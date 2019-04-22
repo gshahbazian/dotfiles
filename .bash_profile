@@ -84,7 +84,7 @@ bash_prompt_command() {
   # Git branch name
   P_GIT=$(parse_git_branch)
 
-  PS1="${P_USER} ${P_YELLOW}${P_PWD}${P_GREEN}${P_GIT}${P_YELLOW} $ ${P_RESET}"
+  PS1="\[\033]0;\w\007\]${P_USER} ${P_YELLOW}${P_PWD}${P_GREEN}${P_GIT}${P_YELLOW} $ ${P_RESET}"
 }
 
 parse_git_branch() {
