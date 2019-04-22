@@ -1,7 +1,7 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-export DOTFILES_DIR=$HOME/development/mac-cofig
+export DOTFILES_DIR=$HOME/development/dotfiles
 
 #
 # ALIAS
@@ -29,6 +29,7 @@ shopt -s cdspell
 
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 
+# Dumb limit bump to get superhuman backend lrt to run
 ulimit -n 10000
 
 #
@@ -95,6 +96,3 @@ _bash_prompt_config
 unset _bash_prompt_config
 
 PROMPT_COMMAND=bash_prompt_command
-
-# Clean up
-unset READLINK CURRENT_SCRIPT SCRIPT_PATH
