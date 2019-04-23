@@ -8,6 +8,9 @@ export DOTFILES_DIR=$HOME/development/dotfiles
 #
 
 alias ll="ls -lahL"
+alias cdev="cd ~/development"
+alias cdoc="cd ~/Documents"
+alias docs="code ~/Documents"
 
 #
 # ENV
