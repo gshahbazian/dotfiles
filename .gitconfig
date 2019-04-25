@@ -10,3 +10,13 @@
 	process = git-lfs filter-process
 [core]
 	excludesfile = /Users/gabeshahbazian/.gitignore_global
+[alias]
+	s = status
+	branchname = rev-parse --abbrev-ref HEAD
+	pb = !git push -u origin $(git branchname)
+	p = pull --rebase --prune
+	master = checkout master
+	cb = checkout -b
+	cm = !git add -A && git commit -m
+	ammend = commit -a --amend
+	rh = reset --hard
