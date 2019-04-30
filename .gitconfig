@@ -20,3 +20,4 @@
 	cm = !git add -A && git commit -m
 	ammend = commit -a --amend
 	rh = reset --hard
+	aliases = config --get-regexp alias
