@@ -33,7 +33,7 @@ shopt -s cdspell
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 
 # Dumb limit bump to get superhuman backend lrt to run
-ulimit -n 10000
+ulimit -S -n 8192
 
 #
 # PROMPT
