@@ -1,9 +1,16 @@
 # dotfiles
 
-Install files by symlinking to home directory:
+Source the bash_profile:
 
 ```bash
-ln -sv ~/dotfiles/.inputrc ~
+cd ~
+echo "source ~/development/dotfiles/.bash_profile" > .bash_profile
+```
+
+Install other files by symlinking to home directory:
+
+```bash
+ln -sv ~/development/dotfiles/.inputrc ~
 ```
 
 Xcode Color Theme directory:
