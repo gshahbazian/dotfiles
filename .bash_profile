@@ -11,7 +11,7 @@ alias ll="ls -lahL"
 alias cdev="cd ~/development"
 alias cdoc="cd ~/Documents"
 alias docs="code ~/Documents"
-alias cdbackend="cd ~/development/go/src/github.com/superhuman/backend"
+alias cdbackend="cd ~/development/backend"
 alias cdweb="cd ~/development/superhuman"
 alias cdios="cd ~/development/superhuman-ios"
 
@@ -33,7 +33,7 @@ shopt -s nocaseglob
 # Autocorrect typos in path names when using `cd`
 shopt -s cdspell
 
-[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
 
 # Dumb limit bump to get superhuman backend lrt to run
 ulimit -S -n 8192
