@@ -11,9 +11,9 @@ alias ll="ls -lahL"
 alias cdev="cd ~/development"
 alias cdoc="cd ~/Documents"
 alias docs="code ~/Documents"
-alias cdbackend="cd ~/development/backend"
-alias cdweb="cd ~/development/superhuman"
-alias cdios="cd ~/development/superhuman-ios"
+alias cdbackend="cd ~/development/superhuman/backend"
+alias cdweb="cd ~/development/superhuman/desktop"
+alias cdios="cd ~/development/superhuman/ios"
 
 #
 # ENV
