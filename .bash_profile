@@ -14,6 +14,8 @@ alias docs="code ~/Documents"
 alias cdbackend="cd ~/development/superhuman/backend"
 alias cdweb="cd ~/development/superhuman/desktop"
 alias cdios="cd ~/development/superhuman/ios"
+alias cdandroid="cd ~/development/superhuman/android"
+alias grep="grep --color=auto"
 
 #
 # ENV
@@ -23,9 +25,6 @@ export GOPATH=$HOME/development/go
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$DOTFILES_DIR/bin:$GOROOT/bin:$GOPATH/bin"
 export CLICOLOR=1
 export LSCOLORS=gxfxcxdxbxegedabagacad
-
-# Tell grep to highlight matches
-export GREP_OPTIONS='—color=auto'
 
 # Case-insensitive globbing (used in pathname expansion)
 shopt -s nocaseglob
