@@ -1,7 +1,7 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-export DOTFILES_DIR=$HOME/development/dotfiles
+export DOTFILES_DIR=$HOME/development/gshahbazian/dotfiles
 
 #
 # ALIAS
@@ -32,7 +32,7 @@ shopt -s nocaseglob
 # Autocorrect typos in path names when using `cd`
 shopt -s cdspell
 
-[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+[[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
 
 # Dumb limit bump to get superhuman backend lrt to run
 ulimit -S -n 8192

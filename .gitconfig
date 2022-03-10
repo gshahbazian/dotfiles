@@ -9,7 +9,7 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 [core]
-	excludesfile = /Users/gabeshahbazian/.gitignore_global
+	excludesfile = /Users/gabelassie/development/gshahbazian/dotfiles/.gitignore_global
 [alias]
 	s = status
 	branchname = rev-parse --abbrev-ref HEAD
