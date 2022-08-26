@@ -9,16 +9,18 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 [core]
-	excludesfile = /Users/gabelassie/development/gshahbazian/dotfiles/.gitignore_global
+	excludesfile = /Users/gabe/development/gshahbazian/dotfiles/.gitignore_global
 [alias]
 	s = status
 	branchname = rev-parse --abbrev-ref HEAD
-	pb = !git push -u origin $(git branchname)
 	p = pull --rebase --prune
 	ma = switch master
 	mn = switch main
+	mm = switch main
 	cb = switch -c
 	cm = !git add -A && git commit -m
 	ammend = commit -a --amend
 	rh = reset --hard
 	aliases = config --get-regexp alias
+[push]
+	autoSetupRemote = true
