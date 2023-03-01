@@ -1,5 +1,3 @@
-[credential]
-	helper = osxkeychain
 [user]
 	name = gshahbazian
 	email = gabeshahbazian@gmail.com
@@ -24,3 +22,9 @@
 	aliases = config --get-regexp alias
 [push]
 	autoSetupRemote = true
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
