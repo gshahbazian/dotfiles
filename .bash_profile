@@ -40,9 +40,6 @@ shopt -s cdspell
 
 [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
 
-# Dumb limit bump to get superhuman backend lrt to run
-ulimit -S -n 8192
-
 #
 # PROMPT
 #
