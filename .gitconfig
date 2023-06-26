@@ -1,5 +1,3 @@
-[credential]
-	helper = osxkeychain
 [user]
 	name = gshahbazian
 	email = gabeshahbazian@gmail.com
@@ -9,15 +7,24 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 [core]
-	excludesfile = /Users/gabeshahbazian/.gitignore_global
+	excludesfile = /Users/gabe/development/gshahbazian/dotfiles/.gitignore_global
 [alias]
 	s = status
 	branchname = rev-parse --abbrev-ref HEAD
-	pb = !git push -u origin $(git branchname)
 	p = pull --rebase --prune
-	ma = checkout master
-	cb = checkout -b
+	ma = switch master
+	mn = switch main
+	mm = switch main
+	cb = switch -c
 	cm = !git add -A && git commit -m
 	ammend = commit -a --amend
 	rh = reset --hard
 	aliases = config --get-regexp alias
+[push]
+	autoSetupRemote = true
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential

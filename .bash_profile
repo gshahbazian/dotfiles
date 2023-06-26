@@ -1,7 +1,7 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-export DOTFILES_DIR=$HOME/development/dotfiles
+export DOTFILES_DIR=$HOME/development/gshahbazian/dotfiles
 
 #
 # ALIAS
@@ -11,10 +11,6 @@ alias ll="ls -lahL"
 alias cdev="cd ~/development"
 alias cdoc="cd ~/Documents"
 alias docs="code ~/Documents"
-alias cdbackend="cd ~/development/superhuman/backend"
-alias cdweb="cd ~/development/superhuman/desktop"
-alias cdios="cd ~/development/superhuman/ios"
-alias cdandroid="cd ~/development/superhuman/android"
 alias grep="grep --color=auto"
 
 #
@@ -23,6 +19,16 @@ alias grep="grep --color=auto"
 
 export GOPATH=$HOME/development/go
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$DOTFILES_DIR/bin:$GOROOT/bin:$GOPATH/bin"
+
+# https://mac.install.guide/ruby/13.html
+if [ -d "/opt/homebrew/opt/ruby/bin" ]; then
+  export PATH=/opt/homebrew/opt/ruby/bin:$PATH
+  export PATH=`gem environment gemdir`/bin:$PATH
+fi
+
+# Add Homebrew env vars.
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 export CLICOLOR=1
 export LSCOLORS=gxfxcxdxbxegedabagacad
 
@@ -32,7 +38,7 @@ shopt -s nocaseglob
 # Autocorrect typos in path names when using `cd`
 shopt -s cdspell
 
-[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+[[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
 
 # Dumb limit bump to get superhuman backend lrt to run
 ulimit -S -n 8192
@@ -101,3 +107,7 @@ _bash_prompt_config
 unset _bash_prompt_config
 
 PROMPT_COMMAND=bash_prompt_command
+
+if [[ $PWD == $HOME ]]; then
+  cdev
+fi
