@@ -1,17 +1,12 @@
-defaults write com.apple.LaunchServices LSQuarantine -bool false
-defaults write NSGlobalDomain NSDisableAutomaticTermination -bool true
+chflags nohidden ~/Library
 defaults write -g ApplePressAndHoldEnabled -bool false
-defaults write NSGlobalDomain KeyRepeat -int 6
-defaults write NSGlobalDomain InitialKeyRepeat -int 25
+defaults write com.apple.dock autohide-delay -float 0
+defaults write com.apple.dock autohide-time-modifier -float 0.5
 defaults write com.apple.finder AppleShowAllFiles -bool true
-defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 defaults write com.apple.finder FXPreferredViewStyle -string "clmv"
-chflags nohidden ~/Library
-defaults write com.apple.dock autohide-time-modifier -float 0.5
-defaults write com.apple.dock autohide-delay -float 0
-defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
-defaults write com.apple.Safari HomePage -string "about:blank"
-defaults write com.apple.Safari AutoOpenSafeDownloads -bool false
-defaults write com.apple.Safari ShowFavoritesBar -bool false
-defaults write com.apple.Safari AutoFillPasswords -bool false
+defaults write com.apple.LaunchServices LSQuarantine -bool false
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+defaults write NSGlobalDomain InitialKeyRepeat -int 25
+defaults write NSGlobalDomain KeyRepeat -int 6
+defaults write NSGlobalDomain NSDisableAutomaticTermination -bool true
