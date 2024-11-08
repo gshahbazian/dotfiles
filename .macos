@@ -10,3 +10,4 @@ defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 defaults write NSGlobalDomain InitialKeyRepeat -int 25
 defaults write NSGlobalDomain KeyRepeat -int 6
 defaults write NSGlobalDomain NSDisableAutomaticTermination -bool true
+defaults -currentHost write -g AppleFontSmoothing -int 0

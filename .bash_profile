@@ -13,6 +13,9 @@ alias cdoc="cd ~/Documents"
 alias docs="code ~/Documents"
 alias grep="grep --color=auto"
 
+# corepack nodenv workaround
+alias yarn="corepack yarn"
+
 #
 # ENV
 #
