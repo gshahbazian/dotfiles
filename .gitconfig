@@ -13,7 +13,6 @@
 	branchname = rev-parse --abbrev-ref HEAD
 	p = pull --rebase --prune
 	ma = switch master
-	mn = switch main
 	mm = switch main
 	cb = switch -c
 	cm = !git add -A && git commit -m
@@ -23,8 +22,8 @@
 [push]
 	autoSetupRemote = true
 [credential "https://github.com"]
-	helper = 
+	helper =
 	helper = !/opt/homebrew/bin/gh auth git-credential
 [credential "https://gist.github.com"]
-	helper = 
+	helper =
 	helper = !/opt/homebrew/bin/gh auth git-credential
