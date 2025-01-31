@@ -1,0 +1,10 @@
+background-blur = true
+background-opacity = 0.96
+confirm-close-surface = false
+font-size = 12
+font-thicken = true
+font-thicken-strength = 100
+window-height=44
+window-title-font-family="JetBrains Mono"
+window-width=160
+working-directory = /Users/gabe/development

@@ -53,12 +53,10 @@ _bash_prompt_config() {
   if tput setaf >/dev/null 2>&1 ; then
     _setaf () { tput setaf "$1" ; }
     local RESET="${ESC_OPEN}$( { tput sgr0 || tput me ; } 2>/dev/null )${ESC_CLOSE}"
-    local BOLD="$( { tput bold || tput md ; } 2>/dev/null )"
   else
     # Fallback
     _setaf () { echo "\033[0;$(($1+30))m" ; }
     local RESET="\033[m"
-    local BOLD=""
     ESC_OPEN=""
     ESC_CLOSE=""
   fi
@@ -93,6 +91,9 @@ bash_prompt_command() {
   # Git branch name
   P_GIT=$(parse_git_branch)
 
+  # Ensure the cursor remains a bar
+  echo -ne "\e[5 q"
+
   PS1="\[\033]0;\w\007\]${P_USER} ${P_YELLOW}${P_PWD}${P_GREEN}${P_GIT}${P_YELLOW} $ ${P_RESET}"
 }
 
@@ -105,7 +106,3 @@ _bash_prompt_config
 unset _bash_prompt_config
 
 PROMPT_COMMAND=bash_prompt_command
-
-if [[ $PWD == $HOME ]]; then
-  cdev
-fi
