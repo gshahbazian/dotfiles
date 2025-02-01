@@ -8,3 +8,4 @@ window-height=44
 window-title-font-family="JetBrains Mono"
 window-width=160
 working-directory = /Users/gabe/development
+theme = Dracula+
