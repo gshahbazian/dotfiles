@@ -9,8 +9,6 @@ export DOTFILES_DIR=$HOME/development/gshahbazian/dotfiles
 
 alias ll="ls -lahL"
 alias cdev="cd ~/development"
-alias cdoc="cd ~/Documents"
-alias docs="code ~/Documents"
 alias grep="grep --color=auto"
 
 #
@@ -94,7 +92,7 @@ bash_prompt_command() {
   # Ensure the cursor remains a bar
   echo -ne "\e[5 q"
 
-  PS1="\[\033]0;\w\007\]${P_USER} ${P_YELLOW}${P_PWD}${P_GREEN}${P_GIT}${P_YELLOW} $ ${P_RESET}"
+  PS1="\[\033]0;\w\007\]\[\033[1m\]${P_USER} ${P_YELLOW}${P_PWD}${P_GREEN}${P_GIT}${P_YELLOW} $ ${P_RESET}"
 }
 
 parse_git_branch() {
