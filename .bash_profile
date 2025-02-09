@@ -18,7 +18,6 @@ alias co="cursor ."
 
 export GOPATH=$HOME/development/go
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$DOTFILES_DIR/bin:$GOROOT/bin:$GOPATH/bin"
-export PATH="/opt/homebrew/opt/node@22/bin:$PATH"
 
 # https://mac.install.guide/ruby/13.html
 if [ -d "/opt/homebrew/opt/ruby/bin" ]; then
