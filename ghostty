@@ -7,7 +7,6 @@ font-thicken-strength = 50
 macos-icon = retro
 theme = Dracula+
 window-height=44
-window-inherit-working-directory = false
 window-padding-x = 4
 window-title-font-family="JetBrains Mono"
 window-width=160
