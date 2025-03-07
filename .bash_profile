@@ -9,6 +9,7 @@ export DOTFILES_DIR=$HOME/development/gshahbazian/dotfiles
 
 alias ll="ls -lahL"
 alias cdev="cd ~/development"
+alias cdd="cd ~/development"
 alias grep="grep --color=auto"
 alias co="cursor ."
 
