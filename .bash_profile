@@ -11,7 +11,8 @@ alias ll="ls -lahL"
 alias cdev="cd ~/development"
 alias cdd="cd ~/development"
 alias grep="grep --color=auto"
-alias co="cursor ."
+alias c="open $1 -a \"Cursor\""
+alias co="open . -a \"Cursor\""
 
 #
 # ENV
