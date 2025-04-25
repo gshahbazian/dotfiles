@@ -13,6 +13,8 @@ alias cdd="cd ~/development"
 alias grep="grep --color=auto"
 alias c="open $1 -a \"Cursor\""
 alias co="open . -a \"Cursor\""
+alias vs="open $1 -a \"Visual Studio Code\""
+alias vso="open . -a \"Visual Studio Code\""
 
 #
 # ENV
@@ -90,9 +92,6 @@ bash_prompt_command() {
 
   # Git branch name
   P_GIT=$(parse_git_branch)
-
-  # Ensure the cursor remains a bar
-  echo -ne "\e[5 q"
 
   PS1="\[\033]0;\w\007\]\[\033[1m\]${P_USER} ${P_YELLOW}${P_PWD}${P_GREEN}${P_GIT}${P_YELLOW} $ ${P_RESET}"
 }
