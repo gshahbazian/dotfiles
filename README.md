@@ -12,9 +12,3 @@ Install other files by symlinking to home directory:
 ```bash
 ln -sv ~/development/dotfiles/.inputrc ~
 ```
-
-Xcode Color Theme directory:
-
-```
-~/Library/Developer/Xcode/UserData/FontAndColorThemes
-```
