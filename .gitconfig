@@ -7,7 +7,7 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 [core]
-	editor = nano
+	editor = nvim
 	excludesfile = /Users/gabe/development/gshahbazian/dotfiles/.gitignore_global
 [alias]
 	s = status
