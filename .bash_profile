@@ -8,14 +8,18 @@ export DOTFILES_DIR=$HOME/development/gshahbazian/dotfiles
 #
 
 alias ll="ls -lahL"
-alias cdev="cd ~/development"
+alias la="ls -A"
+alias l="ls -CF"
 alias cdd="cd ~/development"
-alias grep="grep --color=auto"
 alias nv="nvim"
-alias c="open $2 -a \"Cursor\""
-alias co="open . -a \"Cursor\""
-alias vs="open $1 -a \"Visual Studio Code\""
-alias vso="open . -a \"Visual Studio Code\""
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias mkdir="mkdir -pv"
+alias df="df -h"
+alias du="du -h"
+alias h="history"
+alias path='echo -e ${PATH//:/\\n}'
 
 #
 # ENV
@@ -36,11 +40,36 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 export CLICOLOR=1
 export LSCOLORS=gxfxcxdxbxegedabagacad
 
+# Better history management
+export HISTSIZE=10000
+export HISTFILESIZE=20000
+export HISTCONTROL=ignoreboth:erasedups
+export HISTIGNORE="ls:ll:cd:pwd:exit:clear:history"
+export HISTTIMEFORMAT="%F %T "
+
 # Case-insensitive globbing (used in pathname expansion)
 shopt -s nocaseglob
 
 # Autocorrect typos in path names when using `cd`
 shopt -s cdspell
+
+# Append to history file, don't overwrite it
+shopt -s histappend
+
+# Check window size after each command and update LINES and COLUMNS
+shopt -s checkwinsize
+
+# Enable extended pattern matching
+shopt -s extglob
+
+# Enable ** for recursive matching
+shopt -s globstar
+
+# Save multi-line commands as one command
+shopt -s cmdhist
+
+# Correct minor errors in directory names during completion
+shopt -s dirspell
 
 [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
 

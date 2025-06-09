@@ -1,7 +1,0 @@
-set linenumbers
-set tabsize 2
-set tabstospaces
-set mouse
-set autoindent
-set softwrap
-include /opt/homebrew/share/nano/*.nanorc

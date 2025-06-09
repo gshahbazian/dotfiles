@@ -11,14 +11,11 @@
 	excludesfile = /Users/gabe/development/gshahbazian/dotfiles/.gitignore_global
 [alias]
 	s = status
-	branchname = rev-parse --abbrev-ref HEAD
 	p = pull --rebase --prune
 	ma = switch master
 	mm = switch main
 	cb = switch -c
-	cm = !git add -A && git commit -m
-	ammend = commit -a --amend
-	rh = reset --hard
+	ammend = commit -a --amend --no-edit
 	aliases = config --get-regexp alias
 [push]
 	autoSetupRemote = true
