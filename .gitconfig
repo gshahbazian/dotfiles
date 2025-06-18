@@ -15,7 +15,7 @@
 	ma = switch master
 	mm = switch main
 	cb = switch -c
-	ammend = commit -a --amend --no-edit
+	amend = commit -a --amend --no-edit
 	aliases = config --get-regexp alias
 [push]
 	autoSetupRemote = true
