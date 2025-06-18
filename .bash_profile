@@ -19,7 +19,7 @@ alias mkdir="mkdir -pv"
 alias df="df -h"
 alias du="du -h"
 alias h="history"
-alias path='echo -e ${PATH//:/\\n}'
+alias path='echo -e "${PATH//:/\\n}"'
 
 #
 # ENV
@@ -31,7 +31,7 @@ export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$DOTFILES_DIR/bin:$GOR
 # https://mac.install.guide/ruby/13.html
 if [ -d "/opt/homebrew/opt/ruby/bin" ]; then
   export PATH=/opt/homebrew/opt/ruby/bin:$PATH
-  export PATH=`gem environment gemdir`/bin:$PATH
+  export PATH=$(gem environment gemdir)/bin:$PATH
 fi
 
 # Add Homebrew env vars.
@@ -82,12 +82,12 @@ _bash_prompt_config() {
   local ESC_OPEN="\["
   local ESC_CLOSE="\]"
 
-  if tput setaf >/dev/null 2>&1 ; then
-    _setaf () { tput setaf "$1" ; }
-    local RESET="${ESC_OPEN}$( { tput sgr0 || tput me ; } 2>/dev/null )${ESC_CLOSE}"
+  if tput setaf >/dev/null 2>&1; then
+    _setaf() { tput setaf "$1"; }
+    local RESET="${ESC_OPEN}$({ tput sgr0 || tput me; } 2>/dev/null)${ESC_CLOSE}"
   else
     # Fallback
-    _setaf () { echo "\033[0;$(($1+30))m" ; }
+    _setaf() { echo "\033[0;$(($1 + 30))m"; }
     local RESET="\033[m"
     ESC_OPEN=""
     ESC_CLOSE=""
@@ -111,9 +111,9 @@ bash_prompt_command() {
   local DIR=${PWD##*/}
   local P_PWD=${PWD/#$HOME/\~}
 
-  MAXLENGTH=$(( ( MAXLENGTH < ${#DIR} ) ? ${#DIR} : MAXLENGTH ))
+  MAXLENGTH=$(((MAXLENGTH < ${#DIR}) ? ${#DIR} : MAXLENGTH))
 
-  local OFFSET=$(( ${#P_PWD} - MAXLENGTH ))
+  local OFFSET=$((${#P_PWD} - MAXLENGTH))
 
   if [ ${OFFSET} -gt "0" ]; then
     P_PWD=${P_PWD:$OFFSET:$MAXLENGTH}
@@ -127,7 +127,7 @@ bash_prompt_command() {
 }
 
 parse_git_branch() {
-  local OUT=$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
+  local OUT=$(git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
   if [ "$OUT" != "" ]; then echo " $OUT"; fi
 }
 
