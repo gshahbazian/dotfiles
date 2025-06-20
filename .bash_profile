@@ -20,6 +20,7 @@ alias df="df -h"
 alias du="du -h"
 alias h="history"
 alias path='echo -e "${PATH//:/\\n}"'
+alias yolo="claude --dangerously-skip-permissions"
 
 #
 # ENV
