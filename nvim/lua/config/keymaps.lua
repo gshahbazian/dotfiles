@@ -12,5 +12,10 @@ vim.keymap.set("n", "<leader><BS>", function()
   Snacks.bufdelete()
 end, { desc = "Close Buffer" })
 
--- vim.keymap.set("n", "<D-s>", "<cmd>w<cr>", { desc = "Save" })
--- vim.keymap.set("i", "<D-s>", "<Esc><cmd>w<cr>a", { desc = "Save" })
+vim.keymap.set({ "n", "v", "x" }, "<leader>y", '"+y', { desc = "Copy to system clipboard" })
+
+-- cmd+c not working in ghostty : (
+-- vim.keymap.set("v", "<D-c>", '"+y', { desc = "Copy to system clipboard (Cmd+C)" })
+
+vim.keymap.set("n", "<D-s>", "<cmd>w<cr>", { desc = "Save" })
+vim.keymap.set("i", "<D-s>", "<Esc><cmd>w<cr>", { desc = "Save" })

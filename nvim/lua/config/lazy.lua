@@ -29,7 +29,9 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.formatting.biome" },
 
     { import = "lazyvim.plugins.extras.ui.treesitter-context" },
-    { import = "lazyvim.plugins.extras.ai.copilot" },
+
+    -- { import = "lazyvim.plugins.extras.ai.copilot" },
+    { import = "lazyvim.plugins.extras.ai.supermaven" },
 
     -- import/override with your plugins
     { import = "plugins" },
