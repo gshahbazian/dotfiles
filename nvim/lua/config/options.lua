@@ -2,6 +2,9 @@
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
 
+-- switch ghost text and tab selection to copilot
+vim.g.ai_cmp = false
+
 -- default lazyvim hides markdown characters
 vim.opt.conceallevel = 0
 
