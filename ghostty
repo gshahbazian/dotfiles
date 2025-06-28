@@ -6,6 +6,7 @@ cursor-invert-fg-bg = true
 cursor-style-blink = false
 font-size = 14
 # macos-icon = retro
+mouse-hide-while-typing = true
 shell-integration-features = no-cursor
 theme = catppuccin-mocha
 window-padding-x = 4
