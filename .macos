@@ -1,13 +1,28 @@
-chflags nohidden ~/Library
-defaults write -g ApplePressAndHoldEnabled -bool false
+# dock speed (killall Dock; to apply)
 defaults write com.apple.dock autohide-delay -float 0
 defaults write com.apple.dock autohide-time-modifier -float 0.5
+
+# better smoothing
+defaults -currentHost write -g AppleFontSmoothing -int 0
+
+# key repeat
+# The system has to be restarted for changes to take effect.
+# All values copied from https://mac-key-repeat.zaymon.dev
+
+# set initial key repeat delay to 150 ms
+defaults write -g InitialKeyRepeat -int 10
+
+# set key repeat interval to 15 ms
+defaults write -g KeyRepeat -int 1
+
+# disable press and hold for special characters
+defaults write -g ApplePressAndHoldEnabled -bool false
+
+# not sure about these
+chflags nohidden ~/Library
+defaults write -g NSDisableAutomaticTermination -bool true
+defaults write -g AppleShowAllExtensions -bool true
 defaults write com.apple.finder AppleShowAllFiles -bool true
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 defaults write com.apple.finder FXPreferredViewStyle -string "clmv"
 defaults write com.apple.LaunchServices LSQuarantine -bool false
-defaults write NSGlobalDomain AppleShowAllExtensions -bool true
-defaults write NSGlobalDomain InitialKeyRepeat -int 25
-defaults write NSGlobalDomain KeyRepeat -int 6
-defaults write NSGlobalDomain NSDisableAutomaticTermination -bool true
-defaults -currentHost write -g AppleFontSmoothing -int 0
