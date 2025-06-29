@@ -22,51 +22,35 @@ vim.keymap.set("i", "<D-s>", "<Esc><cmd>w<cr>", { silent = true, desc = "Save" }
 
 vim.keymap.set("n", "<leader>gF", function()
   local cwd = vim.fn.getcwd()
-
-  local function get_git_root()
-    local handle = io.popen("git -C " .. cwd .. " rev-parse --show-toplevel", "r")
-    if not handle then
-      return nil
-    end
-    local root = handle:read("*l")
-    handle:close()
-    return root
-  end
-
-  local git_root = get_git_root()
-  if not git_root then
+  -- Get git root
+  local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+  if not git_root or git_root == "" then
     return
   end
 
-  local function run_git_cmd(cmd)
-    local handle = io.popen(cmd, "r")
-    if not handle then
-      return {}
-    end
-    local out = {}
-    for line in handle:lines() do
-      table.insert(out, line)
-    end
-    handle:close()
-    return out
-  end
+  -- Get all modified files restricted to current directory
+  local cmd = string.format("git diff --name-only HEAD -- %s; git ls-files --others --exclude-standard -- %s", cwd, cwd)
+  local files = vim.fn.systemlist(cmd)
 
-  -- Run git from root, but restrict to subdir using `cwd` as pathspec
-  local staged_files = run_git_cmd("git -C " .. git_root .. " diff --name-only --cached " .. cwd)
-  local changed_files = run_git_cmd("git -C " .. git_root .. " ls-files --modified --others --exclude-standard " .. cwd)
-
-  local file_set = {}
-  for _, f in ipairs(staged_files) do
-    file_set[f] = true
-  end
-  for _, f in ipairs(changed_files) do
-    file_set[f] = true
-  end
-
-  for file, _ in pairs(file_set) do
+  -- Use a set to handle duplicates and open files
+  local seen = {}
+  for _, file in ipairs(files) do
+    -- Git returns paths relative to git root, so we need the full path
     local full_path = git_root .. "/" .. file
-    if vim.fn.filereadable(full_path) == 1 then
+    if not seen[file] and vim.fn.filereadable(full_path) == 1 then
+      seen[file] = true
       vim.cmd("edit " .. vim.fn.fnameescape(full_path))
     end
   end
-end, { desc = "Open git modified files (current dir)" })
+end, { desc = "Open git modified files (cwd)" })
+
+vim.keymap.set("n", "<leader>jf", function()
+  local path = vim.api.nvim_buf_get_name(0)
+  os.execute("open -R " .. path)
+end, { silent = true, desc = "Reveal in Finder" })
+
+vim.keymap.set("n", "<leader>jp", function()
+  local path = vim.fn.expand("%:.")
+  vim.fn.setreg("+", path)
+  print("Copied: " .. path)
+end, { desc = "Copy file path" })
