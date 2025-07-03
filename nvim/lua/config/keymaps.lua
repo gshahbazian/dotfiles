@@ -2,7 +2,7 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
--- jk to escape
+-- jk to escape (removed since i mapped capslock to escape)
 -- vim.keymap.set("i", "jk", "<ESC>", { silent = true })
 
 -- simple string search
@@ -20,7 +20,7 @@ vim.keymap.set("n", "<leader>ba", function()
   Snacks.bufdelete.all()
 end, { desc = "Delete All Buffers" })
 
--- yank to system clipboard
+-- yank and paste to system clipboard
 vim.keymap.set({ "n", "v", "x" }, "<leader>y", '"+y', { silent = true, desc = "Copy to system clipboard" })
 vim.keymap.set({ "n", "x" }, "<leader>p", '"+p', { desc = "Paste from system clipboard after the cursor position" })
 vim.keymap.set({ "n", "x" }, "<leader>P", '"+P', { desc = "Paste from system clipboard before the cursor position" })
