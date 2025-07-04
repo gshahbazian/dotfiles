@@ -76,10 +76,13 @@ shopt -s dirspell
 [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
 
 # fzf
-export FZF_DEFAULT_OPTS="--style full --bind='ctrl-/:toggle-preview' --preview-window=hidden --preview='bat --style=numbers --color=always --line-range=:501 {}'"
-export FZF_COMPLETION_OPTS="--reverse --walker-skip=.git,node_modules --info=inline"
-export FZF_COMPLETION_PATH_OPTS="--walker=file,dir,follow,hidden --preview-window=nohidden"
-export FZF_COMPLETION_DIR_OPTS="--walker=dir,follow,hidden --preview='tree -C {}' --preview-window=nohidden"
+show_file_or_dir_preview="if [ -d {} ]; then tree -C {}; else bat --style=numbers --color=always --line-range=:501 {}; fi"
+export FZF_DEFAULT_OPTS="--style=full --bind='ctrl-/:toggle-preview' --preview-window=hidden --preview='$show_file_or_dir_preview'"
+export FZF_CTRL_T_OPTS="--preview-window=nohidden --layout=reverse"
+export FZF_ALT_C_OPTS="--preview-window=nohidden --layout=reverse"
+export FZF_COMPLETION_OPTS="--preview-window=nohidden --layout=reverse --walker-skip=.git,node_modules"
+export FZF_COMPLETION_PATH_OPTS="--walker=file,dir,follow,hidden"
+export FZF_COMPLETION_DIR_OPTS="--walker=dir,follow,hidden"
 eval "$(fzf --bash)"
 
 export BAT_THEME="Catppuccin Mocha"
