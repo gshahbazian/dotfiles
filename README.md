@@ -1,10 +1,10 @@
 # dotfiles
 
-Source the bash_profile:
+Source the bashrc:
 
 ```bash
 cd ~
-echo "source ~/development/dotfiles/.bash_profile" > .bash_profile
+echo "source ~/development/dotfiles/.bashrc" > .bashrc
 ```
 
 Install other files by symlinking to home directory:

@@ -16,8 +16,6 @@ alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias mkdir="mkdir -pv"
-alias df="df -h"
-alias du="du -h"
 alias h="history"
 alias path='echo -e "${PATH//:/\\n}"'
 alias yolo="claude --dangerously-skip-permissions"
@@ -40,9 +38,6 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # fnm
 eval "$(fnm env --log-level=error --use-on-cd --version-file-strategy=recursive --corepack-enabled --shell bash)"
-
-eval "$(fzf --bash)"
-export FZF_DEFAULT_OPTS="--preview 'bat --style=numbers --color=always --line-range=:500 {}' --preview-window=right:60%"
 
 export CLICOLOR=1
 
@@ -78,6 +73,9 @@ shopt -s cmdhist
 shopt -s dirspell
 
 [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
+
+export FZF_DEFAULT_OPTS="--style full --preview 'bat --style=numbers --color=always --line-range=:500 {}' --preview-window=right:60%"
+eval "$(fzf --bash)"
 
 #
 # PROMPT
