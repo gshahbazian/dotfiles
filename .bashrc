@@ -76,7 +76,10 @@ shopt -s dirspell
 [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
 
 # fzf
-export FZF_DEFAULT_OPTS="--style full --preview 'bat --style=numbers --color=always --line-range=:500 {}' --preview-window=right:60%"
+export FZF_DEFAULT_OPTS="--style full --bind='ctrl-/:toggle-preview' --preview-window=hidden --preview='bat --style=numbers --color=always --line-range=:501 {}'"
+export FZF_COMPLETION_OPTS="--reverse --walker-skip=.git,node_modules --info=inline"
+export FZF_COMPLETION_PATH_OPTS="--walker=file,dir,follow,hidden --preview-window=nohidden"
+export FZF_COMPLETION_DIR_OPTS="--walker=dir,follow,hidden --preview='tree -C {}' --preview-window=nohidden"
 eval "$(fzf --bash)"
 
 export BAT_THEME="Catppuccin Mocha"
@@ -89,8 +92,7 @@ z() {
     _z 2>&1 |
       fzf --height 40% --layout reverse --info inline \
         --nth 2.. --tac --no-sort --query "$*" \
-        --accept-nth 2.. \
-        --preview '' --preview-window=hidden
+        --accept-nth 2..
   ) && cd "$dir"
 }
 
