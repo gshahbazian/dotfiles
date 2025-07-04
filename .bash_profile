@@ -38,6 +38,12 @@ fi
 # Add Homebrew env vars.
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
+# fnm
+eval "$(fnm env --log-level=error --use-on-cd --version-file-strategy=recursive --corepack-enabled --shell bash)"
+
+eval "$(fzf --bash)"
+export FZF_DEFAULT_OPTS="--preview 'bat --style=numbers --color=always --line-range=:500 {}' --preview-window=right:60%"
+
 export CLICOLOR=1
 
 # Better history management

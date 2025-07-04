@@ -12,3 +12,4 @@ theme = catppuccin-mocha
 # window-padding-x = 4
 window-title-font-family = "IBM Plex Mono"
 working-directory = /Users/gabe/development
+keybind = super+enter=unbind
