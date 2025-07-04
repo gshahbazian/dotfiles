@@ -72,10 +72,27 @@ shopt -s cmdhist
 # Correct minor errors in directory names during completion
 shopt -s dirspell
 
+# bash-completion
 [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
 
+# fzf
 export FZF_DEFAULT_OPTS="--style full --preview 'bat --style=numbers --color=always --line-range=:500 {}' --preview-window=right:60%"
 eval "$(fzf --bash)"
+
+export BAT_THEME="Catppuccin Mocha"
+
+# z with fzf integration
+. "/opt/homebrew/etc/profile.d/z.sh"
+unalias z 2>/dev/null
+z() {
+  local dir=$(
+    _z 2>&1 |
+      fzf --height 40% --layout reverse --info inline \
+        --nth 2.. --tac --no-sort --query "$*" \
+        --accept-nth 2.. \
+        --preview '' --preview-window=hidden
+  ) && cd "$dir"
+}
 
 #
 # PROMPT
@@ -138,4 +155,4 @@ parse_git_branch() {
 _bash_prompt_config
 unset _bash_prompt_config
 
-PROMPT_COMMAND=bash_prompt_command
+PROMPT_COMMAND="bash_prompt_command; $PROMPT_COMMAND"
