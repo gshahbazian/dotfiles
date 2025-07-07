@@ -76,7 +76,7 @@ shopt -s dirspell
 [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
 
 # fzf
-show_file_or_dir_preview="if [ -d {} ]; then tree -C {}; else bat --style=numbers --color=always --line-range=:501 {}; fi"
+show_file_or_dir_preview="if [ -d {} ]; then tree -L 2 -C {}; else bat --style=numbers --color=always --line-range=:501 {}; fi"
 export FZF_DEFAULT_OPTS="--style=full --bind='ctrl-/:toggle-preview' --preview-window=hidden --preview='$show_file_or_dir_preview'"
 export FZF_CTRL_T_OPTS="--preview-window=nohidden --layout=reverse"
 export FZF_ALT_C_OPTS="--preview-window=nohidden --layout=reverse"
