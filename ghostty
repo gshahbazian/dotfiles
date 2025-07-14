@@ -1,6 +1,6 @@
 background-blur = true
 background-opacity = 0.96
-confirm-close-surface = false
+# confirm-close-surface = false
 cursor-click-to-move = true
 cursor-invert-fg-bg = true
 cursor-style-blink = false

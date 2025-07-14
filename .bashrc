@@ -39,6 +39,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # fnm
 eval "$(fnm env --log-level=error --use-on-cd --version-file-strategy=recursive --corepack-enabled --shell bash)"
 
+export EDITOR=nvim
 export CLICOLOR=1
 
 # Better history management
