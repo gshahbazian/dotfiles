@@ -42,7 +42,10 @@ vim.keymap.set("n", "<leader>gF", function()
   end
 
   -- Get all modified files restricted to current directory
-  local cmd = string.format("git diff --name-only HEAD -- %s; git ls-files --others --exclude-standard -- %s", cwd, cwd)
+  -- Use relative path from git root for consistency
+  local relative_cwd = vim.fn.fnamemodify(cwd, ":s?" .. git_root .. "/??")
+  local cmd = string.format("cd %s && git diff --name-only HEAD -- %s; git ls-files --others --exclude-standard -- %s", 
+    vim.fn.shellescape(git_root), vim.fn.shellescape(relative_cwd), vim.fn.shellescape(relative_cwd))
   local files = vim.fn.systemlist(cmd)
 
   -- Use a set to handle duplicates and open files
