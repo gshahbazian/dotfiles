@@ -46,4 +46,3 @@ if let rect = getFocusedWindowRect() {
     let center = CGPoint(x: rect.midX, y: rect.midY)
     CGWarpMouseCursorPosition(center)
 }
-

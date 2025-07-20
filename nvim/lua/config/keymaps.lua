@@ -2,9 +2,6 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
--- jk to escape (removed since i mapped capslock to escape)
--- vim.keymap.set("i", "jk", "<ESC>", { silent = true })
-
 -- simple string search
 vim.keymap.set("n", "<leader>sf", function()
   Snacks.picker.grep({ root = false, args = { "-F" } })
@@ -44,7 +41,7 @@ vim.keymap.set("n", "<leader>gF", function()
   -- Get all modified files restricted to current directory
   -- Use relative path from git root for consistency
   local relative_cwd = vim.fn.fnamemodify(cwd, ":s?" .. git_root .. "/??")
-  local cmd = string.format("cd %s && git diff --name-only HEAD -- %s; git ls-files --others --exclude-standard -- %s", 
+  local cmd = string.format("cd %s && git diff --name-only HEAD -- %s; git ls-files --others --exclude-standard -- %s",
     vim.fn.shellescape(git_root), vim.fn.shellescape(relative_cwd), vim.fn.shellescape(relative_cwd))
   local files = vim.fn.systemlist(cmd)
 

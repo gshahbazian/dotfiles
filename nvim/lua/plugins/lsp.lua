@@ -9,6 +9,9 @@ return {
               preferences = {
                 importModuleSpecifier = "non-relative",
               },
+              inlayHints = {
+                parameterNames = "all",
+              },
             },
           },
         },

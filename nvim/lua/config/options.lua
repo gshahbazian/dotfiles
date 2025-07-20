@@ -13,3 +13,8 @@ vim.g.lazyvim_prettier_needs_config = true
 
 -- disable using the system clipboard (remapped to leader+y)
 vim.opt.clipboard = ""
+
+-- enable mode in vscode status line
+if vim.g.vscode then
+  vim.opt.showmode = true
+end
