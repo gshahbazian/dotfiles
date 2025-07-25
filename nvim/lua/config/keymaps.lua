@@ -41,8 +41,12 @@ vim.keymap.set("n", "<leader>gF", function()
   -- Get all modified files restricted to current directory
   -- Use relative path from git root for consistency
   local relative_cwd = vim.fn.fnamemodify(cwd, ":s?" .. git_root .. "/??")
-  local cmd = string.format("cd %s && git diff --name-only HEAD -- %s; git ls-files --others --exclude-standard -- %s",
-    vim.fn.shellescape(git_root), vim.fn.shellescape(relative_cwd), vim.fn.shellescape(relative_cwd))
+  local cmd = string.format(
+    "cd %s && git diff --name-only HEAD -- %s; git ls-files --others --exclude-standard -- %s",
+    vim.fn.shellescape(git_root),
+    vim.fn.shellescape(relative_cwd),
+    vim.fn.shellescape(relative_cwd)
+  )
   local files = vim.fn.systemlist(cmd)
 
   -- Use a set to handle duplicates and open files
@@ -69,3 +73,8 @@ vim.keymap.set("n", "<leader>jp", function()
   vim.fn.setreg("+", path)
   print("Copied: " .. path)
 end, { desc = "Copy file path" })
+
+-- open in vscode
+vim.keymap.set("n", "<leader>jv", function()
+  vim.fn.jobstart({ "code", "." }, { detach = true })
+end, { silent = true, desc = "Open in VSCode" })
