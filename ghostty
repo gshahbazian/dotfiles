@@ -6,7 +6,7 @@ cursor-style-blink = false
 font-size = 14
 mouse-hide-while-typing = true
 shell-integration-features = no-cursor
-theme = catppuccin-mocha
+theme = rose-pine
 window-title-font-family = "IBM Plex Mono"
 working-directory = /Users/gabe/development
 keybind = super+enter=unbind

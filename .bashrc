@@ -75,6 +75,7 @@ shopt -s dirspell
 
 # bash-completion
 [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
+complete -r bun # remove bun completion cause its breaking file completion
 
 # fzf
 show_file_or_dir_preview="if [ -d {} ]; then tree -L 2 -C {}; else bat --style=numbers --color=always --line-range=:501 {}; fi"
@@ -86,7 +87,7 @@ export FZF_COMPLETION_PATH_OPTS="--walker=file,dir,follow,hidden"
 export FZF_COMPLETION_DIR_OPTS="--walker=dir,follow,hidden"
 eval "$(fzf --bash)"
 
-export BAT_THEME="Catppuccin Mocha"
+export BAT_THEME="rose-pine"
 
 # z with fzf integration
 . "/opt/homebrew/etc/profile.d/z.sh"

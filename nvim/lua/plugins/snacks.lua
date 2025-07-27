@@ -2,34 +2,39 @@ return {
   "folke/snacks.nvim",
   opts = {
     picker = {
+      hidden = true,
+      ignored = true,
+      exclude = {
+        ".git",
+        "node_modules",
+        "vendor",
+        "dist",
+        "build",
+        "out",
+        ".DS_Store",
+      },
       sources = {
-        explorer = {
+        files = {
           hidden = true,
           ignored = true,
+        },
+        explorer = {
           layout = {
             layout = {
               position = "right",
             },
           },
-          exclude = {
-            ".git",
-            "node_modules",
-            "vendor",
-            "dist",
-            "build",
-            "out",
-            ".DS_Store",
-          },
         },
       },
     },
     dashboard = {
-      width = 18,
+      width = 20,
       preset = {
         keys = {
-          { icon = "", key = "s", desc = " ̲last session", section = "session" },
-          { icon = "", key = "l", desc = " ̲lazy", action = ":Lazy" },
-          { icon = "", key = "q", desc = " ̲quit", action = ":qa" },
+          { icon = "", key = "s", desc = "[s]ession resume", section = "session" },
+          { icon = "", key = "e", desc = "[e]xplorer", action = ":lua Snacks.explorer({ cwd = LazyVim.root() })" },
+          { icon = "", key = "l", desc = "[l]azy", action = ":Lazy" },
+          { icon = "", key = "q", desc = "[q]uit", action = ":qa" },
         },
         header = [[
                                                                    

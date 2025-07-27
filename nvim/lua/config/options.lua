@@ -18,3 +18,6 @@ vim.opt.clipboard = ""
 if vim.g.vscode then
   vim.opt.showmode = true
 end
+
+-- disable undofile
+vim.opt.undofile = false
