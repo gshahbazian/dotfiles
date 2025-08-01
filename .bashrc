@@ -7,9 +7,9 @@ export DOTFILES_DIR=$HOME/development/gshahbazian/dotfiles
 # ALIAS
 #
 
-alias ll="ls -lahL"
-alias la="ls -A"
-alias l="ls -CF"
+alias l="eza -l --git --no-user --icons=always"
+alias ll="l"
+alias tree="eza --tree --level=2 --git --no-user --icons=always"
 alias cdd="cd ~/development"
 alias nv="nvim"
 alias ..="cd .."
@@ -78,7 +78,7 @@ shopt -s dirspell
 complete -r bun # remove bun completion cause its breaking file completion
 
 # fzf
-show_file_or_dir_preview="if [ -d {} ]; then tree -L 2 -C {}; else bat --style=numbers --color=always --line-range=:501 {}; fi"
+show_file_or_dir_preview="if [ -d {} ]; then eza --tree --level=2 --git --no-user --icons=always {}; else bat --style=numbers --color=always --line-range=:501 {}; fi"
 export FZF_DEFAULT_OPTS="--style=full --bind='ctrl-/:toggle-preview' --preview-window=hidden --preview='$show_file_or_dir_preview'"
 export FZF_CTRL_T_OPTS="--preview-window=nohidden --layout=reverse"
 export FZF_ALT_C_OPTS="--preview-window=nohidden --layout=reverse"

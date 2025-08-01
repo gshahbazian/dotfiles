@@ -12,6 +12,7 @@ return {
         "build",
         "out",
         ".DS_Store",
+        ".next",
       },
       sources = {
         files = {
