@@ -18,7 +18,6 @@ alias ....="cd ../../.."
 alias mkdir="mkdir -pv"
 alias h="history"
 alias path='echo -e "${PATH//:/\\n}"'
-alias yolo="claude --dangerously-skip-permissions"
 
 #
 # ENV
@@ -46,14 +45,8 @@ export CLICOLOR=1
 export HISTSIZE=10000
 export HISTFILESIZE=20000
 export HISTCONTROL=ignoreboth:erasedups
-export HISTIGNORE="ls:ll:cd:pwd:exit:clear:history"
+export HISTIGNORE="cd:pwd:exit:clear:history:ls:ll:eza:eza *:z *:zi:zi *"
 export HISTTIMEFORMAT="%F %T "
-
-# Case-insensitive globbing (used in pathname expansion)
-shopt -s nocaseglob
-
-# Autocorrect typos in path names when using `cd`
-shopt -s cdspell
 
 # Append to history file, don't overwrite it
 shopt -s histappend
@@ -89,18 +82,6 @@ eval "$(fzf --bash)"
 
 export BAT_THEME="rose-pine"
 
-# z with fzf integration
-. "/opt/homebrew/etc/profile.d/z.sh"
-unalias z 2>/dev/null
-z() {
-  local dir=$(
-    _z 2>&1 |
-      fzf --height 40% --layout reverse --info inline \
-        --nth 2.. --tac --no-sort --query "$*" \
-        --accept-nth 2..
-  ) && cd "$dir"
-}
-
 #
 # PROMPT
 #
@@ -116,3 +97,6 @@ starship_precmd_user_func="set_win_title"
 
 # nvim was causing problems not existing cleanly
 trap 'tput rmcup; clear' EXIT
+
+# zoxide
+eval "$(zoxide init bash)"

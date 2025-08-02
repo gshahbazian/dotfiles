@@ -3,10 +3,12 @@ background-opacity = 0.96
 cursor-click-to-move = true
 cursor-invert-fg-bg = true
 cursor-style-blink = false
+font-family = "Berkeley Mono"
+font-feature = -calt, -liga, -dlig # berkeley mono ligatures look funny to me
 font-size = 14
 mouse-hide-while-typing = true
 shell-integration-features = no-cursor
 theme = rose-pine
-window-title-font-family = "IBM Plex Mono"
+window-title-font-family = "Berkeley Mono"
 working-directory = /Users/gabe/development
 keybind = super+enter=unbind
