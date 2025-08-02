@@ -9,7 +9,7 @@ export DOTFILES_DIR=$HOME/development/gshahbazian/dotfiles
 
 alias l="eza -la --git --no-user --icons=always"
 alias ll="l"
-alias tree="eza -a --tree --level=2 --git --no-user --icons=always"
+alias tree="eza -a --git-ignore --tree --level=2 --git --no-user --icons=always"
 alias cdd="cd ~/development"
 alias nv="nvim"
 alias ..="cd .."
