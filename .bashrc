@@ -15,7 +15,6 @@ alias nv="nvim"
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
-alias mkdir="mkdir -pv"
 alias h="history"
 alias path='echo -e "${PATH//:/\\n}"'
 
@@ -45,7 +44,7 @@ export CLICOLOR=1
 export HISTSIZE=10000
 export HISTFILESIZE=20000
 export HISTCONTROL=ignoreboth:erasedups
-export HISTIGNORE="cd:pwd:exit:clear:history:ls:ll:eza:eza *:z *:zi:zi *"
+export HISTIGNORE="cd:pwd:exit:clear:history:ls:ll:eza:eza *:z *:zi:zi *:..:...:...."
 export HISTTIMEFORMAT="%F %T "
 
 # Append to history file, don't overwrite it
@@ -96,7 +95,7 @@ function set_win_title() {
 starship_precmd_user_func="set_win_title"
 
 # nvim was causing problems not existing cleanly
-trap 'tput rmcup; clear' EXIT
+trap '[[ -n "$NVIM" ]] && tput rmcup' EXIT
 
 # zoxide
 eval "$(zoxide init bash)"
