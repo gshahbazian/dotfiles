@@ -33,7 +33,7 @@ return {
       preset = {
         keys = {
           { icon = "", key = "s", desc = "[s]ession resume", section = "session" },
-          { icon = "", key = "e", desc = "[e]xplorer", action = ":lua Snacks.explorer({ cwd = LazyVim.root() })" },
+          { icon = "", key = "e", desc = "[e]xplorer", action = "<leader>fE" },
           { icon = "", key = "l", desc = "[l]azy", action = ":Lazy" },
           { icon = "", key = "q", desc = "[q]uit", action = ":qa" },
         },
@@ -58,6 +58,8 @@ return {
     },
   },
   keys = {
+    { "<leader><space>", LazyVim.pick("files", { root = false }), desc = "Find Files (cwd)" },
+    { "<leader>e", "<leader>fE", desc = "Explorer Snacks (cwd)", remap = true },
     {
       "<leader>,",
       function()
@@ -78,4 +80,7 @@ return {
       desc = "Buffers",
     },
   },
+  init = function()
+    vim.api.nvim_set_hl(0, "SnacksDashboardHeader", { fg = "#ea9d34" })
+  end,
 }
