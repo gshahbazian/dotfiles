@@ -20,3 +20,6 @@ format = '[$branch]($style)'
 
 [git_commit]
 style = 'blue'
+
+[fill]
+style = 'green'

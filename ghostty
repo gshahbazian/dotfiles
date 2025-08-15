@@ -1,5 +1,7 @@
-background-blur = true
-background-opacity = 0.96
+# https://ghostty.org/docs/config/reference
+
+# background-blur = true
+# background-opacity = 0.96
 cursor-click-to-move = true
 cursor-invert-fg-bg = true
 cursor-style-blink = false

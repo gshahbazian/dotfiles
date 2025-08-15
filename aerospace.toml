@@ -1,0 +1,169 @@
+# https://nikitabobko.github.io/AeroSpace/guide
+# available commands : https://nikitabobko.github.io/aerospace/commands
+
+after-startup-command = [
+  'exec-and-forget borders active_color=0xfffffaf3 width=6.0 hidpi=on'
+]
+
+# start aerospace at login
+start-at-login = true
+
+# normalizations. see: https://nikitabobko.github.io/aerospace/guide#normalization
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+
+# see: https://nikitabobko.github.io/aerospace/guide#layouts
+# the 'accordion-padding' specifies the size of accordion padding
+# you can set 0 to disable the padding feature
+accordion-padding = 30
+
+# possible values: tiles|accordion
+default-root-container-layout = 'tiles'
+
+# possible values: horizontal|vertical|auto
+# 'auto' means: wide monitor (anything wider than high) gets horizontal orientation,
+#               tall monitor (anything higher than wide) gets vertical orientation
+default-root-container-orientation = 'auto'
+
+# mouse follows focus when focused monitor changes
+# drop it from your config, if you don't like this behavior
+# see https://nikitabobko.github.io/aerospace/guide#on-focus-changed-callbacks
+# see https://nikitabobko.github.io/aerospace/commands#move-mouse
+# fallback value (if you omit the key): on-focused-monitor-changed = []
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+on-focus-changed = ['move-mouse window-lazy-center']
+
+# you can effectively turn off macos "hide application" (cmd-h) feature by toggling this flag
+# useful if you don't use this macos feature, but accidentally hit cmd-h or cmd-alt-h key
+# also see: https://nikitabobko.github.io/aerospace/goodies#disable-hide-app
+automatically-unhide-macos-hidden-apps = false
+
+# possible values: (qwerty|dvorak|colemak)
+# see https://nikitabobko.github.io/aerospace/guide#key-mapping
+[key-mapping]
+  preset = 'qwerty'
+
+# gaps between windows (inner-*) and between monitor edges (outer-*).
+# possible values:
+# - constant:     gaps.outer.top = 8
+# - per monitor:  gaps.outer.top = [{ monitor.main = 16 }, { monitor."some-pattern" = 32 }, 24]
+#                 in this example, 24 is a default value when there is no match.
+#                 monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
+#                 see:
+#                 https://nikitabobko.github.io/aerospace/guide#assign-workspaces-to-monitors
+[gaps]
+  inner.horizontal = 8
+  inner.vertical =   8
+  outer.left =       8
+  outer.bottom =     [{ monitor."lg" = 24 }, 8]
+  outer.top =        8
+  outer.right =      8
+
+# 'main' binding mode declaration
+# see: https://nikitabobko.github.io/aerospace/guide#binding-modes
+# 'main' binding mode must be always presented
+# fallback value (if you omit the key): mode.main.binding = {}
+[mode.main.binding]
+
+  # all possible keys:
+  # - letters.        a, b, c, ..., z
+  # - numbers.        0, 1, 2, ..., 9
+  # - keypad numbers. keypad0, keypad1, keypad2, ..., keypad9
+  # - f-keys.         f1, f2, ..., f20
+  # - special keys.   minus, equal, period, comma, slash, backslash, quote, semicolon,
+  #                   backtick, leftsquarebracket, rightsquarebracket, space, enter, esc,
+  #                   backspace, tab, pageup, pagedown, home, end, forwarddelete,
+  #                   sectionsign (iso keyboards only, european keyboards only)
+  # - keypad special. keypadclear, keypaddecimalmark, keypaddivide, keypadenter, keypadequal,
+  #                   keypadminus, keypadmultiply, keypadplus
+  # - arrows.         left, down, up, right
+
+  # all possible modifiers: cmd, alt, ctrl, shift
+
+  # all possible commands: https://nikitabobko.github.io/aerospace/commands
+
+  # see: https://nikitabobko.github.io/aerospace/commands#layout
+  alt-shift-ctrl-t = 'layout tiles horizontal vertical'
+  alt-shift-ctrl-r = 'layout accordion horizontal vertical'
+  alt-shift-ctrl-e = 'layout floating tiling'
+  alt-shift-ctrl-w = 'fullscreen'
+
+  # see: https://nikitabobko.github.io/aerospace/commands#focus
+  alt-shift-ctrl-h = 'focus left'
+  alt-shift-ctrl-j = 'focus down'
+  alt-shift-ctrl-k = 'focus up'
+  alt-shift-ctrl-l = 'focus right'
+
+  # see: https://nikitabobko.github.io/aerospace/commands#move
+  alt-shift-ctrl-a = 'move left'
+  alt-shift-ctrl-s = 'move down'
+  alt-shift-ctrl-d = 'move up'
+  alt-shift-ctrl-f = 'move right'
+
+  # see: https://nikitabobko.github.io/aerospace/commands#resize
+  alt-shift-ctrl-minus = 'resize smart -50'
+  alt-shift-ctrl-equal = 'resize smart +50'
+
+  # see: https://nikitabobko.github.io/aerospace/commands#workspace
+  alt-shift-ctrl-1 = 'workspace 1'
+  alt-shift-ctrl-2 = 'workspace 2'
+  alt-shift-ctrl-3 = 'workspace 3'
+  alt-shift-ctrl-4 = 'workspace 4'
+  alt-shift-ctrl-g = 'workspace G'
+
+  # see: https://nikitabobko.github.io/aerospace/commands#move-node-to-workspace
+  alt-shift-1 = 'move-node-to-workspace 1 --focus-follows-window'
+  alt-shift-2 = 'move-node-to-workspace 2 --focus-follows-window'
+  alt-shift-3 = 'move-node-to-workspace 3 --focus-follows-window'
+  alt-shift-4 = 'move-node-to-workspace 4 --focus-follows-window'
+  alt-shift-g = 'move-node-to-workspace G --focus-follows-window'
+
+  alt-shift-ctrl-v = 'join-with left'
+  alt-shift-ctrl-b = 'join-with right'
+
+  # see: https://nikitabobko.github.io/aerospace/commands#workspace-back-and-forth
+  alt-shift-ctrl-i = 'workspace-back-and-forth'
+  alt-shift-ctrl-o = 'focus-back-and-forth'
+
+  # see: https://nikitabobko.github.io/aerospace/commands#mode
+  alt-shift-semicolon = 'mode service'
+
+  cmd-h = [] # Disable "hide application"
+  cmd-alt-h = [] # Disable "hide others"
+
+# 'service' binding mode declaration.
+# see: https://nikitabobko.github.io/aerospace/guide#binding-modes
+[mode.service.binding]
+  esc = ['reload-config', 'mode main']
+  r = ['flatten-workspace-tree', 'mode main'] # reset layout
+  backspace = ['close-all-windows-but-current', 'mode main']
+
+  # sticky is not yet supported https://github.com/nikitabobko/aerospace/issues/2
+  #s = ['layout sticky tiling', 'mode main']
+
+[[on-window-detected]]
+  check-further-callbacks = true
+  run = 'layout floating'
+
+[[on-window-detected]]
+  if.window-title-regex-substring = 'picture in picture'
+  run = 'layout floating'
+
+[[on-window-detected]]
+  if.app-id = 'com.mitchellh.ghostty'
+  run = 'layout tiling'
+
+[[on-window-detected]]
+  if.app-id = 'com.google.Chrome'
+  run = 'layout tiling'
+
+[[on-window-detected]]
+  if.app-id = 'com.microsoft.VSCode'
+  run = 'layout tiling'
+
+[[on-window-detected]]
+  if.app-id = 'dev.zed.Zed'
+  run = 'layout tiling'
+
+[workspace-to-monitor-force-assignment]
+  G = ['secondary', 'main']
