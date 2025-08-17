@@ -141,29 +141,10 @@ automatically-unhide-macos-hidden-apps = false
   # sticky is not yet supported https://github.com/nikitabobko/aerospace/issues/2
   #s = ['layout sticky tiling', 'mode main']
 
+# float all but the apps in the negative regex
 [[on-window-detected]]
-  check-further-callbacks = true
+  if.app-name-regex-substring = '^(?!.*\b(?:ghostty|chrome|code|zed)\b).+$'
   run = 'layout floating'
-
-[[on-window-detected]]
-  if.window-title-regex-substring = 'picture in picture'
-  run = 'layout floating'
-
-[[on-window-detected]]
-  if.app-id = 'com.mitchellh.ghostty'
-  run = 'layout tiling'
-
-[[on-window-detected]]
-  if.app-id = 'com.google.Chrome'
-  run = 'layout tiling'
-
-[[on-window-detected]]
-  if.app-id = 'com.microsoft.VSCode'
-  run = 'layout tiling'
-
-[[on-window-detected]]
-  if.app-id = 'dev.zed.Zed'
-  run = 'layout tiling'
 
 [workspace-to-monitor-force-assignment]
   G = ['secondary', 'main']
