@@ -25,12 +25,6 @@ alias path='echo -e "${PATH//:/\\n}"'
 export GOPATH=$HOME/development/go
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$DOTFILES_DIR/bin:$GOROOT/bin:$GOPATH/bin"
 
-# https://mac.install.guide/ruby/13.html
-if [ -d "/opt/homebrew/opt/ruby/bin" ]; then
-  export PATH=/opt/homebrew/opt/ruby/bin:$PATH
-  export PATH=$(gem environment gemdir)/bin:$PATH
-fi
-
 # Add Homebrew env vars.
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
