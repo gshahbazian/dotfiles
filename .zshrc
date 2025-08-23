@@ -3,6 +3,7 @@ export DOTFILES_DIR="$HOME/development/gshahbazian/dotfiles"
 export EDITOR="nvim"
 export CLICOLOR=1
 
+fpath+=("$HOME/.zfunc")
 autoload -Uz compinit
 compinit
 
@@ -24,7 +25,7 @@ alias path='printf "%s\n" $path'
 # path
 # -----------------------
 export GOPATH="$HOME/development/go"
-export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/.local/bin:$HOME/.npm-global/bin:$DOTFILES_DIR/bin:$GOROOT/bin:$GOPATH/bin"
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/.local/bin:$HOME/.npm-global/bin:$DOTFILES_DIR/bin:$GOPATH/bin"
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 eval "$(fnm env --log-level=error --use-on-cd --version-file-strategy=recursive --corepack-enabled --shell zsh)"
@@ -49,8 +50,6 @@ setopt hist_ignore_space       # ignore commands starting with a space
 # -----------------------
 # completions
 # -----------------------
-fpath+=("$HOME/.zfunc")
-
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' menu select
 zstyle ':completion:*' list-colors ''
@@ -69,7 +68,7 @@ export FZF_ALT_C_OPTS="--preview-window=nohidden --layout=reverse"
 export FZF_COMPLETION_OPTS="--preview-window=nohidden --layout=reverse --walker-skip=.git,node_modules"
 export FZF_COMPLETION_PATH_OPTS="--walker=file,dir,follow,hidden"
 export FZF_COMPLETION_DIR_OPTS="--walker=dir,follow,hidden"
-eval "$(fzf --zsh)"
+source <(fzf --zsh)
 
 export BAT_THEME="rose-pine"
 
@@ -94,7 +93,6 @@ eval "$(zoxide init zsh)"
 # keybinds
 # -----------------------
 bindkey -e                                   # emacs mode (default, explicit)
-bindkey '^I' menu-complete                   # Tab cycles choices
 bindkey '^[[A' history-beginning-search-backward
 bindkey '^[[B' history-beginning-search-forward
 
