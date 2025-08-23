@@ -3,34 +3,6 @@ export DOTFILES_DIR="$HOME/development/gshahbazian/dotfiles"
 export EDITOR="nvim"
 export CLICOLOR=1
 
-fpath+=("$HOME/.zfunc")
-autoload -Uz compinit
-compinit
-
-# -----------------------
-# aliases
-# -----------------------
-alias l='eza -la --git --no-user --icons=always'
-alias ll='l'
-alias tree='eza -a --git-ignore --tree --level=2 --git --no-user --icons=always'
-alias cdd='cd ~/development'
-alias nv='nvim'
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias h='history'
-alias path='printf "%s\n" $path'
-
-# -----------------------
-# path
-# -----------------------
-export GOPATH="$HOME/development/go"
-export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/.local/bin:$HOME/.npm-global/bin:$DOTFILES_DIR/bin:$GOPATH/bin"
-
-eval "$(/opt/homebrew/bin/brew shellenv)"
-eval "$(fnm env --log-level=error --use-on-cd --version-file-strategy=recursive --corepack-enabled --shell zsh)"
-eval "$(uv generate-shell-completion zsh)"
-
 # -----------------------
 # history
 # -----------------------
@@ -57,6 +29,34 @@ zstyle ':completion:*' list-colors ''
 setopt correct            # command spelling correction
 setopt extended_glob      # like extglob
 unsetopt nomatch          # don't error on unmatched globs
+
+fpath+=("$HOME/.zfunc")
+
+# -----------------------
+# aliases
+# -----------------------
+alias l='eza -la --git --no-user --icons=always'
+alias ll='l'
+alias tree='eza -a --git-ignore --tree --level=2 --git --no-user --icons=always'
+alias cdd='cd ~/development'
+alias nv='nvim'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias h='history'
+alias path='printf "%s\n" $path'
+
+# -----------------------
+# path
+# -----------------------
+export GOPATH="$HOME/development/go"
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/.local/bin:$HOME/.npm-global/bin:$DOTFILES_DIR/bin:$GOPATH/bin"
+
+eval "$(/opt/homebrew/bin/brew shellenv)"
+autoload -Uz compinit && compinit
+
+eval "$(fnm env --log-level=error --use-on-cd --version-file-strategy=recursive --corepack-enabled --shell zsh)"
+eval "$(uv generate-shell-completion zsh)"
 
 # -----------------------
 # fzf
@@ -95,7 +95,6 @@ eval "$(zoxide init zsh)"
 bindkey -e                                   # emacs mode (default, explicit)
 bindkey '^[[A' history-beginning-search-backward
 bindkey '^[[B' history-beginning-search-forward
-
 
 # -----------------------
 # plugins
