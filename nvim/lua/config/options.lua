@@ -11,6 +11,9 @@ vim.opt.conceallevel = 0
 -- disable prettier if prittierrc not found
 vim.g.lazyvim_prettier_needs_config = true
 
+-- dont format with eslint
+vim.g.lazyvim_eslint_auto_format = false
+
 -- disable using the system clipboard (remapped to leader+y)
 vim.opt.clipboard = ""
 
@@ -20,4 +23,4 @@ if vim.g.vscode then
 end
 
 -- disable undofile
-vim.opt.undofile = false
+-- vim.opt.undofile = false
