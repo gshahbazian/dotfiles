@@ -10,7 +10,7 @@ HISTSIZE=10000
 SAVEHIST=20000
 HISTFILE="$HOME/.zsh_history"
 
-setopt share_history           # share across sessions
+# setopt share_history           # share across sessions
 setopt append_history          # append, don't clobber
 setopt inc_append_history      # write immediately
 setopt extended_history        # timestamps etc.
