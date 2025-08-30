@@ -77,13 +77,6 @@ export BAT_THEME="rose-pine"
 # -----------------------
 eval "$(starship init zsh)"
 
-function set_win_title() {
-  local path="$PWD"
-  [[ "$path" == "$HOME"* ]] && path="~${path#$HOME}"
-  print -n "\033]0;$path\007"
-}
-starship_precmd_user_func="set_win_title"
-
 # -----------------------
 # zoxide
 # -----------------------
