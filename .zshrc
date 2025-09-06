@@ -10,7 +10,6 @@ HISTSIZE=10000
 SAVEHIST=20000
 HISTFILE="$HOME/.zsh_history"
 
-# setopt share_history           # share across sessions
 setopt append_history          # append, don't clobber
 setopt inc_append_history      # write immediately
 setopt extended_history        # timestamps etc.
@@ -26,25 +25,24 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' menu select
 zstyle ':completion:*' list-colors ''
 
-setopt correct            # command spelling correction
-setopt extended_glob      # like extglob
-unsetopt nomatch          # don't error on unmatched globs
+setopt correct
+setopt extended_glob
+unsetopt nomatch
 
 fpath+=("$HOME/.zfunc")
 
 # -----------------------
 # aliases
 # -----------------------
-alias l='eza -la --git --no-user --icons=always'
-alias ll='l'
+alias ll='eza -la --git --no-user --icons=always'
 alias tree='eza -a --git-ignore --tree --level=2 --git --no-user --icons=always'
 alias cdd='cd ~/development'
 alias nv='nvim'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-alias h='history'
 alias path='printf "%s\n" $path'
+alias viewpr='gh pr view --web'
 
 # -----------------------
 # path
@@ -85,7 +83,7 @@ eval "$(zoxide init zsh)"
 # -----------------------
 # keybinds
 # -----------------------
-bindkey -e                                   # emacs mode (default, explicit)
+bindkey -e
 bindkey '^[[A' history-beginning-search-backward
 bindkey '^[[B' history-beginning-search-forward
 

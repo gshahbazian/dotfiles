@@ -22,12 +22,19 @@ vim.keymap.set({ "n", "v", "x" }, "<leader>y", '"+y', { silent = true, desc = "C
 vim.keymap.set({ "n", "x" }, "<leader>p", '"+p', { desc = "Paste from system clipboard after the cursor position" })
 vim.keymap.set({ "n", "x" }, "<leader>P", '"+P', { desc = "Paste from system clipboard before the cursor position" })
 
--- cmd+c not working in ghostty : (
--- vim.keymap.set("v", "<D-c>", '"+y', { desc = "Copy to system clipboard (Cmd+C)" })
-
 -- cmd+s to save
 vim.keymap.set("n", "<D-s>", "<cmd>w<cr>", { silent = true, desc = "Save" })
 vim.keymap.set("i", "<D-s>", "<Esc><cmd>w<cr>", { silent = true, desc = "Save" })
+
+-- center on some jumps
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
+vim.keymap.set("n", "n", "nzz")
+vim.keymap.set("n", "N", "Nzz")
+vim.keymap.set("n", "*", "*zzzv")
+vim.keymap.set("n", "#", "#zzzv")
+vim.keymap.set("n", "G", "Gzz")
+vim.keymap.set("n", "%", "%zz")
 
 -- open all git modified files
 vim.keymap.set("n", "<leader>gF", function()
@@ -78,3 +85,50 @@ end, { desc = "Copy file path" })
 vim.keymap.set("n", "<leader>jv", function()
   vim.fn.jobstart({ "code", "." }, { detach = true })
 end, { silent = true, desc = "Open in VSCode" })
+
+-- jank function to center some plugin keymaps jump
+local function add_centering_to_keymap(mode, key, desc_suffix)
+  local original = vim.fn.maparg(key, mode, false, true)
+  if vim.tbl_isempty(original) then
+    return
+  end
+
+  vim.keymap.set(mode, key, function()
+    if original.callback then
+      original.callback()
+    elseif original.rhs then
+      if original.noremap == 1 then
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(original.rhs, true, false, true), "n", false)
+      else
+        vim.cmd("normal! " .. original.rhs)
+      end
+    end
+
+    vim.cmd("normal! zz")
+  end, {
+    desc = original.desc and (original.desc .. desc_suffix) or ("Original " .. key .. desc_suffix),
+    silent = original.silent == 1,
+    buffer = original.buffer ~= 0 and original.buffer or nil,
+  })
+end
+
+-- Function to batch add centering to multiple keymaps
+local function add_centering_to_keymaps(keymaps, desc_suffix)
+  desc_suffix = desc_suffix or " (centered)"
+
+  for _, keymap in ipairs(keymaps) do
+    local mode = keymap.mode or "n"
+    local key = keymap.key
+    add_centering_to_keymap(mode, key, desc_suffix)
+  end
+end
+
+-- Usage: Add centering to diagnostic and navigation keymaps
+add_centering_to_keymaps({
+  { key = "]e" },
+  { key = "[e" },
+  { key = "]d" },
+  { key = "[d" },
+  { key = "]h" },
+  { key = "[h" },
+})
