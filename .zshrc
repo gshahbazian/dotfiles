@@ -35,7 +35,7 @@ fpath+=("$HOME/.zfunc")
 # aliases
 # -----------------------
 alias ll='eza -la --git --no-user --icons=always'
-alias tree='eza -a --git-ignore --tree --level=2 --git --no-user --icons=always'
+alias tree='eza -a --git-ignore --tree --level=2 --icons=always'
 alias cdd='cd ~/development'
 alias nv='nvim'
 alias ..='cd ..'
@@ -43,6 +43,7 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias path='printf "%s\n" $path'
 alias viewpr='gh pr view --web'
+alias p='pnpm'
 
 # -----------------------
 # path
@@ -59,8 +60,19 @@ eval "$(uv generate-shell-completion zsh)"
 # -----------------------
 # fzf
 # -----------------------
-show_file_or_dir_preview='if [ -d {} ]; then eza --tree --level=2 --git --no-user --icons=always {}; else bat --style=numbers --color=always --line-range=:501 {}; fi'
-export FZF_DEFAULT_OPTS="--style=full --bind='ctrl-/:toggle-preview' --preview-window=hidden --preview='$show_file_or_dir_preview'"
+show_file_or_dir_preview='if [ -d {} ]; then eza --tree --level=2 --icons=always {}; else bat --style=numbers --color=always --line-range=:501 {}; fi'
+
+# https://github.com/rose-pine/fzf
+export FZF_DEFAULT_OPTS="
+  --style=full
+  --bind='ctrl-/:toggle-preview'
+  --preview-window=hidden
+  --preview='$show_file_or_dir_preview'
+  --color=fg:#908caa,bg:#191724,hl:#ebbcba
+	--color=fg+:#e0def4,bg+:#26233a,hl+:#ebbcba
+	--color=border:#403d52,header:#31748f,gutter:#191724
+	--color=spinner:#f6c177,info:#9ccfd8
+	--color=pointer:#c4a7e7,marker:#eb6f92,prompt:#908caa"
 export FZF_CTRL_T_OPTS="--preview-window=nohidden --layout=reverse"
 export FZF_ALT_C_OPTS="--preview-window=nohidden --layout=reverse"
 export FZF_COMPLETION_OPTS="--preview-window=nohidden --layout=reverse --walker-skip=.git,node_modules"
