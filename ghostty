@@ -1,7 +1,6 @@
 # https://ghostty.org/docs/config/reference
 
 cursor-click-to-move = true
-cursor-invert-fg-bg = true
 cursor-style-blink = false
 font-family = "Berkeley Mono"
 font-feature = -calt, -liga, -dlig # berkeley mono ligatures look funny to me
@@ -12,6 +11,6 @@ keybind = page_down=scroll_page_down
 mouse-hide-while-typing = true
 shell-integration-features = no-cursor
 split-divider-color = #524f67
-theme = rose-pine
+theme = Rose Pine
 window-title-font-family = "Berkeley Mono"
 working-directory = /Users/gabe/development
