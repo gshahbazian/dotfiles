@@ -5,9 +5,9 @@ cursor-style-blink = false
 font-family = "Berkeley Mono"
 font-feature = -calt, -liga, -dlig # berkeley mono ligatures look funny to me
 font-size = 14
-keybind = super+enter=unbind
-keybind = page_up=scroll_page_up
 keybind = page_down=scroll_page_down
+keybind = page_up=scroll_page_up
+keybind = super+enter=unbind
 mouse-hide-while-typing = true
 shell-integration-features = no-cursor
 split-divider-color = #524f67
