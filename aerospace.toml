@@ -79,6 +79,7 @@ automatically-unhide-macos-hidden-apps = false
   # - arrows.         left, down, up, right
 
   # all possible modifiers: cmd, alt, ctrl, shift
+  # MEH key = alt-shift-ctrl
 
   # all possible commands: https://nikitabobko.github.io/aerospace/commands
 
@@ -95,10 +96,10 @@ automatically-unhide-macos-hidden-apps = false
   alt-shift-ctrl-l = 'focus right'
 
   # see: https://nikitabobko.github.io/aerospace/commands#move
-  alt-shift-ctrl-a = 'move left'
-  alt-shift-ctrl-s = 'move down'
-  alt-shift-ctrl-d = 'move up'
-  alt-shift-ctrl-f = 'move right'
+  alt-shift-a = 'move left'
+  alt-shift-s = 'move down'
+  alt-shift-d = 'move up'
+  alt-shift-f = 'move right'
 
   # see: https://nikitabobko.github.io/aerospace/commands#resize
   alt-shift-ctrl-minus = 'resize smart -50'
