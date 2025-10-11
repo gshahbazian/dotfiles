@@ -49,7 +49,14 @@ alias p='pnpm'
 # path
 # -----------------------
 export GOPATH="$HOME/development/go"
-export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/.local/bin:$HOME/.npm-global/bin:$DOTFILES_DIR/bin:$GOPATH/bin"
+typeset -U path PATH
+path=(
+  $DOTFILES_DIR/bin
+  $HOME/.npm-global/bin
+  $GOPATH/bin
+  $HOME/.local/bin
+  $path
+)
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 autoload -Uz compinit && compinit

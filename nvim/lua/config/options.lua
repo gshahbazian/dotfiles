@@ -21,3 +21,6 @@ vim.opt.clipboard = ""
 if vim.g.vscode then
   vim.opt.showmode = true
 end
+
+-- switch python lsp to basedpyright
+vim.g.lazyvim_python_lsp = "basedpyright"

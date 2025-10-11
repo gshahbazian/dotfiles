@@ -36,6 +36,10 @@ vim.keymap.set("n", "#", "#zzzv")
 vim.keymap.set("n", "G", "Gzz")
 vim.keymap.set("n", "%", "%zz")
 
+-- change macro keys
+vim.keymap.set("n", "q", "<nop>", { silent = true })
+vim.keymap.set("n", "<C-M-q>", "q", { desc = "Record macro" })
+
 -- open all git modified files
 vim.keymap.set("n", "<leader>gF", function()
   local cwd = vim.fn.getcwd()

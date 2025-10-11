@@ -50,12 +50,12 @@ automatically-unhide-macos-hidden-apps = false
 #                 in this example, 24 is a default value when there is no match.
 #                 monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
 #                 see:
-#                 https://nikitabobko.github.io/aerospace/guide#assign-workspaces-to-monitors
+#                 https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
 [gaps]
   inner.horizontal = 8
   inner.vertical =   8
   outer.left =       8
-  outer.bottom =     [{ monitor."lg" = 32 }, 8]
+  outer.bottom =     [{ monitor."pa32qcv" = 32 }, 8]
   outer.top =        8
   outer.right =      8
 
