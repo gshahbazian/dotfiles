@@ -144,12 +144,15 @@ automatically-unhide-macos-hidden-apps = false
   #s = ['layout sticky tiling', 'mode main']
 
 [[on-window-detected]]
+  if.window-title-regex-substring = 'devtools'
+  run = ['layout floating']
+
+[[on-window-detected]]
   if.window-title-regex-substring = 'keymapp'
   run = ['layout floating', 'move-node-to-workspace G']
 
 # float all but the apps in the negative regex
 [[on-window-detected]]
-  # if.app-name-regex-substring = '^(?!.*\b(?:ghostty|chrome|code|zed)\b).+$'
   if.app-name-regex-substring = '^(?!.*\b(?:ghostty|chrome)\b).+$'
   run = 'layout floating'
 
