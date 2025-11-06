@@ -117,6 +117,10 @@ if vim.g.vscode then
     vscode.action("editor.action.goToReferences")
   end, { desc = "Go to references" })
 
+  vim.keymap.set("n", "<leader>ca", function()
+    vscode.action("editor.action.quickFix")
+  end, { desc = "Code actions" })
+
   -- quick close tab
   vim.keymap.set("n", "<leader><BS>", function()
     vscode.action("workbench.action.closeActiveEditor")
