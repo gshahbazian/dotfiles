@@ -7,11 +7,6 @@ vim.keymap.set("n", "<leader>sf", function()
   Snacks.picker.grep({ root = false, args = { "-F" } })
 end, { silent = true, desc = "String match" })
 
--- quick delete buffer
-vim.keymap.set("n", "<leader><BS>", function()
-  Snacks.bufdelete()
-end, { silent = true, desc = "Close Buffer" })
-
 -- delete all buffers
 vim.keymap.set("n", "<leader>ba", function()
   Snacks.bufdelete.all()
@@ -89,3 +84,46 @@ end, { desc = "Copy file path" })
 vim.keymap.set("n", "<leader>jv", function()
   vim.fn.jobstart({ "code", "." }, { detach = true })
 end, { silent = true, desc = "Open in VSCode" })
+
+-- vscode specific keymaps
+if vim.g.vscode then
+  local vscode = require("vscode")
+
+  vim.keymap.set("n", "]h", function()
+    vscode.action("workbench.action.editor.nextChange")
+  end, { desc = "Next git hunk" })
+
+  vim.keymap.set("n", "[h", function()
+    vscode.action("workbench.action.editor.previousChange")
+  end, { desc = "Previous git hunk" })
+
+  vim.keymap.set("n", "]e", function()
+    vscode.action("editor.action.marker.next")
+  end, { desc = "Next error" })
+
+  vim.keymap.set("n", "[e", function()
+    vscode.action("editor.action.marker.prev")
+  end, { desc = "Previous error" })
+
+  vim.keymap.set("n", "]d", function()
+    vscode.action("editor.action.marker.next")
+  end, { desc = "Next diagnostic" })
+
+  vim.keymap.set("n", "[d", function()
+    vscode.action("editor.action.marker.prev")
+  end, { desc = "Previous diagnostic" })
+
+  vim.keymap.set("n", "gr", function()
+    vscode.action("editor.action.goToReferences")
+  end, { desc = "Go to references" })
+
+  -- quick close tab
+  vim.keymap.set("n", "<leader><BS>", function()
+    vscode.action("workbench.action.closeActiveEditor")
+  end, { desc = "Close tab" })
+else
+  -- quick delete buffer
+  vim.keymap.set("n", "<leader><BS>", function()
+    Snacks.bufdelete()
+  end, { silent = true, desc = "Close Buffer" })
+end
