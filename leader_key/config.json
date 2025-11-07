@@ -1,0 +1,206 @@
+{
+  "actions" : [
+    {
+      "actions" : [
+        {
+          "key" : "j",
+          "type" : "folder",
+          "value" : "/Users/gabe/Downloads"
+        },
+        {
+          "key" : "k",
+          "type" : "folder",
+          "value" : "/Users/gabe/Desktop"
+        },
+        {
+          "key" : "l",
+          "type" : "folder",
+          "value" : "/Users/gabe/Documents"
+        },
+        {
+          "key" : "h",
+          "type" : "folder",
+          "value" : "/Users/gabe/development"
+        },
+        {
+          "key" : "g",
+          "label" : "github",
+          "type" : "url",
+          "value" : "https://github.com/"
+        },
+        {
+          "key" : "e",
+          "label" : "gmail",
+          "type" : "url",
+          "value" : "https://mail.google.com/mail/u/0/"
+        },
+        {
+          "key" : "y",
+          "label" : "youtube",
+          "type" : "url",
+          "value" : "https://www.youtube.com/"
+        },
+        {
+          "key" : "s",
+          "label" : "slack",
+          "type" : "url",
+          "value" : "https://slack.com/"
+        },
+        {
+          "key" : ";",
+          "label" : "chatgpt",
+          "type" : "url",
+          "value" : "https://chatgpt.com/"
+        },
+        {
+          "key" : "n",
+          "label" : "notion",
+          "type" : "url",
+          "value" : "https://notion.so/"
+        }
+      ],
+      "key" : "l",
+      "label" : "quicklinks",
+      "type" : "group"
+    },
+    {
+      "actions" : [
+        {
+          "key" : "s",
+          "type" : "application",
+          "value" : "/Applications/Spotify.app"
+        },
+        {
+          "key" : "z",
+          "type" : "application",
+          "value" : "/Applications/Zed.app"
+        },
+        {
+          "key" : "v",
+          "type" : "application",
+          "value" : "/Applications/Visual Studio Code.app"
+        },
+        {
+          "key" : "x",
+          "type" : "application",
+          "value" : "/Applications/Xcode.app"
+        },
+        {
+          "key" : "t",
+          "type" : "application",
+          "value" : "/Applications/TablePlus.app"
+        },
+        {
+          "key" : "o",
+          "type" : "application",
+          "value" : "/Applications/OrbStack.app"
+        }
+      ],
+      "key" : "a",
+      "label" : "apps",
+      "type" : "group"
+    },
+    {
+      "actions" : [
+        {
+          "actions" : [
+            {
+              "key" : "1",
+              "label" : "RAND",
+              "type" : "command",
+              "value" : "/opt/homebrew/bin/aerospace move-node-to-workspace 1 --focus-follows-window"
+            },
+            {
+              "key" : "2",
+              "label" : "INFL",
+              "type" : "command",
+              "value" : "/opt/homebrew/bin/aerospace move-node-to-workspace 2 --focus-follows-window"
+            },
+            {
+              "key" : "3",
+              "label" : "CHROMA",
+              "type" : "command",
+              "value" : "/opt/homebrew/bin/aerospace move-node-to-workspace 3 --focus-follows-window"
+            },
+            {
+              "key" : "4",
+              "label" : "OTHER",
+              "type" : "command",
+              "value" : "/opt/homebrew/bin/aerospace move-node-to-workspace 4 --focus-follows-window"
+            },
+            {
+              "key" : "g",
+              "label" : "G",
+              "type" : "command",
+              "value" : "/opt/homebrew/bin/aerospace move-node-to-workspace G --focus-follows-window"
+            }
+          ],
+          "key" : "m",
+          "label" : "move",
+          "type" : "group"
+        },
+        {
+          "actions" : [
+            {
+              "key" : "h",
+              "type" : "command",
+              "value" : "/opt/homebrew/bin/aerospace join-with left"
+            },
+            {
+              "key" : "j",
+              "type" : "command",
+              "value" : "/opt/homebrew/bin/aerospace join-with down"
+            },
+            {
+              "key" : "k",
+              "type" : "command",
+              "value" : "/opt/homebrew/bin/aerospace join-with up"
+            },
+            {
+              "key" : "l",
+              "type" : "command",
+              "value" : "/opt/homebrew/bin/aerospace join-with right"
+            }
+          ],
+          "key" : "j",
+          "label" : "join",
+          "type" : "group"
+        },
+        {
+          "key" : "e",
+          "label" : "floating toggle",
+          "type" : "command",
+          "value" : "/opt/homebrew/bin/aerospace layout floating tiling"
+        },
+        {
+          "key" : "r",
+          "label" : "accordion toggle",
+          "type" : "command",
+          "value" : "/opt/homebrew/bin/aerospace layout accordion horizontal vertical"
+        },
+        {
+          "key" : "t",
+          "label" : "tile toggle",
+          "type" : "command",
+          "value" : "/opt/homebrew/bin/aerospace layout tiles horizontal vertical"
+        },
+        {
+          "key" : "b",
+          "label" : "balance sizes",
+          "type" : "command",
+          "value" : "/opt/homebrew/bin/aerospace balance-sizes"
+        },
+        {
+          "key" : "w",
+          "label" : "fullscreen toggle",
+          "type" : "command",
+          "value" : "/opt/homebrew/bin/aerospace fullscreen"
+        }
+      ],
+      "key" : "w",
+      "label" : "aerospace",
+      "type" : "group"
+    }
+  ],
+  "type" : "group"
+}
