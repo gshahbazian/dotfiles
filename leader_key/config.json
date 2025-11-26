@@ -29,34 +29,16 @@
           "value" : "https://github.com/"
         },
         {
-          "key" : "e",
-          "label" : "gmail",
-          "type" : "url",
-          "value" : "https://mail.google.com/mail/u/0/"
-        },
-        {
           "key" : "y",
           "label" : "youtube",
           "type" : "url",
           "value" : "https://www.youtube.com/"
         },
         {
-          "key" : "s",
-          "label" : "slack",
-          "type" : "url",
-          "value" : "https://slack.com/"
-        },
-        {
           "key" : ";",
           "label" : "chatgpt",
           "type" : "url",
           "value" : "https://chatgpt.com/"
-        },
-        {
-          "key" : "n",
-          "label" : "notion",
-          "type" : "url",
-          "value" : "https://notion.so/"
         }
       ],
       "key" : "l",
@@ -81,9 +63,9 @@
           "value" : "/Applications/Visual Studio Code.app"
         },
         {
-          "key" : "x",
+          "key" : "c",
           "type" : "application",
-          "value" : "/Applications/Xcode.app"
+          "value" : "/Applications/Cursor.app"
         },
         {
           "key" : "t",
