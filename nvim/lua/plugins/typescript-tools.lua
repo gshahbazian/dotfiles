@@ -6,12 +6,12 @@ return {
       settings = {
         tsserver_file_preferences = {
           importModuleSpecifierPreference = "non-relative",
-          includeInlayParameterNameHints = "literals",
-          includeInlayFunctionParameterTypeHints = true,
-          includeInlayFunctionLikeReturnTypeHints = true,
-          includeInlayVariableTypeHints = false,
-          includeInlayPropertyDeclarationTypeHints = true,
-          includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+          -- includeInlayParameterNameHints = "literals",
+          -- includeInlayFunctionParameterTypeHints = true,
+          -- includeInlayFunctionLikeReturnTypeHints = true,
+          -- includeInlayVariableTypeHints = false,
+          -- includeInlayPropertyDeclarationTypeHints = true,
+          -- includeInlayParameterNameHintsWhenArgumentMatchesName = false,
         },
       },
     },

@@ -85,6 +85,11 @@ vim.keymap.set("n", "<leader>jv", function()
   vim.fn.jobstart({ "code", "." }, { detach = true })
 end, { silent = true, desc = "Open in VSCode" })
 
+-- open in cursor
+vim.keymap.set("n", "<leader>jc", function()
+  vim.fn.jobstart({ "cursor", "." }, { detach = true })
+end, { silent = true, desc = "Open in Cursor" })
+
 -- vscode specific keymaps
 if vim.g.vscode then
   local vscode = require("vscode")
@@ -125,6 +130,11 @@ if vim.g.vscode then
   vim.keymap.set("n", "<leader><BS>", function()
     vscode.action("workbench.action.closeActiveEditor")
   end, { desc = "Close tab" })
+
+  -- toggle file explorer
+  vim.keymap.set("n", "<leader>e", function()
+    vscode.action("workbench.action.toggleSidebarVisibility")
+  end, { desc = "Toggle file explorer" })
 else
   -- quick delete buffer
   vim.keymap.set("n", "<leader><BS>", function()
