@@ -12,6 +12,11 @@ vim.keymap.set("n", "<leader>ba", function()
   Snacks.bufdelete.all()
 end, { desc = "Delete All Buffers" })
 
+-- quick delete buffer
+vim.keymap.set("n", "<leader><BS>", function()
+  Snacks.bufdelete()
+end, { silent = true, desc = "Close Buffer" })
+
 -- yank and paste to system clipboard
 vim.keymap.set({ "n", "v", "x" }, "<leader>y", '"+y', { silent = true, desc = "Copy to system clipboard" })
 vim.keymap.set({ "n", "x" }, "<leader>p", '"+p', { desc = "Paste from system clipboard after the cursor position" })
@@ -135,9 +140,4 @@ if vim.g.vscode then
   vim.keymap.set("n", "<leader>e", function()
     vscode.action("workbench.action.toggleSidebarVisibility")
   end, { desc = "Toggle file explorer" })
-else
-  -- quick delete buffer
-  vim.keymap.set("n", "<leader><BS>", function()
-    Snacks.bufdelete()
-  end, { silent = true, desc = "Close Buffer" })
 end

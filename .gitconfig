@@ -16,8 +16,8 @@
 	mm = switch main
 	cb = switch -c
 	amend = commit --amend --no-edit
-	aliases = config --get-regexp alias
 	copy-hash = !git rev-parse --short HEAD | pbcopy
+  aliases = config --get-regexp alias
 [push]
 	autoSetupRemote = true
 [credential "https://github.com"]
