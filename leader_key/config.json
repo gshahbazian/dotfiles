@@ -177,6 +177,12 @@
           "label" : "fullscreen toggle",
           "type" : "command",
           "value" : "/opt/homebrew/bin/aerospace fullscreen"
+        },
+        {
+          "key" : "/",
+          "label" : "reset layout",
+          "type" : "command",
+          "value" : "/opt/homebrew/bin/aerospace flatten-workspace-tree"
         }
       ],
       "key" : "w",
