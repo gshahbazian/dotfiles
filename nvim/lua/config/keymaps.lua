@@ -40,6 +40,9 @@ vim.keymap.set("n", "%", "%zz")
 vim.keymap.set("n", "q", "<nop>", { silent = true })
 vim.keymap.set("n", "<C-M-q>", "q", { desc = "Record macro" })
 
+-- stop ctrl-z from suspending
+vim.api.nvim_set_keymap("n", "<c-z>", "<nop>", { noremap = true, silent = true })
+
 -- open all git modified files
 vim.keymap.set("n", "<leader>gF", function()
   local cwd = vim.fn.getcwd()
@@ -94,6 +97,12 @@ end, { silent = true, desc = "Open in VSCode" })
 vim.keymap.set("n", "<leader>jc", function()
   vim.fn.jobstart({ "cursor", "." }, { detach = true })
 end, { silent = true, desc = "Open in Cursor" })
+
+-- yank with path
+local yank = require("custom.yank")
+vim.keymap.set("v", "<leader>jy", function()
+  yank.yank_visual_with_path(yank.get_buffer_cwd_relative(), "relative")
+end, { desc = "[Y]ank selection with [R]elative path" })
 
 -- vscode specific keymaps
 if vim.g.vscode then
