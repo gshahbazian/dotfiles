@@ -145,6 +145,11 @@ if vim.g.vscode then
     vscode.action("workbench.action.closeActiveEditor")
   end, { desc = "Close tab" })
 
+  -- close all tabs except current
+  vim.keymap.set("n", "<leader>bo", function()
+    vscode.action("workbench.action.closeOtherEditors")
+  end, { desc = "Close other tabs" })
+
   -- toggle file explorer
   vim.keymap.set("n", "<leader>e", function()
     vscode.action("workbench.action.toggleSidebarVisibility")
