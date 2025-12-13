@@ -85,17 +85,18 @@ end, { silent = true, desc = "Reveal in Finder" })
 vim.keymap.set("n", "<leader>jp", function()
   local path = vim.fn.expand("%:.")
   vim.fn.setreg("+", path)
-  print("Copied: " .. path)
+  print(path)
 end, { desc = "Copy file path" })
-
--- open in vscode
-vim.keymap.set("n", "<leader>jv", function()
-  vim.fn.jobstart({ "code", "." }, { detach = true })
-end, { silent = true, desc = "Open in VSCode" })
 
 -- open in cursor
 vim.keymap.set("n", "<leader>jc", function()
-  vim.fn.jobstart({ "cursor", "." }, { detach = true })
+  vim.fn.jobstart({
+    "cursor",
+    "--reuse-window",
+    vim.fn.getcwd(),
+    "--goto",
+    vim.fn.expand("%:p") .. ":" .. vim.fn.line(".") .. ":" .. vim.fn.col("."),
+  }, { detach = true })
 end, { silent = true, desc = "Open in Cursor" })
 
 -- yank with path
