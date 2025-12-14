@@ -41,44 +41,71 @@ vim.keymap.set("n", "q", "<nop>", { silent = true })
 vim.keymap.set("n", "<C-M-q>", "q", { desc = "Record macro" })
 
 -- stop ctrl-z from suspending
-vim.api.nvim_set_keymap("n", "<c-z>", "<nop>", { noremap = true, silent = true })
+vim.keymap.set("n", "<c-z>", "<nop>", { noremap = true, silent = true })
 
 -- open all git modified files
 vim.keymap.set("n", "<leader>gF", function()
   local cwd = vim.fn.getcwd()
-  -- Get git root
-  local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
-  if not git_root or git_root == "" then
+  local root_res = vim.system({ "git", "rev-parse", "--show-toplevel" }, { text = true }):wait()
+  if root_res.code ~= 0 then
+    return
+  end
+  local git_root = vim.trim(root_res.stdout or "")
+  if git_root == "" then
     return
   end
 
-  -- Get all modified files restricted to current directory
-  -- Use relative path from git root for consistency
-  local relative_cwd = vim.fn.fnamemodify(cwd, ":s?" .. git_root .. "/??")
-  local cmd = string.format(
-    "cd %s && git diff --name-only HEAD -- %s; git ls-files --others --exclude-standard -- %s",
-    vim.fn.shellescape(git_root),
-    vim.fn.shellescape(relative_cwd),
-    vim.fn.shellescape(relative_cwd)
-  )
-  local files = vim.fn.systemlist(cmd)
+  local relative_cwd = "."
+  if cwd ~= git_root and vim.startswith(cwd, git_root .. "/") then
+    relative_cwd = cwd:sub(#git_root + 2)
+  end
+
+  local status_res = vim.system({ "git", "-C", git_root, "status", "--porcelain=v1", "-z", "--", relative_cwd }, { text = true }):wait()
+  if status_res.code ~= 0 then
+    return
+  end
+
+  local output = status_res.stdout or ""
+  if output == "" then
+    return
+  end
+
+  local items = vim.split(output, "\0", { plain = true })
 
   -- Use a set to handle duplicates and open files
   local seen = {}
-  for _, file in ipairs(files) do
-    -- Git returns paths relative to git root, so we need the full path
-    local full_path = git_root .. "/" .. file
-    if not seen[file] and vim.fn.filereadable(full_path) == 1 then
-      seen[file] = true
-      vim.cmd("edit " .. vim.fn.fnameescape(full_path))
+
+  local i = 1
+  while i <= #items do
+    local entry = items[i]
+    if entry == "" then
+      break
     end
+
+    -- porcelain v1: "XY <path>" (and for renames/copies: "XY <from>\0<to>")
+    local status = entry:sub(1, 2)
+    local path = vim.trim(entry:sub(4))
+    if status:find("R", 1, true) or status:find("C", 1, true) then
+      i = i + 1
+      path = items[i] or path
+    end
+
+    if path ~= "" and not seen[path] then
+      seen[path] = true
+      local full_path = git_root .. "/" .. path
+      if vim.fn.filereadable(full_path) == 1 then
+        vim.cmd.edit(vim.fn.fnameescape(full_path))
+      end
+    end
+
+    i = i + 1
   end
 end, { desc = "Open git modified files (cwd)" })
 
 -- open in finder
 vim.keymap.set("n", "<leader>jf", function()
   local path = vim.api.nvim_buf_get_name(0)
-  os.execute("open -R " .. path)
+  vim.fn.jobstart({ "open", "-R", path }, { detach = true })
 end, { silent = true, desc = "Reveal in Finder" })
 
 -- copy relative path
