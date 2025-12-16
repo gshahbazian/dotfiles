@@ -1,11 +1,14 @@
 return {
   "nvim-lualine/lualine.nvim",
-  opts = function(_, opts)
-    opts.sections = opts.sections or {}
-    opts.sections.lualine_c = opts.sections.lualine_c or {}
-
-    local component = { LazyVim.lualine.pretty_path({ length = 6 }) }
-    local pos = math.min(4, #opts.sections.lualine_c + 1)
-    table.insert(opts.sections.lualine_c, pos, component)
-  end,
+  opts = {
+    sections = {
+      lualine_b = {},
+      lualine_c = {
+        { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
+        { LazyVim.lualine.pretty_path() },
+      },
+      lualine_y = { "diagnostics" },
+      lualine_z = { "branch" },
+    },
+  },
 }
