@@ -58,11 +58,6 @@
           "value" : "/Applications/Zed.app"
         },
         {
-          "key" : "v",
-          "type" : "application",
-          "value" : "/Applications/Visual Studio Code.app"
-        },
-        {
           "key" : "c",
           "type" : "application",
           "value" : "/Applications/Cursor.app"

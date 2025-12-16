@@ -119,7 +119,6 @@ end, { desc = "Copy file path" })
 vim.keymap.set("n", "<leader>jc", function()
   vim.fn.jobstart({
     "cursor",
-    "--reuse-window",
     vim.fn.getcwd(),
     "--goto",
     vim.fn.expand("%:p") .. ":" .. vim.fn.line(".") .. ":" .. vim.fn.col("."),
