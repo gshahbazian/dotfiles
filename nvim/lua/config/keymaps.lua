@@ -2,21 +2,6 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
--- simple string search
-vim.keymap.set("n", "<leader>sf", function()
-  Snacks.picker.grep({ root = false, args = { "-F" } })
-end, { silent = true, desc = "String match" })
-
--- delete all buffers
-vim.keymap.set("n", "<leader>ba", function()
-  Snacks.bufdelete.all()
-end, { desc = "Delete All Buffers" })
-
--- quick delete buffer
-vim.keymap.set("n", "<leader><BS>", function()
-  Snacks.bufdelete()
-end, { silent = true, desc = "Close Buffer" })
-
 -- yank and paste to system clipboard
 vim.keymap.set({ "n", "v", "x" }, "<leader>y", '"+y', { silent = true, desc = "Copy to system clipboard" })
 vim.keymap.set({ "n", "x" }, "<leader>p", '"+p', { desc = "Paste from system clipboard after the cursor position" })
@@ -181,4 +166,17 @@ if vim.g.vscode then
   vim.keymap.set("n", "<leader>e", function()
     vscode.action("workbench.action.toggleSidebarVisibility")
   end, { desc = "Toggle file explorer" })
+
+  -- use vscode native undo/redo
+  vim.keymap.set("n", "u", function()
+    vscode.action("undo")
+  end, { desc = "Undo" })
+
+  vim.keymap.set("n", "<C-r>", function()
+    vscode.action("redo")
+  end, { desc = "Redo" })
 end
+
+-- disable some lazyvim keymaps
+vim.keymap.del("n", "<leader>fT")
+vim.keymap.del("n", "<leader>ft")
