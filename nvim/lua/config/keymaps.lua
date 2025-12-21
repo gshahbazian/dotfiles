@@ -111,8 +111,8 @@ vim.keymap.set("n", "<leader>jc", function()
 end, { silent = true, desc = "Open in Cursor" })
 
 -- yank with path
-local yank = require("custom.yank")
 vim.keymap.set("v", "<leader>jy", function()
+  local yank = require("custom.yank")
   yank.yank_visual_with_path(yank.get_buffer_cwd_relative(), "relative")
 end, { desc = "[Y]ank selection with [R]elative path" })
 
