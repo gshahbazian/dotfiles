@@ -6,7 +6,7 @@ $username$directory$git_branch$git_commit$git_state $fill
 
 [username]
 show_always = true
-style_user = 'bold purple'
+style_user = 'bold bright-red'
 format = '[$user]($style) '
 
 [directory]
@@ -14,12 +14,12 @@ truncation_length = 0
 style = 'yellow'
 
 [git_branch]
-style = 'blue'
+style = 'green'
 truncation_length = 22
 format = '[$branch]($style)'
 
 [git_commit]
-style = 'blue'
+style = 'green'
 
 [fill]
-style = 'green'
+style = 'blue'

@@ -1,17 +1,11 @@
 return {
   {
-    "rose-pine/neovim",
-    name = "rose-pine",
-    opts = {
-      styles = {
-        italic = false,
-      },
-    },
+    "nexxeln/vesper.nvim",
   },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "rose-pine",
+      colorscheme = "vesper",
     },
   },
 }

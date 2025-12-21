@@ -69,17 +69,11 @@ eval "$(uv generate-shell-completion zsh)"
 # -----------------------
 show_file_or_dir_preview='if [ -d {} ]; then eza --tree --level=2 --icons=always {}; else bat --style=numbers --color=always --line-range=:501 {}; fi'
 
-# https://github.com/rose-pine/fzf
 export FZF_DEFAULT_OPTS="
   --style=full
   --bind='ctrl-/:toggle-preview'
   --preview-window=hidden
-  --preview='$show_file_or_dir_preview'
-  --color=fg:#908caa,bg:#191724,hl:#ebbcba
-  --color=fg+:#e0def4,bg+:#26233a,hl+:#ebbcba
-  --color=border:#403d52,header:#31748f,gutter:#191724
-  --color=spinner:#f6c177,info:#9ccfd8
-  --color=pointer:#c4a7e7,marker:#eb6f92,prompt:#908caa"
+  --preview='$show_file_or_dir_preview'"
 export FZF_CTRL_T_OPTS="--preview-window=nohidden --layout=reverse"
 export FZF_ALT_C_OPTS="--preview-window=nohidden --layout=reverse"
 export FZF_COMPLETION_OPTS="--preview-window=nohidden --layout=reverse --walker-skip=.git,node_modules"
@@ -87,7 +81,7 @@ export FZF_COMPLETION_PATH_OPTS="--walker=file,dir,follow,hidden"
 export FZF_COMPLETION_DIR_OPTS="--walker=dir,follow,hidden"
 source <(fzf --zsh)
 
-export BAT_THEME="rose-pine"
+export BAT_THEME="ansi"
 
 # -----------------------
 # starship
@@ -112,7 +106,7 @@ bindkey '^[[B' history-beginning-search-forward
 BREW_PREFIX="$(/opt/homebrew/bin/brew --prefix)"
 source "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 source "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-ZSH_HIGHLIGHT_STYLES[command]='fg=blue,bold'
-ZSH_HIGHLIGHT_STYLES[alias]='fg=blue,bold'
-ZSH_HIGHLIGHT_STYLES[function]='fg=blue,bold'
-ZSH_HIGHLIGHT_STYLES[builtin]='fg=blue,bold'
+ZSH_HIGHLIGHT_STYLES[command]='fg=white,bold'
+ZSH_HIGHLIGHT_STYLES[alias]='fg=white,bold'
+ZSH_HIGHLIGHT_STYLES[function]='fg=white,bold'
+ZSH_HIGHLIGHT_STYLES[builtin]='fg=white,bold'
