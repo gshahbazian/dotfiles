@@ -81,7 +81,7 @@ export FZF_COMPLETION_PATH_OPTS="--walker=file,dir,follow,hidden"
 export FZF_COMPLETION_DIR_OPTS="--walker=dir,follow,hidden"
 source <(fzf --zsh)
 
-export BAT_THEME="ansi"
+export BAT_THEME="base16"
 
 # -----------------------
 # starship

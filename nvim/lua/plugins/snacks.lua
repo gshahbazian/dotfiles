@@ -38,7 +38,7 @@ return {
       preset = {
         keys = {
           { icon = "", key = "s", desc = "[s]ession resume", section = "session" },
-          { icon = "", key = "e", desc = "[e]xplorer", action = "<leader>fE" },
+          { icon = "", key = "e", desc = "[e]xplorer", action = "<leader>e" },
           { icon = "", key = "l", desc = "[l]azy", action = ":Lazy" },
           { icon = "", key = "q", desc = "[q]uit", action = ":qa" },
         },
@@ -133,7 +133,7 @@ return {
     { "<leader>fr", false },
   },
   init = function()
-    -- vim.api.nvim_set_hl(0, "SnacksDashboardHeader", { fg = "#ea9d34" })
+    vim.api.nvim_set_hl(0, "SnacksDashboardHeader", { fg = "#262626" })
     vim.api.nvim_set_hl(0, "SnacksIndent", { fg = "#323232" })
     vim.api.nvim_set_hl(0, "SnacksIndentScope", { fg = "#888888" })
   end,
