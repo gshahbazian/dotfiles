@@ -132,9 +132,4 @@ return {
     { "<leader>fp", false },
     { "<leader>fr", false },
   },
-  init = function()
-    vim.api.nvim_set_hl(0, "SnacksDashboardHeader", { fg = "#262626" })
-    vim.api.nvim_set_hl(0, "SnacksIndent", { fg = "#323232" })
-    vim.api.nvim_set_hl(0, "SnacksIndentScope", { fg = "#888888" })
-  end,
 }

@@ -1,6 +1,7 @@
 return {
   {
     "pmizio/typescript-tools.nvim",
+    enabled = false,
     dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
     config = function()
       require("typescript-tools").setup({
@@ -36,6 +37,7 @@ return {
 
   {
     "nvim-mini/mini.icons",
+    enabled = false,
     opts = {
       file = {
         [".eslintrc.js"] = { glyph = "󰱺", hl = "MiniIconsYellow" },
