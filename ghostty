@@ -10,7 +10,7 @@ keybind = page_up=scroll_page_up
 keybind = super+enter=unbind
 mouse-hide-while-typing = true
 shell-integration-features = no-cursor
-split-divider-color = #a0a0a0
+split-divider-color = #2e2e2e
 window-title-font-family = "Berkeley Mono"
 working-directory = /Users/gabe/development
 

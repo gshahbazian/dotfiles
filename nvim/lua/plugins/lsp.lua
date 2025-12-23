@@ -3,7 +3,9 @@ return {
   opts = {
     diagnostics = {
       virtual_text = false,
-      virtual_lines = true,
+      virtual_lines = {
+        current_line = true,
+      },
     },
     servers = {
       vtsls = {
