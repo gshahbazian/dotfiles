@@ -102,12 +102,12 @@ end, { desc = "Copy file path" })
 
 -- open in cursor
 vim.keymap.set("n", "<leader>jc", function()
-  vim.fn.jobstart({
-    "cursor",
-    vim.fn.getcwd(),
-    "--goto",
-    vim.fn.expand("%:p") .. ":" .. vim.fn.line(".") .. ":" .. vim.fn.col("."),
-  }, { detach = true })
+  local file_path = vim.fn.expand("%:p")
+  local cwd = vim.fn.getcwd()
+  local line = vim.fn.line(".")
+  local col = vim.fn.col(".")
+  local goto_arg = '"' .. file_path .. ":" .. line .. ":" .. col .. '"'
+  vim.fn.jobstart({ "cursor", cwd, "--goto", goto_arg }, { detach = true })
 end, { silent = true, desc = "Open in Cursor" })
 
 -- yank with path

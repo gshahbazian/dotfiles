@@ -61,6 +61,11 @@ return {
         { section = "keys" },
       },
     },
+    lazygit = {
+      theme = {
+        inactiveBorderColor = { fg = "FoldColumn" },
+      },
+    },
   },
   keys = {
     { "<leader><space>", LazyVim.pick("files", { root = false }), desc = "Find Files (cwd)" },
