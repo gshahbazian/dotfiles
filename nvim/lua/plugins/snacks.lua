@@ -70,6 +70,13 @@ return {
   keys = {
     { "<leader><space>", LazyVim.pick("files", { root = false }), desc = "Find Files (cwd)" },
     {
+      "<leader>/",
+      function()
+        Snacks.picker.grep({ root = false })
+      end,
+      desc = "Grep",
+    },
+    {
       "<leader>sf",
       function()
         Snacks.picker.grep({ root = false, args = { "-F" } })

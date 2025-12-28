@@ -13,6 +13,7 @@ return {
           typescript = {
             preferences = {
               importModuleSpecifier = "non-relative",
+              preferTypeOnlyAutoImports = true,
             },
             inlayHints = {
               parameterNames = "all",

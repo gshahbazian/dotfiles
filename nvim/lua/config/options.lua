@@ -22,5 +22,7 @@ end
 -- switch python lsp to basedpyright
 vim.g.lazyvim_python_lsp = "basedpyright"
 
--- rust
-vim.g.lazyvim_rust_diagnostics = "rust-analyzer"
+-- tiltfiles are starlark, map to python for comments
+vim.filetype.add({
+  filename = { Tiltfile = "python" },
+})

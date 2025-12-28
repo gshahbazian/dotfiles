@@ -122,59 +122,59 @@ if vim.g.vscode then
 
   vim.keymap.set("n", "]h", function()
     vscode.action("workbench.action.editor.nextChange")
-  end, { desc = "Next git hunk" })
+  end)
 
   vim.keymap.set("n", "[h", function()
     vscode.action("workbench.action.editor.previousChange")
-  end, { desc = "Previous git hunk" })
+  end)
 
   vim.keymap.set("n", "]e", function()
     vscode.action("editor.action.marker.next")
-  end, { desc = "Next error" })
+  end)
 
   vim.keymap.set("n", "[e", function()
     vscode.action("editor.action.marker.prev")
-  end, { desc = "Previous error" })
+  end)
 
   vim.keymap.set("n", "]d", function()
     vscode.action("editor.action.marker.next")
-  end, { desc = "Next diagnostic" })
+  end)
 
   vim.keymap.set("n", "[d", function()
     vscode.action("editor.action.marker.prev")
-  end, { desc = "Previous diagnostic" })
+  end)
 
   vim.keymap.set("n", "gr", function()
     vscode.action("editor.action.goToReferences")
-  end, { desc = "Go to references" })
+  end)
 
   vim.keymap.set("n", "<leader>ca", function()
     vscode.action("editor.action.quickFix")
-  end, { desc = "Code actions" })
+  end)
 
   -- quick close tab
   vim.keymap.set("n", "<leader><BS>", function()
     vscode.action("workbench.action.closeActiveEditor")
-  end, { desc = "Close tab" })
+  end)
 
   -- close all tabs except current
   vim.keymap.set("n", "<leader>bo", function()
     vscode.action("workbench.action.closeOtherEditors")
-  end, { desc = "Close other tabs" })
+  end)
 
   -- toggle file explorer
   vim.keymap.set("n", "<leader>e", function()
     vscode.action("workbench.action.toggleSidebarVisibility")
-  end, { desc = "Toggle file explorer" })
+  end)
 
   -- use vscode native undo/redo
   vim.keymap.set("n", "u", function()
     vscode.action("undo")
-  end, { desc = "Undo" })
+  end)
 
   vim.keymap.set("n", "<C-r>", function()
     vscode.action("redo")
-  end, { desc = "Redo" })
+  end)
 end
 
 -- disable some lazyvim keymaps
