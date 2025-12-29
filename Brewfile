@@ -1,4 +1,5 @@
 brew "bat"
+brew "bash"
 brew "cmake"
 brew "eza"
 brew "fastfetch"
