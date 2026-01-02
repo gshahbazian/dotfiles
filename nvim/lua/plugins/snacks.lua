@@ -39,6 +39,7 @@ return {
         keys = {
           { icon = "", key = "s", desc = "[s]ession resume", section = "session" },
           { icon = "", key = "e", desc = "[e]xplorer", action = "<leader>e" },
+          { icon = "", key = "r", desc = "[r]ecent", action = "<leader>fr" },
           { icon = "", key = "l", desc = "[l]azy", action = ":Lazy" },
           { icon = "", key = "q", desc = "[q]uit", action = ":qa" },
         },
@@ -124,6 +125,13 @@ return {
       end,
       desc = "Close Buffer",
     },
+    {
+      "<leader>fr",
+      function()
+        Snacks.picker.recent({ filter = { cwd = true } })
+      end,
+      desc = "Recent (cwd)",
+    },
 
     -- disable all this jank
     { "<leader>n", false },
@@ -142,6 +150,6 @@ return {
     { "<leader>fe", false },
     { "<leader>fE", false },
     { "<leader>fp", false },
-    { "<leader>fr", false },
+    { "<leader>fR", false },
   },
 }
