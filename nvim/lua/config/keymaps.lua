@@ -12,21 +12,18 @@ vim.keymap.set("n", "<D-s>", "<cmd>w<cr>", { silent = true, desc = "Save" })
 vim.keymap.set("i", "<D-s>", "<Esc><cmd>w<cr>", { silent = true, desc = "Save" })
 
 -- center on some jumps
-vim.keymap.set("n", "<C-d>", "<C-d>zz")
-vim.keymap.set("n", "<C-u>", "<C-u>zz")
-vim.keymap.set("n", "n", "nzz")
-vim.keymap.set("n", "N", "Nzz")
-vim.keymap.set("n", "*", "*zzzv")
-vim.keymap.set("n", "#", "#zzzv")
+vim.keymap.set("n", "n", "'Nn'[v:searchforward] .. 'zzzv'", { expr = true, desc = "Next Search Result" })
+vim.keymap.set("n", "N", "'nN'[v:searchforward] .. 'zzzv'", { expr = true, desc = "Prev Search Result" })
+vim.keymap.set("n", "*", "*zzv")
+vim.keymap.set("n", "#", "#zzv")
 vim.keymap.set("n", "G", "Gzz")
-vim.keymap.set("n", "%", "%zz")
 
 -- change macro keys
 vim.keymap.set("n", "q", "<nop>", { silent = true })
 vim.keymap.set("n", "<C-M-q>", "q", { desc = "Record macro" })
 
 -- stop ctrl-z from suspending
-vim.keymap.set("n", "<c-z>", "<nop>", { noremap = true, silent = true })
+vim.keymap.set("n", "<c-z>", "<nop>", { silent = true })
 
 -- open all git modified files
 vim.keymap.set("n", "<leader>gF", function()
