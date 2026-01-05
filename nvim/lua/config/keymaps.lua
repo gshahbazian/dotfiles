@@ -14,8 +14,6 @@ vim.keymap.set("i", "<D-s>", "<Esc><cmd>w<cr>", { silent = true, desc = "Save" }
 -- center on some jumps
 vim.keymap.set("n", "n", "'Nn'[v:searchforward] .. 'zzzv'", { expr = true, desc = "Next Search Result" })
 vim.keymap.set("n", "N", "'nN'[v:searchforward] .. 'zzzv'", { expr = true, desc = "Prev Search Result" })
-vim.keymap.set("n", "*", "*zzv")
-vim.keymap.set("n", "#", "#zzv")
 vim.keymap.set("n", "G", "Gzz")
 
 -- change macro keys
