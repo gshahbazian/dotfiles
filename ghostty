@@ -5,6 +5,7 @@ cursor-style-blink = false
 font-family = "Berkeley Mono"
 font-feature = -calt, -liga, -dlig # berkeley mono ligatures look funny to me
 font-size = 14
+keybind = shift+enter=text:\n
 keybind = page_down=scroll_page_down
 keybind = page_up=scroll_page_up
 keybind = super+enter=unbind
