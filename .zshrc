@@ -35,7 +35,6 @@ fpath+=("$HOME/.zfunc")
 # aliases
 # -----------------------
 alias ll='eza -la --git --no-user --icons=always'
-tree() { eza -a --git-ignore --tree --level=${1:-3} --icons=always; }
 alias cdd='cd ~/development'
 alias nv='nvim'
 alias ..='cd ..'
