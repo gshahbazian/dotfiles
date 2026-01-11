@@ -1,15 +1,20 @@
 # https://ghostty.org/docs/config/reference
 
+auto-update-channel = tip
+
 cursor-click-to-move = true
 cursor-style-blink = false
 font-family = "Berkeley Mono"
 font-feature = -calt, -liga, -dlig # berkeley mono ligatures look funny to me
 font-size = 14
-keybind = shift+enter=text:\n
+keybind = global:super+shift+ctrl+alt+t=toggle_quick_terminal
 keybind = page_down=scroll_page_down
 keybind = page_up=scroll_page_up
 keybind = super+enter=unbind
 mouse-hide-while-typing = true
+quick-terminal-animation-duration = 0
+quick-terminal-position = center
+quick-terminal-size = 80%,80%
 shell-integration-features = no-cursor
 split-divider-color = #2e2e2e
 window-title-font-family = "Berkeley Mono"
