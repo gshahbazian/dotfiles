@@ -43,6 +43,8 @@ alias ....='cd ../../..'
 alias path='printf "%s\n" $path'
 alias viewpr='gh pr view --web'
 alias p='pnpm'
+alias claudey='claude --allow-dangerously-skip-permissions'
+alias codexy='codex --dangerously-bypass-approvals-and-sandbox'
 
 # -----------------------
 # path

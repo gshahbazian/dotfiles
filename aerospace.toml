@@ -152,6 +152,10 @@ automatically-unhide-macos-hidden-apps = false
   if.window-title-regex-substring = '(devtools|untitled)'
   run = ['layout floating']
 
+[[on-window-detected]]
+  if.app-id = 'com.spotify.client'
+  run = ['move-node-to-workspace G', 'layout floating', 'exec-and-forget open -g "raycast://extensions/raycast/window-management/center"']
+
 # float all but the apps in the negative regex
 [[on-window-detected]]
   if.app-name-regex-substring = '^(?!.*\b(?:ghostty|chrome)\b).+$'
