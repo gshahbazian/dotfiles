@@ -17,6 +17,7 @@ vim.opt.clipboard = ""
 -- enable mode in vscode status line
 if vim.g.vscode then
   vim.opt.showmode = true
+  vim.opt.spell = false
 end
 
 -- switch python lsp to basedpyright

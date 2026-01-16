@@ -1,28 +1,30 @@
 [user]
-	name = gshahbazian
-	email = gabeshahbazian@gmail.com
+  name = gshahbazian
+  email = gabeshahbazian@gmail.com
 [filter "lfs"]
-	required = true
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
+  required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
 [core]
-	editor = nvim
-	excludesfile = /Users/gabe/development/gshahbazian/dotfiles/.gitignore_global
+  editor = nvim
+  excludesfile = /Users/gabe/development/gshahbazian/dotfiles/.gitignore_global
 [alias]
-	s = status
-	p = pull --rebase --prune
-	ma = switch master
-	mm = switch main
-	cb = switch -c
-	amend = commit --amend --no-edit
-	copy-hash = !git rev-parse --short HEAD | pbcopy
+  s = status
+  p = pull --rebase --prune
+  ma = switch master
+  mm = switch main
+  cb = switch -c
+  amend = commit --amend --no-edit
+  copy-hash = !git rev-parse --short HEAD | pbcopy
   aliases = config --get-regexp alias
 [push]
-	autoSetupRemote = true
+  autoSetupRemote = true
 [credential "https://github.com"]
-	helper =
-	helper = !/opt/homebrew/bin/gh auth git-credential
+  helper =
+  helper = !/opt/homebrew/bin/gh auth git-credential
 [credential "https://gist.github.com"]
-	helper =
-	helper = !/opt/homebrew/bin/gh auth git-credential
+  helper =
+  helper = !/opt/homebrew/bin/gh auth git-credential
+[color "diff"]
+	new = "#bce088"
