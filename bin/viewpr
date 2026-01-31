@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Opens the PR for the current branch in the browser.
+# If no PR exists, opens the page to create a new one.
+
+branch=$(git branch --show-current 2>/dev/null)
+if [[ -z "$branch" ]]; then
+  echo "error: not in a git repository or no branch checked out" >&2
+  exit 1
+fi
+
+# Check if a PR exists for this branch
+if gh pr view --json url &>/dev/null; then
+  # PR exists, open it
+  gh pr view --web
+else
+  # No PR exists, open the create PR page
+  gh pr create --web
+fi

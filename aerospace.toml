@@ -144,10 +144,6 @@ automatically-unhide-macos-hidden-apps = false
   #s = ['layout sticky tiling', 'mode main']
 
 [[on-window-detected]]
-  if.window-title-regex-substring = 'devtools'
-  run = ['layout floating']
-
-[[on-window-detected]]
   if.app-id = 'com.google.Chrome'
   if.window-title-regex-substring = '(devtools|untitled)'
   run = ['layout floating']
