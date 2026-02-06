@@ -150,7 +150,9 @@ function parsePrUrl(raw: string): { owner: string; repo: string; number: number;
     fail("URL must match /<owner>/<repo>/pull/<number>");
   }
 
-  const [, owner, repo, numberRaw] = match;
+  const owner = match[1]!;
+  const repo = match[2]!;
+  const numberRaw = match[3]!;
   const number = Number(numberRaw);
   if (!Number.isInteger(number) || number <= 0) {
     fail("pull request number must be a positive integer");
@@ -189,8 +191,7 @@ function toFirstSentence(text: string): string {
   const oneLine = text.replace(/\s+/g, " ").trim();
   if (!oneLine) return "(empty comment)";
 
-  const sentenceMatch = oneLine.match(/^(.+?[.!?])(?:\s|$)/);
-  const sentence = sentenceMatch ? sentenceMatch[1] : oneLine;
+  const sentence = oneLine.match(/^(.+?[.!?])(?:\s|$)/)?.[1] ?? oneLine;
   const max = 140;
   return sentence.length > max ? `${sentence.slice(0, max - 1)}…` : sentence;
 }
