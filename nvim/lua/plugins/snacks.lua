@@ -14,7 +14,7 @@ return {
         "node_modules",
         "vendor",
         "dist",
-        "build",
+        -- "build",
         "out",
         ".DS_Store",
         ".next",

@@ -12,13 +12,17 @@ vim.keymap.set("n", "<D-s>", "<cmd>w<cr>", { silent = true, desc = "Save" })
 vim.keymap.set("i", "<D-s>", "<Esc><cmd>w<cr>", { silent = true, desc = "Save" })
 
 -- center on some jumps
-vim.keymap.set("n", "n", "'Nn'[v:searchforward] .. 'zzzv'", { expr = true, desc = "Next Search Result" })
-vim.keymap.set("n", "N", "'nN'[v:searchforward] .. 'zzzv'", { expr = true, desc = "Prev Search Result" })
-vim.keymap.set("n", "G", "Gzz")
+-- vim.keymap.set("n", "n", "'Nn'[v:searchforward] .. 'zzzv'", { expr = true, desc = "Next Search Result" })
+-- vim.keymap.set("n", "N", "'nN'[v:searchforward] .. 'zzzv'", { expr = true, desc = "Prev Search Result" })
+-- vim.keymap.set("n", "G", "Gzz")
 
 -- change macro keys
 vim.keymap.set("n", "q", "<nop>", { silent = true })
 vim.keymap.set("n", "<C-M-q>", "q", { desc = "Record macro" })
+
+-- alt+h/l to go to start/end of line
+vim.keymap.set({ "n", "v" }, "<A-h>", "^", { desc = "Go to start of line" })
+vim.keymap.set({ "n", "v" }, "<A-l>", "$", { desc = "Go to end of line" })
 
 -- stop ctrl-z from suspending
 vim.keymap.set("n", "<c-z>", "<nop>", { silent = true })
