@@ -2,10 +2,12 @@
   "name": "src",
   "private": true,
   "scripts": {
-    "check": "tsc --noEmit"
+    "check": "tsc --noEmit",
+    "format": "prettier --write ."
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "prettier": "latest"
   },
   "peerDependencies": {
     "typescript": "^5"
