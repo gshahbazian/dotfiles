@@ -1,14 +1,17 @@
 [user]
   name = gshahbazian
   email = gabeshahbazian@gmail.com
+
 [filter "lfs"]
   required = true
   clean = git-lfs clean -- %f
   smudge = git-lfs smudge -- %f
   process = git-lfs filter-process
+
 [core]
   editor = nvim
   excludesfile = /Users/gabe/development/gshahbazian/dotfiles/.gitignore_global
+
 [alias]
   s = status
   p = pull --rebase --prune
@@ -18,13 +21,27 @@
   amend = commit --amend --no-edit
   copy-hash = !git rev-parse --short HEAD | pbcopy
   aliases = config --get-regexp alias
+
 [push]
   autoSetupRemote = true
+
 [credential "https://github.com"]
   helper =
   helper = !/opt/homebrew/bin/gh auth git-credential
+
 [credential "https://gist.github.com"]
   helper =
   helper = !/opt/homebrew/bin/gh auth git-credential
-[color "diff"]
-	new = "#bce088"
+
+[core]
+  pager = delta
+
+[interactive]
+  diffFilter = delta --color-only
+
+[delta]
+  navigate = true
+  dark = true
+
+[merge]
+  conflictStyle = zdiff3
