@@ -11,6 +11,7 @@
 [core]
   editor = nvim
   excludesfile = /Users/gabe/development/gshahbazian/dotfiles/.gitignore_global
+  pager = delta
 
 [alias]
   s = status
@@ -33,15 +34,13 @@
   helper =
   helper = !/opt/homebrew/bin/gh auth git-credential
 
-[core]
-  pager = delta
-
 [interactive]
   diffFilter = delta --color-only
 
 [delta]
   navigate = true
   dark = true
+  line-numbers = true
 
 [merge]
   conflictStyle = zdiff3
