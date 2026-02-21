@@ -115,6 +115,11 @@ vim.keymap.set("v", "<leader>jy", function()
   yank.yank_visual_with_path(yank.get_buffer_cwd_relative(), "relative")
 end, { desc = "[Y]ank selection with [R]elative path" })
 
+-- save without triggering format
+vim.keymap.set("n", "<leader>jW", "<cmd>noautocmd write<CR>", {
+  desc = "Save without formatting",
+})
+
 -- vscode specific keymaps
 if vim.g.vscode then
   local vscode = require("vscode")
