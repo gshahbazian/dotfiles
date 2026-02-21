@@ -182,7 +182,8 @@
       ],
       "key" : "w",
       "label" : "aerospace",
-      "type" : "group"
+      "type" : "group",
+      "global_shortcut": "command+shift+option+control+;"
     }
   ],
   "type" : "group"
