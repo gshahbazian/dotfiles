@@ -1,13 +1,13 @@
 {
-  "activation_shortcut" : "command+shift+option+control+space",
-  "cheatsheet" : {
-    "auto_open" : "after_delay",
-    "delay_ms" : 500,
-    "expand_groups" : false,
-    "show_app_icons" : true,
-    "show_details" : true,
-    "show_favicons" : true
+  "activation_shortcut": "command+shift+option+control+space",
+  "cheatsheet": {
+    "auto_open": "after_delay",
+    "delay_ms": 500,
+    "expand_groups": false,
+    "show_app_icons": true,
+    "show_details": true,
+    "show_favicons": true
   },
-  "reactivate_behavior" : "hide",
-  "screen" : "primary"
+  "reactivate_behavior": "hide",
+  "screen": "primary"
 }
