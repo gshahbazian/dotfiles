@@ -99,15 +99,15 @@ vim.keymap.set("n", "<leader>jp", function()
   print(path)
 end, { desc = "Copy file path" })
 
--- open in cursor
+-- open in zed
 vim.keymap.set("n", "<leader>jc", function()
   local file_path = vim.fn.expand("%:p")
   local cwd = vim.fn.getcwd()
   local line = vim.fn.line(".")
   local col = vim.fn.col(".")
-  local goto_arg = '"' .. file_path .. ":" .. line .. ":" .. col .. '"'
-  vim.fn.jobstart({ "cursor", cwd, "--goto", goto_arg }, { detach = true })
-end, { silent = true, desc = "Open in Cursor" })
+  local goto_arg = file_path .. ":" .. line .. ":" .. col
+  vim.fn.jobstart({ "zed", cwd, goto_arg }, { detach = true })
+end, { silent = true, desc = "Open in Zed" })
 
 -- yank with path
 vim.keymap.set("v", "<leader>jy", function()
