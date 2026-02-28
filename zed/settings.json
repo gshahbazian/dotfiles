@@ -1,0 +1,107 @@
+{
+  "semantic_tokens": "combined",
+  "terminal": {
+    "button": false,
+  },
+  "gutter": {
+    "runnables": false,
+    "breakpoints": false,
+  },
+  "format_on_save": "off",
+  "collaboration_panel": {
+    "button": false,
+  },
+  "outline_panel": {
+    "button": false,
+  },
+  "git_panel": {
+    "dock": "right",
+  },
+  "which_key": {
+    "enabled": true,
+  },
+  "restore_on_startup": "empty_tab",
+  "tab_bar": {
+    "show_nav_history_buttons": false,
+  },
+  "debugger": {
+    "button": false,
+  },
+  "project_panel": {
+    "starts_open": true,
+    "dock": "right",
+  },
+  "colorize_brackets": true,
+  "disable_ai": true,
+  "base_keymap": "VSCode",
+  "buffer_font_size": 14,
+  "buffer_font_family": "Berkeley Mono",
+  "cursor_blink": false,
+  "inlay_hints": {
+    "show_other_hints": true,
+    "show_value_hints": true,
+    "show_type_hints": true,
+    "show_parameter_hints": true,
+    "show_background": true,
+    "enabled": true,
+  },
+  "tab_size": 2,
+  "tabs": {
+    "git_status": true,
+  },
+  "theme": {
+    "mode": "system",
+    "light": "One Light",
+    "dark": "One Dark",
+  },
+  "vim": {
+    "toggle_relative_line_numbers": true,
+    "use_system_clipboard": "on_yank",
+    "use_smartcase_find": true,
+  },
+  "vim_mode": true,
+  "languages": {
+    "Starlark": {
+      "language_servers": ["tilt", "!starpls", "!buck2-lsp"],
+    },
+  },
+  "file_types": {
+    "Starlark": ["Tiltfile"],
+  },
+  "lsp": {
+    "biome": {
+      "settings": {
+        "require_config_file": true,
+      },
+    },
+    "vtsls": {
+      "settings": {
+        "vtsls": {
+          "experimental": {
+            "maxInlayHintLength": 30,
+          },
+        },
+        "typescript": {
+          "inlayHints": {
+            "parameterNames": {
+              "enabled": "literals",
+              "suppressWhenArgumentMatchesName": true,
+            },
+            "variableTypes": {
+              "enabled": true,
+            },
+            "propertyDeclarationTypes": {
+              "enabled": true,
+            },
+            "functionLikeReturnTypes": {
+              "enabled": true,
+            },
+            "enumMemberValues": {
+              "enabled": true,
+            },
+          },
+        },
+      },
+    },
+  },
+}

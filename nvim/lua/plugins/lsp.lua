@@ -16,7 +16,11 @@ return {
               preferTypeOnlyAutoImports = true,
             },
             inlayHints = {
-              parameterNames = "all",
+              variableTypes = {
+                enabled = true,
+                suppressWhenTypeMatchesName = false,
+              },
+              -- parameterNames = "all",
             },
           },
         },

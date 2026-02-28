@@ -82,25 +82,25 @@
         {
           "actions": [
             {
-              "key": "1",
+              "key": "a",
               "label": "BROWSE",
               "type": "command",
               "value": "/opt/homebrew/bin/aerospace move-node-to-workspace 1 --focus-follows-window"
             },
             {
-              "key": "2",
+              "key": "s",
               "label": "WORK",
               "type": "command",
               "value": "/opt/homebrew/bin/aerospace move-node-to-workspace 2 --focus-follows-window"
             },
             {
-              "key": "3",
+              "key": "d",
               "label": "DOTS",
               "type": "command",
               "value": "/opt/homebrew/bin/aerospace move-node-to-workspace 3 --focus-follows-window"
             },
             {
-              "key": "4",
+              "key": "f",
               "label": "OTHER",
               "type": "command",
               "value": "/opt/homebrew/bin/aerospace move-node-to-workspace 4 --focus-follows-window"
