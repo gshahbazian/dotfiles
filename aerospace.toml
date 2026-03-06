@@ -106,17 +106,17 @@ automatically-unhide-macos-hidden-apps = false
   alt-shift-ctrl-equal = 'resize smart +50'
 
   # see: https://nikitabobko.github.io/aerospace/commands#workspace
-  alt-shift-ctrl-1 = 'workspace 1'
-  alt-shift-ctrl-2 = 'workspace 2'
-  alt-shift-ctrl-3 = 'workspace 3'
-  alt-shift-ctrl-4 = 'workspace 4'
+  alt-shift-ctrl-a = 'workspace 1'
+  alt-shift-ctrl-s = 'workspace 2'
+  alt-shift-ctrl-d = 'workspace 3'
+  alt-shift-ctrl-f = 'workspace 4'
   alt-shift-ctrl-g = 'workspace G'
 
   # see: https://nikitabobko.github.io/aerospace/commands#move-node-to-workspace
-  alt-shift-1 = 'move-node-to-workspace 1 --focus-follows-window'
-  alt-shift-2 = 'move-node-to-workspace 2 --focus-follows-window'
-  alt-shift-3 = 'move-node-to-workspace 3 --focus-follows-window'
-  alt-shift-4 = 'move-node-to-workspace 4 --focus-follows-window'
+  alt-shift-a = 'move-node-to-workspace 1 --focus-follows-window'
+  alt-shift-s = 'move-node-to-workspace 2 --focus-follows-window'
+  alt-shift-d = 'move-node-to-workspace 3 --focus-follows-window'
+  alt-shift-f = 'move-node-to-workspace 4 --focus-follows-window'
   alt-shift-g = 'move-node-to-workspace G --focus-follows-window'
 
   alt-shift-ctrl-v = 'join-with left'

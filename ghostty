@@ -11,6 +11,7 @@ keybind = global:super+shift+ctrl+alt+t=toggle_quick_terminal
 keybind = page_down=scroll_page_down
 keybind = page_up=scroll_page_up
 keybind = super+enter=unbind
+macos-titlebar-style = hidden
 mouse-hide-while-typing = true
 quick-terminal-animation-duration = 0
 quick-terminal-position = center
@@ -20,6 +21,7 @@ window-title-font-family = "Berkeley Mono"
 working-directory = /Users/gabe/development
 
 # Vesper Minimal Theme for Ghostty by @beingfranklin
+# https://github.com/beingfranklin/Vesper-Ghostty
 
 # Terminal Colors
 background = #101010

@@ -34,6 +34,7 @@ fpath+=("$HOME/.zfunc")
 # -----------------------
 # aliases
 # -----------------------
+alias l='eza --grid --group-directories-first'
 alias ll='eza -la --git --no-user --icons=always'
 alias cdd='cd ~/development'
 alias nv='nvim'
@@ -62,7 +63,7 @@ path=(
 eval "$(/opt/homebrew/bin/brew shellenv)"
 autoload -Uz compinit && compinit
 
-eval "$(fnm env --log-level=error --use-on-cd --version-file-strategy=recursive --corepack-enabled --shell zsh)"
+eval "$(fnm env --log-level=quiet --use-on-cd --version-file-strategy=recursive --corepack-enabled --shell zsh)"
 eval "$(uv generate-shell-completion zsh)"
 
 # -----------------------
