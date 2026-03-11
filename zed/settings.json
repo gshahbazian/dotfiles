@@ -20,7 +20,7 @@
   "which_key": {
     "enabled": true,
   },
-  "restore_on_startup": "empty_tab",
+  "restore_on_startup": "last_session",
   "tab_bar": {
     "show_nav_history_buttons": false,
   },

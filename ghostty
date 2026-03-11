@@ -1,24 +1,26 @@
 # https://ghostty.org/docs/config/reference
 
-auto-update-channel = tip
+# auto-update-channel = tip
 
 cursor-click-to-move = true
 cursor-style-blink = false
 font-family = "Berkeley Mono"
 font-feature = -calt, -liga, -dlig # berkeley mono ligatures look funny to me
 font-size = 14
-keybind = global:super+shift+ctrl+alt+t=toggle_quick_terminal
-keybind = page_down=scroll_page_down
-keybind = page_up=scroll_page_up
-keybind = super+enter=unbind
 macos-titlebar-style = hidden
 mouse-hide-while-typing = true
 quick-terminal-animation-duration = 0
 quick-terminal-position = center
 shell-integration-features = no-cursor
 split-divider-color = #2e2e2e
-window-title-font-family = "Berkeley Mono"
 working-directory = /Users/gabe/development
+
+# keybinds
+
+keybind = global:super+shift+ctrl+alt+t=toggle_quick_terminal
+keybind = page_down=scroll_page_down
+keybind = page_up=scroll_page_up
+keybind = super+enter=unbind
 
 # Vesper Minimal Theme for Ghostty by @beingfranklin
 # https://github.com/beingfranklin/Vesper-Ghostty
