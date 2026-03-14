@@ -1,5 +1,10 @@
 require("config.options")
 
+if vim.g.vscode then
+  require("util.vscode").setup()
+  return
+end
+
 -- PackChanged hook (MUST be before vim.pack.add)
 vim.api.nvim_create_autocmd("PackChanged", {
   callback = function(ev)
