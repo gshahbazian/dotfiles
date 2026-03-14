@@ -1,11 +1,10 @@
 require("config.options")
 
 if vim.g.vscode then
-  require("util.vscode").setup()
+  require("utils.vscode").setup()
   return
 end
 
--- PackChanged hook (MUST be before vim.pack.add)
 vim.api.nvim_create_autocmd("PackChanged", {
   callback = function(ev)
     local name, kind = ev.data.spec.name, ev.data.kind
@@ -19,12 +18,10 @@ vim.api.nvim_create_autocmd("PackChanged", {
   end,
 })
 
--- Install and load all plugins
 vim.pack.add({
-  -- Colorschemes
   "https://github.com/gshahbazian/vesper.nvim",
 
-  -- Core UI
+  -- UI
   "https://github.com/folke/snacks.nvim",
   "https://github.com/akinsho/bufferline.nvim",
   "https://github.com/nvim-lualine/lualine.nvim",
@@ -41,7 +38,7 @@ vim.pack.add({
   "https://github.com/arnamak/stay-centered.nvim",
 
   -- Coding
-  { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("1.9") },
+  { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("1.*") },
   "https://github.com/rafamadriz/friendly-snippets",
   "https://github.com/nvim-mini/mini.ai",
   "https://github.com/nvim-mini/mini.surround",
@@ -86,6 +83,6 @@ require("plugins.formatting")
 require("plugins.linting")
 require("plugins.lang")
 
--- Keymaps & autocmds last (depend on plugins being configured)
+-- Keymaps & autocmds
 require("config.keymaps")
 require("config.autocmds")

@@ -67,8 +67,6 @@ require("conform").setup({
   formatters_by_ft = formatters_by_ft,
   default_format_opts = {
     timeout_ms = 3000,
-    async = false,
-    quiet = false,
     lsp_format = "fallback",
   },
   formatters = {

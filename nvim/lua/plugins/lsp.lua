@@ -1,7 +1,5 @@
 -- Diagnostics
 vim.diagnostic.config({
-  underline = true,
-  update_in_insert = false,
   virtual_text = false,
   virtual_lines = { current_line = true },
   severity_sort = true,
@@ -52,17 +50,12 @@ vim.lsp.config("*", {
 vim.lsp.config("lua_ls", {
   settings = {
     Lua = {
-      diagnostics = {
-        globals = { "vim" },
-      },
       workspace = { checkThirdParty = false },
       codeLens = { enable = true },
       completion = { callSnippet = "Replace" },
       doc = { privateName = { "^_" } },
       hint = {
         enable = true,
-        setType = false,
-        paramType = true,
         paramName = "Disable",
         semicolon = "Disable",
         arrayIndex = "Disable",
@@ -116,7 +109,6 @@ vim.lsp.config("vtsls", {
 vim.lsp.config("eslint", {
   settings = {
     workingDirectories = { mode = "auto" },
-    format = false,
   },
 })
 
@@ -145,13 +137,8 @@ vim.lsp.config("tailwindcss", {
   },
 })
 
-vim.lsp.config("bashls", {})
-
 -- rust_analyzer is disabled — rustaceanvim handles it
 vim.lsp.config("rust_analyzer", { enabled = false })
-
--- Enable servers not handled by mason-lspconfig
--- (mason-lspconfig's automatic_enable handles the rest)
 
 -- Inlay hints & LSP keymaps via LspAttach
 vim.api.nvim_create_autocmd("LspAttach", {

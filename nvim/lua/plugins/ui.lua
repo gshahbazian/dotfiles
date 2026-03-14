@@ -24,13 +24,13 @@ end
 
 -- snacks.nvim
 Snacks.setup({
-  bigfile = { enabled = true },
-  quickfile = { enabled = true },
-  indent = { enabled = true },
-  input = { enabled = true },
-  scope = { enabled = true },
-  words = { enabled = true },
-  statuscolumn = { enabled = true },
+  bigfile = {},
+  quickfile = {},
+  indent = {},
+  input = {},
+  scope = {},
+  words = {},
+  statuscolumn = {},
   lazygit = {
     theme = {
       inactiveBorderColor = { fg = "FoldColumn" },
@@ -62,9 +62,8 @@ Snacks.setup({
       },
     },
   },
-  explorer = { enabled = true },
+  explorer = {},
   dashboard = {
-    enabled = true,
     width = 20,
     preset = {
       keys = {
@@ -97,12 +96,8 @@ Snacks.setup({
 -- bufferline
 require("bufferline").setup({
   options = {
-    close_command = function(n)
-      Snacks.bufdelete(n)
-    end,
-    right_mouse_command = function(n)
-      Snacks.bufdelete(n)
-    end,
+    close_command = Snacks.bufdelete,
+    right_mouse_command = Snacks.bufdelete,
     show_buffer_close_icons = false,
     show_close_icon = false,
     diagnostics = "nvim_lsp",
@@ -126,27 +121,14 @@ vim.api.nvim_create_autocmd({ "BufAdd", "BufDelete" }, {
 })
 
 -- lualine
-vim.g.lualine_laststatus = vim.o.laststatus
-if vim.fn.argc(-1) > 0 then
-  vim.o.statusline = " "
-else
-  vim.o.laststatus = 0
-end
-
-local lualine_require = require("lualine_require")
-lualine_require.require = require
-vim.o.laststatus = vim.g.lualine_laststatus
-
 require("lualine").setup({
   options = {
-    theme = "auto",
-    globalstatus = vim.o.laststatus == 3,
+    globalstatus = true,
     disabled_filetypes = { statusline = { "dashboard", "snacks_dashboard" } },
     section_separators = { left = "", right = "" },
     component_separators = { left = "", right = "" },
   },
   sections = {
-    lualine_a = { "mode" },
     lualine_b = {},
     lualine_c = {
       { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
@@ -188,7 +170,6 @@ require("lualine").setup({
     lualine_y = { "diagnostics" },
     lualine_z = { "branch" },
   },
-  extensions = {},
 })
 
 -- noice
@@ -218,7 +199,6 @@ require("noice").setup({
   cmdline = { enabled = false },
   messages = { enabled = false },
   notify = {
-    enabled = true,
     view = "mini",
   },
   views = {

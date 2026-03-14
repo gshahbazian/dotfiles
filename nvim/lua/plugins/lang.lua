@@ -14,11 +14,7 @@ vim.g.rustaceanvim = vim.tbl_deep_extend("keep", vim.g.rustaceanvim or {}, {
         cargo = {
           allFeatures = true,
           loadOutDirsFromCheck = true,
-          buildScripts = { enable = true },
         },
-        checkOnSave = true,
-        diagnostics = { enable = true },
-        procMacro = { enable = true },
         files = {
           exclude = {
             ".direnv",
@@ -41,14 +37,8 @@ vim.g.rustaceanvim = vim.tbl_deep_extend("keep", vim.g.rustaceanvim or {}, {
 
 -- crates.nvim
 require("crates").setup({
-  completion = {
-    crates = { enabled = true },
-  },
   lsp = {
     enabled = true,
-    actions = true,
-    completion = true,
-    hover = true,
   },
 })
 

@@ -1,7 +1,6 @@
 -- blink.cmp
 require("blink.cmp").setup({
   keymap = {
-    preset = "default",
     ["<C-y>"] = { "select_and_accept" },
   },
   sources = {

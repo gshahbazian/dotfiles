@@ -74,7 +74,7 @@ require("gitsigns").setup({
 })
 
 -- stay-centered.nvim
-require("stay-centered").setup({ enabled = true })
+require("stay-centered").setup({})
 
 -- persistence.nvim
 require("persistence").setup({})
