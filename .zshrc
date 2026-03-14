@@ -38,6 +38,7 @@ alias l='eza --grid --group-directories-first'
 alias ll='eza -la --git --no-user --icons=always'
 alias cdd='cd ~/development'
 alias nv='nvim'
+alias nv-lazy='NVIM_APPNAME=nvim-lazy nvim'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
@@ -50,6 +51,8 @@ alias lg='lazygit'
 # -----------------------
 # path
 # -----------------------
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 export GOPATH="$HOME/development/go"
 typeset -U path PATH
 path=(
@@ -60,7 +63,6 @@ path=(
   $path
 )
 
-eval "$(/opt/homebrew/bin/brew shellenv)"
 autoload -Uz compinit && compinit
 
 eval "$(fnm env --log-level=quiet --use-on-cd --version-file-strategy=recursive --corepack-enabled --shell zsh)"

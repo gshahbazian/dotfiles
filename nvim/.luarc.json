@@ -1,0 +1,9 @@
+{
+  "diagnostics": {
+    "globals": ["vim"]
+  },
+  "workspace": {
+    "checkThirdParty": false,
+    "library": ["$VIMRUNTIME"]
+  }
+}
