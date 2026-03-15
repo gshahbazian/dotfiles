@@ -35,111 +35,6 @@ require("mason-lspconfig").setup({
   },
 })
 
--- Server configs
-vim.lsp.config("*", {
-  capabilities = {
-    workspace = {
-      fileOperations = {
-        didRename = true,
-        willRename = true,
-      },
-    },
-  },
-})
-
-vim.lsp.config("lua_ls", {
-  settings = {
-    Lua = {
-      workspace = { checkThirdParty = false },
-      codeLens = { enable = true },
-      completion = { callSnippet = "Replace" },
-      doc = { privateName = { "^_" } },
-      hint = {
-        enable = true,
-        paramName = "Disable",
-        semicolon = "Disable",
-        arrayIndex = "Disable",
-      },
-    },
-  },
-})
-
-local vtsls_settings = {
-  complete_function_calls = true,
-  vtsls = {
-    enableMoveToFileCodeAction = true,
-    autoUseWorkspaceTsdk = true,
-    experimental = {
-      maxInlayHintLength = 30,
-      completion = { enableServerSideFuzzyMatch = true },
-    },
-  },
-  typescript = {
-    updateImportsOnFileMove = { enabled = "always" },
-    suggest = { completeFunctionCalls = true },
-    preferences = {
-      importModuleSpecifier = "non-relative",
-      preferTypeOnlyAutoImports = true,
-    },
-    inlayHints = {
-      enumMemberValues = { enabled = true },
-      functionLikeReturnTypes = { enabled = true },
-      parameterNames = { enabled = "literals" },
-      parameterTypes = { enabled = true },
-      propertyDeclarationTypes = { enabled = true },
-      variableTypes = { enabled = true, suppressWhenTypeMatchesName = false },
-    },
-  },
-}
-
-vtsls_settings.javascript = vim.tbl_deep_extend("force", {}, vtsls_settings.typescript, vtsls_settings.javascript or {})
-
-vim.lsp.config("vtsls", {
-  filetypes = {
-    "javascript",
-    "javascriptreact",
-    "javascript.jsx",
-    "typescript",
-    "typescriptreact",
-    "typescript.tsx",
-  },
-  settings = vtsls_settings,
-})
-
-vim.lsp.config("eslint", {
-  settings = {
-    workingDirectories = { mode = "auto" },
-  },
-})
-
-vim.lsp.config("jsonls", {
-  before_init = function(_, new_config)
-    new_config.settings.json.schemas = new_config.settings.json.schemas or {}
-    vim.list_extend(new_config.settings.json.schemas, require("schemastore").json.schemas())
-  end,
-  settings = {
-    json = {
-      format = { enable = true },
-      validate = { enable = true },
-    },
-  },
-})
-
-vim.lsp.config("tailwindcss", {
-  settings = {
-    tailwindCSS = {
-      includeLanguages = {
-        elixir = "html-eex",
-        eelixir = "html-eex",
-        heex = "html-eex",
-      },
-    },
-  },
-})
-
--- rust_analyzer is disabled — rustaceanvim handles it
-vim.lsp.config("rust_analyzer", { enabled = false })
-
 -- Inlay hints & LSP keymaps via LspAttach
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("pack_lsp_attach", { clear = true }),
@@ -175,7 +70,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
       Snacks.picker.lsp_type_definitions()
     end, "Goto T[y]pe Definition")
     map("n", "gD", vim.lsp.buf.declaration, "Goto Declaration")
-    map("n", "K", vim.lsp.buf.hover, "Hover")
     map("n", "gK", vim.lsp.buf.signature_help, "Signature Help")
     map("i", "<c-k>", vim.lsp.buf.signature_help, "Signature Help")
     map({ "n", "x" }, "<leader>ca", vim.lsp.buf.code_action, "Code Action")

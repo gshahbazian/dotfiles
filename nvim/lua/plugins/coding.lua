@@ -3,6 +3,11 @@ require("blink.cmp").setup({
   keymap = {
     ["<C-y>"] = { "select_and_accept" },
   },
+  completion = {
+    menu = {
+      draw = { treesitter = { "lsp" } },
+    },
+  },
   sources = {
     default = { "lsp", "path", "snippets", "buffer", "lazydev" },
     providers = {
@@ -11,6 +16,18 @@ require("blink.cmp").setup({
         module = "lazydev.integrations.blink",
         score_offset = 100,
       },
+    },
+  },
+  cmdline = {
+    keymap = { preset = "cmdline" },
+    completion = {
+      list = { selection = { preselect = false } },
+      menu = {
+        auto_show = function()
+          return vim.fn.getcmdtype() == ":"
+        end,
+      },
+      ghost_text = { enabled = true },
     },
   },
 })

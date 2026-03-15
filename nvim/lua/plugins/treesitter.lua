@@ -1,4 +1,3 @@
--- filetype detection
 vim.filetype.add({
   filename = {
     ["Tiltfile"] = "python",
@@ -43,8 +42,6 @@ local ensure_installed = {
   "xml",
   "yaml",
 }
-
-vim.treesitter.language.register("bash", "kitty")
 
 TS.setup({
   indent = { enable = true },

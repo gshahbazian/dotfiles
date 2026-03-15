@@ -21,9 +21,9 @@ opt.fillchars = {
   eob = " ",
 }
 opt.foldlevel = 99
-opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-opt.foldmethod = "expr"
+opt.foldmethod = "indent"
 opt.foldtext = ""
+opt.formatexpr = "v:lua.LazyVim.format.formatexpr()"
 opt.formatoptions = "jcroqlnt"
 opt.grepprg = "rg --vimgrep"
 opt.ignorecase = true

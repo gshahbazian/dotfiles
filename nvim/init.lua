@@ -1,3 +1,5 @@
+vim.loader.enable(true)
+
 require("config.options")
 
 if vim.g.vscode then
