@@ -56,10 +56,7 @@ vim.pack.add({
   "https://github.com/neovim/nvim-lspconfig",
   "https://github.com/mason-org/mason.nvim",
   "https://github.com/mason-org/mason-lspconfig.nvim",
-
-  -- Formatting & Linting
   "https://github.com/stevearc/conform.nvim",
-  "https://github.com/mfussenegger/nvim-lint",
 
   -- Lang
   "https://github.com/mrcjkb/rustaceanvim",
@@ -82,7 +79,6 @@ require("plugins.coding")
 require("plugins.treesitter")
 require("plugins.lsp")
 require("plugins.formatting")
-require("plugins.linting")
 require("plugins.lang")
 
 -- Keymaps & autocmds

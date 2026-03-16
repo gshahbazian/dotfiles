@@ -36,7 +36,6 @@ local prettier_fts = {
 -- Build formatters_by_ft
 local formatters_by_ft = {
   lua = { "stylua" },
-  fish = { "fish_indent" },
   sh = { "shfmt" },
 }
 

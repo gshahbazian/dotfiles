@@ -16,7 +16,6 @@ local ensure_installed = {
   "bash",
   "c",
   "diff",
-  "fish",
   "git_config",
   "html",
   "javascript",
