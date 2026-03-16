@@ -1,9 +1,16 @@
 {
   "diagnostics": {
-    "globals": ["vim"]
+    "globals": [
+      "vim",
+      "Snacks",
+      "MiniIcons",
+      "MiniHipatterns"
+    ]
   },
   "workspace": {
     "checkThirdParty": false,
-    "library": ["$VIMRUNTIME"]
+    "library": [
+      "$VIMRUNTIME"
+    ]
   }
 }
