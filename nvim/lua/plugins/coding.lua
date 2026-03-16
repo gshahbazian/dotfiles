@@ -69,11 +69,3 @@ require("mini.surround").setup({
 
 -- ts-comments.nvim
 require("ts-comments").setup({})
-
--- lazydev.nvim
-require("lazydev").setup({
-  library = {
-    { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-    { path = "snacks.nvim", words = { "Snacks" } },
-  },
-})
