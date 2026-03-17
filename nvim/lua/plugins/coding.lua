@@ -49,6 +49,7 @@ ai.setup({
     },
     u = ai.gen_spec.function_call(),
     U = ai.gen_spec.function_call({ name_pattern = "[%w_]" }),
+    g = require("utils.ai").ai_buffer,
   },
 })
 
