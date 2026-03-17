@@ -44,7 +44,7 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias path='printf "%s\n" $path'
 alias p='pnpm'
-alias claudey='claude --allow-dangerously-skip-permissions'
+alias claudey='claude --permission-mode bypassPermissions'
 alias codexy='codex --dangerously-bypass-approvals-and-sandbox'
 alias lg='lazygit'
 
