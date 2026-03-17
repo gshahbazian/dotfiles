@@ -190,7 +190,9 @@ map("n", "<leader>cm", "<cmd>Mason<cr>", { desc = "Mason" })
 
 -- picker
 map("n", "<leader><space>", function()
-  Snacks.picker.files()
+  Snacks.picker.smart({
+    filter = { cwd = true },
+  })
 end, { desc = "Find Files" })
 map("n", "<leader>/", function()
   Snacks.picker.grep()
@@ -205,19 +207,28 @@ map("n", "<leader>sk", function()
   Snacks.picker.keymaps()
 end, { desc = "Keymaps" })
 map("n", "<leader>sr", function()
-  Snacks.picker.resume()
+  Snacks.picker.resume({
+    on_show = function()
+      vim.cmd.stopinsert()
+    end,
+  })
 end, { desc = "Resume" })
 map({ "n", "x" }, "<leader>sw", function()
-  Snacks.picker.grep_word()
+  Snacks.picker.grep_word({
+    on_show = function()
+      vim.cmd.stopinsert()
+    end,
+  })
 end, { desc = "Visual selection or word" })
 map("n", "<leader>sm", function()
   Snacks.picker.marks()
 end, { desc = "Marks" })
 map("n", "<leader>sf", function()
-  Snacks.picker.grep({ args = { "-F" } })
+  Snacks.picker.grep({ regex = false })
 end, { desc = "Search string" })
 map("n", "<leader>fg", function()
   Snacks.picker.git_status({
+    ignored = false,
     on_show = function()
       vim.cmd.stopinsert()
     end,
