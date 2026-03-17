@@ -1,4 +1,3 @@
--- mini.icons
 require("mini.icons").setup({
   file = {
     [".keep"] = { glyph = "󰊢", hl = "MiniIconsGrey" },
@@ -19,7 +18,6 @@ require("mini.icons").setup({
 })
 MiniIcons.mock_nvim_web_devicons()
 
--- snacks.nvim
 Snacks.setup({
   bigfile = {},
   quickfile = {},
@@ -90,7 +88,6 @@ Snacks.setup({
   },
 })
 
--- bufferline
 require("bufferline").setup({
   options = {
     close_command = Snacks.bufdelete,
@@ -117,7 +114,6 @@ vim.api.nvim_create_autocmd({ "BufAdd", "BufDelete" }, {
   end,
 })
 
--- lualine
 require("lualine").setup({
   options = {
     globalstatus = true,
@@ -169,7 +165,6 @@ require("lualine").setup({
   },
 })
 
--- noice
 require("noice").setup({
   lsp = {
     override = {
@@ -178,19 +173,6 @@ require("noice").setup({
     },
     hover = {
       silent = true,
-    },
-  },
-  routes = {
-    {
-      filter = {
-        event = "msg_show",
-        any = {
-          { find = "%d+L, %d+B" },
-          { find = "; after #%d+" },
-          { find = "; before #%d+" },
-        },
-      },
-      view = "mini",
     },
   },
   cmdline = { enabled = false },
@@ -209,7 +191,6 @@ require("noice").setup({
   },
 })
 
--- which-key
 require("which-key").setup({
   preset = "helix",
   icons = {

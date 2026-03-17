@@ -1,4 +1,3 @@
--- rustaceanvim
 vim.g.rustaceanvim = vim.tbl_deep_extend("keep", vim.g.rustaceanvim or {}, {
   server = {
     on_attach = function(_, bufnr)
@@ -35,17 +34,14 @@ vim.g.rustaceanvim = vim.tbl_deep_extend("keep", vim.g.rustaceanvim or {}, {
   },
 })
 
--- crates.nvim
 require("crates").setup({
   lsp = {
     enabled = true,
   },
 })
 
--- mini.hipatterns
 local hi = require("mini.hipatterns")
 
--- Tailwind color data (inline to avoid pulling in the full LazyVim module)
 local tailwind_colors = {
   slate = {
     [50] = "f8fafc",

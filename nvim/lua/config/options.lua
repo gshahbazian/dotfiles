@@ -1,9 +1,5 @@
--- Leaders (must be set before plugins load)
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
-
--- General
-vim.g.markdown_recommended_style = 0
 
 local opt = vim.opt
 
@@ -23,7 +19,7 @@ opt.fillchars = {
 opt.foldlevel = 99
 opt.foldmethod = "indent"
 opt.foldtext = ""
-opt.formatexpr = "v:lua.LazyVim.format.formatexpr()"
+opt.formatexpr = "v:lua.require'conform'.formatexpr()"
 opt.formatoptions = "jcroqlnt"
 opt.grepprg = "rg --vimgrep"
 opt.ignorecase = true
@@ -60,3 +56,5 @@ opt.virtualedit = "block"
 opt.wildmode = "longest:full,full"
 opt.winminwidth = 5
 opt.wrap = false
+
+vim.g.markdown_recommended_style = 0

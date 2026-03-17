@@ -1,4 +1,3 @@
--- blink.cmp
 require("blink.cmp").setup({
   keymap = {
     ["<C-y>"] = { "select_and_accept" },
@@ -32,7 +31,6 @@ require("blink.cmp").setup({
   },
 })
 
--- mini.ai
 local ai = require("mini.ai")
 ai.setup({
   n_lines = 500,
@@ -54,7 +52,6 @@ ai.setup({
   },
 })
 
--- mini.surround
 require("mini.surround").setup({
   mappings = {
     add = "gsa",
@@ -67,5 +64,4 @@ require("mini.surround").setup({
   },
 })
 
--- ts-comments.nvim
-require("ts-comments").setup({})
+require("ts-comments").setup()

@@ -10,7 +10,7 @@ function M.setup()
     load = true,
   })
 
-  require("flash").setup({})
+  require("flash").setup()
 
   local ai = require("mini.ai")
   ai.setup({

@@ -68,7 +68,6 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- nvim-treesitter-textobjects
 local TSTextObjects = require("nvim-treesitter-textobjects")
 TSTextObjects.setup({
   move = { set_jumps = true },
@@ -109,7 +108,6 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 vim.tbl_map(attach_textobjects, vim.api.nvim_list_bufs())
 
--- nvim-treesitter-context
 require("treesitter-context").setup({
   max_lines = 3,
 })

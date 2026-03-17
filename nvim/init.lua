@@ -23,7 +23,7 @@ vim.api.nvim_create_autocmd("PackChanged", {
 vim.pack.add({
   "https://github.com/gshahbazian/vesper.nvim",
 
-  -- UI
+  -- ui
   "https://github.com/folke/snacks.nvim",
   "https://github.com/akinsho/bufferline.nvim",
   "https://github.com/nvim-lualine/lualine.nvim",
@@ -31,15 +31,16 @@ vim.pack.add({
   "https://github.com/folke/noice.nvim",
   "https://github.com/folke/which-key.nvim",
   "https://github.com/nvim-mini/mini.icons",
+  "https://github.com/folke/persistence.nvim",
 
-  -- Editor
+  -- editor
   "https://github.com/folke/flash.nvim",
   "https://github.com/folke/trouble.nvim",
   "https://github.com/folke/todo-comments.nvim",
   "https://github.com/lewis6991/gitsigns.nvim",
   "https://github.com/arnamak/stay-centered.nvim",
 
-  -- Coding
+  -- coding
   { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("1.*") },
   "https://github.com/rafamadriz/friendly-snippets",
   "https://github.com/nvim-mini/mini.ai",
@@ -47,31 +48,26 @@ vim.pack.add({
   "https://github.com/folke/ts-comments.nvim",
   "https://github.com/folke/lazydev.nvim",
 
-  -- Treesitter
+  -- treesitter
   { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
   { src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects", version = "main" },
   "https://github.com/nvim-treesitter/nvim-treesitter-context",
 
-  -- LSP
+  -- lsp
   "https://github.com/neovim/nvim-lspconfig",
   "https://github.com/mason-org/mason.nvim",
   "https://github.com/mason-org/mason-lspconfig.nvim",
   "https://github.com/stevearc/conform.nvim",
 
-  -- Lang
+  -- lang
   "https://github.com/mrcjkb/rustaceanvim",
   "https://github.com/Saecki/crates.nvim",
   "https://github.com/b0o/SchemaStore.nvim",
-
-  -- Util
-  "https://github.com/folke/persistence.nvim",
-  "https://github.com/nvim-lua/plenary.nvim",
   "https://github.com/nvim-mini/mini.hipatterns",
 }, {
   load = true,
 })
 
--- Configure plugins
 require("plugins.colorscheme")
 require("plugins.ui")
 require("plugins.editor")
@@ -80,7 +76,5 @@ require("plugins.treesitter")
 require("plugins.lsp")
 require("plugins.formatting")
 require("plugins.lang")
-
--- Keymaps & autocmds
 require("config.keymaps")
 require("config.autocmds")

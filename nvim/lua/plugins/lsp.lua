@@ -1,4 +1,3 @@
--- Diagnostics
 vim.diagnostic.config({
   virtual_text = false,
   virtual_lines = { current_line = true },
@@ -13,10 +12,8 @@ vim.diagnostic.config({
   },
 })
 
--- Mason
-require("mason").setup({})
+require("mason").setup()
 
--- ensure mason tools are installed
 local mr = require("mason-registry")
 mr.refresh(function()
   for _, tool in ipairs({ "stylua", "shfmt", "prettier", "biome", "shellcheck" }) do
@@ -27,7 +24,6 @@ mr.refresh(function()
   end
 end)
 
--- mason-lspconfig
 require("mason-lspconfig").setup({
   ensure_installed = { "lua_ls", "vtsls", "eslint", "jsonls", "tailwindcss", "bashls" },
   automatic_enable = {
@@ -35,7 +31,6 @@ require("mason-lspconfig").setup({
   },
 })
 
--- Inlay hints & LSP keymaps via LspAttach
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("pack_lsp_attach", { clear = true }),
   callback = function(ev)
@@ -45,14 +40,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
       return
     end
 
-    -- Enable inlay hints
+    -- inlay hints
     if client:supports_method("textDocument/inlayHint") then
       if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype == "" then
         vim.lsp.inlay_hint.enable(true, { bufnr = buf })
       end
     end
 
-    -- LSP keymaps
+    -- keymaps
     local function map(mode, lhs, rhs, desc)
       vim.keymap.set(mode, lhs, rhs, { buffer = buf, desc = desc, silent = true })
     end
@@ -83,7 +78,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
       Snacks.picker.lsp_config()
     end, "Lsp Info")
 
-    -- TypeScript-specific keymaps
     if client.name == "vtsls" then
       local function code_action(action)
         return function()

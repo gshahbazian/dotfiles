@@ -6,19 +6,19 @@ map({ "n", "x" }, "<Down>", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr =
 map({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
 map({ "n", "x" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
 
--- Move to window using the <ctrl> hjkl keys
+-- move to window using the <ctrl> hjkl keys
 map("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
 map("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
 map("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
 map("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window", remap = true })
 
--- Resize window using <ctrl> arrow keys
+-- resize window using <ctrl> arrow keys
 map("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase Window Height" })
 map("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "Decrease Window Height" })
 map("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Window Width" })
 map("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Window Width" })
 
--- Move Lines
+-- move Lines
 map("n", "<A-j>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down" })
 map("n", "<A-k>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up" })
 map("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
@@ -26,7 +26,7 @@ map("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
 map("v", "<A-j>", [[:<C-u>execute "'<,'>move '>+" . v:count1<cr>gv=gv]], { desc = "Move Down" })
 map("v", "<A-k>", [[:<C-u>execute "'<,'>move '<-" . (v:count1 + 1)<cr>gv=gv]], { desc = "Move Up" })
 
--- Buffers
+-- buffers
 map("n", "<S-h>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })
 map("n", "<S-l>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next Buffer" })
 map("n", "<leader>bb", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
@@ -41,7 +41,6 @@ map("n", "<leader>br", "<Cmd>BufferLineCloseRight<CR>", { desc = "Delete Buffers
 map("n", "<leader>bl", "<Cmd>BufferLineCloseLeft<CR>", { desc = "Delete Buffers to the Left" })
 map("n", "<leader>bj", "<cmd>BufferLinePick<cr>", { desc = "Pick Buffer" })
 
--- Clear search and stop snippet on escape
 map({ "i", "n", "s" }, "<esc>", function()
   vim.cmd("noh")
   return "<esc>"
@@ -55,26 +54,22 @@ map("n", "N", "'nN'[v:searchforward].'zv'", { expr = true, desc = "Prev Search R
 map("x", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev Search Result" })
 map("o", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev Search Result" })
 
--- Add undo break-points
+-- add undo break-points
 map("i", ",", ",<c-g>u")
 map("i", ".", ".<c-g>u")
 map("i", ";", ";<c-g>u")
 
--- Keywordprg
 map("n", "<leader>K", "<cmd>norm! K<cr>", { desc = "Keywordprg" })
 
--- Better indenting
+-- better indenting
 map("x", "<", "<gv")
 map("x", ">", ">gv")
 
--- Commenting
 map("n", "gco", "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Below" })
 map("n", "gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Above" })
 
--- New file
 map("n", "<leader>fn", "<cmd>enew<cr>", { desc = "New File" })
 
--- Location list
 map("n", "<leader>xl", function()
   local success, err = pcall(vim.fn.getloclist(0, { winid = 0 }).winid ~= 0 and vim.cmd.lclose or vim.cmd.lopen)
   if not success and err then
@@ -82,7 +77,7 @@ map("n", "<leader>xl", function()
   end
 end, { desc = "Location List" })
 
--- Quickfix list
+-- quickfix list
 map("n", "<leader>xq", function()
   local success, err = pcall(vim.fn.getqflist({ winid = 0 }).winid ~= 0 and vim.cmd.cclose or vim.cmd.copen)
   if not success and err then
@@ -93,12 +88,11 @@ end, { desc = "Quickfix List" })
 map("n", "[q", vim.cmd.cprev, { desc = "Previous Quickfix" })
 map("n", "]q", vim.cmd.cnext, { desc = "Next Quickfix" })
 
--- Formatting
 map({ "n", "x" }, "<leader>cf", function()
   require("conform").format({ bufnr = 0 })
 end, { desc = "Format" })
 
--- Diagnostic
+-- diagnostic
 local function diagnostic_goto(next, severity)
   return function()
     vim.diagnostic.jump({
@@ -117,18 +111,11 @@ map("n", "]w", diagnostic_goto(true, "WARN"), { desc = "Next Warning" })
 map("n", "[w", diagnostic_goto(false, "WARN"), { desc = "Prev Warning" })
 
 -- vim.pack
-map("n", "<leader>lp", function()
-  vim.pack.update(nil, { offline = true })
-end, { desc = "Plugin status" })
 map("n", "<leader>lu", function()
   vim.pack.update()
 end, { desc = "Update plugins" })
-map("n", "<leader>lU", function()
-  vim.pack.update(nil, { force = true })
-end, { desc = "Update plugins (force)" })
 map("n", "<leader>lh", "<cmd>checkhealth vim.pack<cr>", { desc = "Plugin health" })
 
--- Lazygit
 map("n", "<leader>gg", function()
   Snacks.lazygit()
 end, { desc = "Lazygit" })
@@ -145,18 +132,17 @@ map({ "n", "x" }, "<leader>gY", function()
   })
 end, { desc = "Git Browse (copy)" })
 
--- Quit
 map("n", "<leader>qq", "<cmd>qa<cr>", { desc = "Quit All" })
 
--- Windows
+-- windows
 map("n", "<leader>-", "<C-W>s", { desc = "Split Window Below", remap = true })
 map("n", "<leader>|", "<C-W>v", { desc = "Split Window Right", remap = true })
 map("n", "<leader>wd", "<C-W>c", { desc = "Delete Window", remap = true })
 
--- Tabs
+-- tabs
 map("n", "<leader><tab>o", "<cmd>tabonly<cr>", { desc = "Close Other Tabs" })
 
--- Flash keymaps
+-- flash
 map({ "n", "x", "o" }, "s", function()
   require("flash").jump()
 end, { desc = "Flash" })
@@ -178,19 +164,17 @@ map({ "n", "o", "x" }, "<c-space>", function()
   })
 end, { desc = "Treesitter Incremental Selection" })
 
--- Trouble keymaps
+-- trouble
 map("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics (Trouble)" })
 map("n", "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", { desc = "Buffer Diagnostics (Trouble)" })
 map("n", "<leader>cs", "<cmd>Trouble symbols toggle<cr>", { desc = "Symbols (Trouble)" })
 map("n", "<leader>cS", "<cmd>Trouble lsp toggle<cr>", { desc = "LSP references/definitions/... (Trouble)" })
 map("n", "<leader>xL", "<cmd>Trouble loclist toggle<cr>", { desc = "Location List (Trouble)" })
 map("n", "<leader>xQ", "<cmd>Trouble qflist toggle<cr>", { desc = "Quickfix List (Trouble)" })
-
--- Todo-comments keymaps
 map("n", "<leader>xt", "<cmd>Trouble todo toggle<cr>", { desc = "Todo (Trouble)" })
 map("n", "<leader>xT", "<cmd>Trouble todo toggle filter = {tag = {TODO,FIX,FIXME}}<cr>", { desc = "Todo/Fix/Fixme (Trouble)" })
 
--- Word reference navigation
+-- word reference navigation
 map("n", "]]", function()
   Snacks.words.jump(vim.v.count1)
 end, { desc = "Next Reference" })
@@ -198,13 +182,13 @@ map("n", "[[", function()
   Snacks.words.jump(-vim.v.count1)
 end, { desc = "Prev Reference" })
 
--- Noice keymaps
+-- noice
 map("n", "<leader>n", "<cmd>Noice history<cr>", { desc = "Notification History" })
 
--- Mason
+-- mason
 map("n", "<leader>cm", "<cmd>Mason<cr>", { desc = "Mason" })
 
--- Snacks picker keymaps
+-- picker
 map("n", "<leader><space>", function()
   Snacks.picker.files()
 end, { desc = "Find Files" })
@@ -268,29 +252,27 @@ map("n", "<leader>fr", function()
   })
 end, { desc = "Recent files" })
 
--- ============================================================================
-
--- Yank and paste to system clipboard
+-- yank and paste to system clipboard
 map({ "n", "v" }, "<leader>y", '"+y', { silent = true, desc = "Copy to system clipboard" })
 map({ "n", "x" }, "<leader>p", '"+p', { desc = "Paste from system clipboard after the cursor position" })
 map({ "n", "x" }, "<leader>P", '"+P', { desc = "Paste from system clipboard before the cursor position" })
 
--- Cmd+s to save
+-- cmd+s to save
 map("n", "<D-s>", "<cmd>w<cr>", { silent = true, desc = "Save" })
 map("i", "<D-s>", "<Esc><cmd>w<cr>", { silent = true, desc = "Save" })
 
--- Change macro keys
+-- change macro keys
 map("n", "q", "<nop>", { silent = true })
 map("n", "<C-M-q>", "q", { desc = "Record macro" })
 
--- Alt+h/l to go to start/end of line
+-- alt+h/l to go to start/end of line
 map({ "n", "v" }, "<A-h>", "^", { desc = "Go to start of line" })
 map({ "n", "v" }, "<A-l>", "$", { desc = "Go to end of line" })
 
--- Stop ctrl-z from suspending
+-- stop ctrl-z from suspending
 map("n", "<c-z>", "<nop>", { silent = true })
 
--- Open all git modified files
+-- open all git modified files
 map("n", "<leader>gF", function()
   local cwd = vim.fn.getcwd()
   local root_res = vim.system({ "git", "rev-parse", "--show-toplevel" }, { text = true }):wait()
@@ -345,20 +327,17 @@ map("n", "<leader>gF", function()
   end
 end, { desc = "Open git modified files" })
 
--- Open in finder
 map("n", "<leader>jf", function()
   local path = vim.api.nvim_buf_get_name(0)
   vim.fn.jobstart({ "open", "-R", path }, { detach = true })
 end, { silent = true, desc = "Reveal in Finder" })
 
--- Copy relative path
 map("n", "<leader>jp", function()
   local path = vim.fn.expand("%:.")
   vim.fn.setreg("+", path)
   print(path)
 end, { desc = "Copy file path" })
 
--- Open in zed
 map("n", "<leader>jc", function()
   local file_path = vim.fn.expand("%:p")
   local cwd = vim.fn.getcwd()
@@ -368,11 +347,9 @@ map("n", "<leader>jc", function()
   vim.fn.jobstart({ "zed", cwd, goto_arg }, { detach = true })
 end, { silent = true, desc = "Open in Zed" })
 
--- Yank with path
 map("v", "<leader>jy", function()
   local yank = require("utils.yank")
   yank.yank_visual_with_path(yank.get_buffer_cwd_relative(), "relative")
 end, { desc = "[Y]ank selection with [R]elative path" })
 
--- Save without triggering format
 map("n", "<leader>jW", "<cmd>noautocmd write<CR>", { desc = "Save without formatting" })

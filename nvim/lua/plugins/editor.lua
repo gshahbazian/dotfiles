@@ -1,7 +1,5 @@
--- flash.nvim
-require("flash").setup({})
+require("flash").setup()
 
--- trouble.nvim
 require("trouble").setup({
   modes = {
     lsp = {
@@ -10,10 +8,8 @@ require("trouble").setup({
   },
 })
 
--- todo-comments.nvim
-require("todo-comments").setup({})
+require("todo-comments").setup()
 
--- gitsigns.nvim
 require("gitsigns").setup({
   signs = {
     add = { text = "▎" },
@@ -73,8 +69,6 @@ require("gitsigns").setup({
   end,
 })
 
--- stay-centered.nvim
-require("stay-centered").setup({})
+require("stay-centered").setup()
 
--- persistence.nvim
-require("persistence").setup({})
+require("persistence").setup()

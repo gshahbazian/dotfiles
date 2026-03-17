@@ -1,4 +1,3 @@
--- Biome-supported filetypes
 local biome_fts = {
   "astro",
   "css",
@@ -13,7 +12,6 @@ local biome_fts = {
   "vue",
 }
 
--- Prettier-supported filetypes
 local prettier_fts = {
   "css",
   "graphql",
@@ -33,30 +31,27 @@ local prettier_fts = {
   "yaml",
 }
 
--- Build formatters_by_ft
 local formatters_by_ft = {
   lua = { "stylua" },
   sh = { "shfmt" },
 }
 
--- TS/TSX get biome-organize-imports first
+-- ts get biome-organize-imports first
 for _, ft in ipairs({ "typescript", "typescriptreact" }) do
   formatters_by_ft[ft] = { "biome-organize-imports" }
 end
 
--- Add biome for supported filetypes
 for _, ft in ipairs(biome_fts) do
   formatters_by_ft[ft] = formatters_by_ft[ft] or {}
   table.insert(formatters_by_ft[ft], "biome")
 end
 
--- Add prettier for supported filetypes
 for _, ft in ipairs(prettier_fts) do
   formatters_by_ft[ft] = formatters_by_ft[ft] or {}
   table.insert(formatters_by_ft[ft], "prettier")
 end
 
--- Prettier requires config file
+-- prettier requires config file
 local function has_prettier_config(ctx)
   vim.fn.system({ "prettier", "--find-config-path", ctx.filename })
   return vim.v.shell_error == 0
@@ -80,7 +75,7 @@ require("conform").setup({
   },
 })
 
--- Format on save
+-- format on save
 vim.api.nvim_create_autocmd("BufWritePre", {
   group = vim.api.nvim_create_augroup("pack_format_on_save", { clear = true }),
   callback = function(event)
