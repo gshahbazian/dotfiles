@@ -1,15 +1,3 @@
-vim.filetype.add({
-  filename = {
-    ["Tiltfile"] = "python",
-    ["vifmrc"] = "vim",
-  },
-  pattern = {
-    ["%.env%.[%w_.-]+"] = "sh",
-    [".*/%.vscode/.*%.json"] = "jsonc",
-    [".*/zed/.*%.json"] = "jsonc",
-  },
-})
-
 local TS = require("nvim-treesitter")
 
 local ensure_installed = {

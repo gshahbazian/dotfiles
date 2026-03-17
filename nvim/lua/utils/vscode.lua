@@ -4,30 +4,20 @@ function M.setup()
   local map = vim.keymap.set
 
   vim.pack.add({
+    { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
+    { src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects", version = "main" },
+    "https://github.com/nvim-treesitter/nvim-treesitter-context",
+
     "https://github.com/folke/flash.nvim",
     "https://github.com/nvim-mini/mini.ai",
+    "https://github.com/nvim-mini/mini.surround",
+    "https://github.com/folke/ts-comments.nvim",
   }, {
     load = true,
   })
 
-  require("flash").setup()
-
-  local ai = require("mini.ai")
-  ai.setup({
-    n_lines = 500,
-    custom_textobjects = {
-      t = { "<([%p%w]-)%f[^<%w][^<>]->.-</%1>", "^<.->().*()</[^/]->$" },
-      d = { "%f[%d]%d+" },
-      e = {
-        { "%u[%l%d]+%f[^%l%d]", "%f[%S][%l%d]+%f[^%l%d]", "%f[%P][%l%d]+%f[^%l%d]", "^[%l%d]+%f[^%l%d]" },
-        "^().*()$",
-      },
-      u = ai.gen_spec.function_call(),
-      U = ai.gen_spec.function_call({ name_pattern = "[%w_]" }),
-      g = require("utils.ai").ai_buffer,
-    },
-  })
-
+  require("plugins.coding")
+  require("plugins.treesitter")
   require("config.keymaps")
 
   local vscode = require("vscode")

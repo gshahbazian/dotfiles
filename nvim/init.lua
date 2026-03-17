@@ -34,19 +34,18 @@ vim.pack.add({
   "https://github.com/folke/persistence.nvim",
 
   -- editor
-  "https://github.com/folke/flash.nvim",
+  { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("1.*") },
+  "https://github.com/rafamadriz/friendly-snippets",
   "https://github.com/folke/trouble.nvim",
   "https://github.com/folke/todo-comments.nvim",
   "https://github.com/lewis6991/gitsigns.nvim",
   "https://github.com/arnamak/stay-centered.nvim",
 
   -- coding
-  { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("1.*") },
-  "https://github.com/rafamadriz/friendly-snippets",
+  "https://github.com/folke/flash.nvim",
   "https://github.com/nvim-mini/mini.ai",
   "https://github.com/nvim-mini/mini.surround",
   "https://github.com/folke/ts-comments.nvim",
-  "https://github.com/folke/lazydev.nvim",
 
   -- treesitter
   { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
@@ -60,6 +59,7 @@ vim.pack.add({
   "https://github.com/stevearc/conform.nvim",
 
   -- lang
+  "https://github.com/folke/lazydev.nvim",
   "https://github.com/mrcjkb/rustaceanvim",
   "https://github.com/Saecki/crates.nvim",
   "https://github.com/b0o/SchemaStore.nvim",
