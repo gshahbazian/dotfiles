@@ -212,8 +212,8 @@ require("which-key").setup({
   spec = {
     {
       mode = { "n", "x" },
-      { "<leader><tab>", group = "tabs" },
       { "<leader>c", group = "code" },
+      { "<leader>r", group = "lsp pickers" },
       { "<leader>f", group = "file" },
       { "<leader>g", group = "git" },
       { "<leader>gh", group = "hunks" },
@@ -225,6 +225,7 @@ require("which-key").setup({
       { "[", group = "prev" },
       { "]", group = "next" },
       { "g", group = "goto" },
+      { "gr", group = "lsp" },
       { "gs", group = "surround" },
       { "z", group = "fold" },
       {
@@ -242,6 +243,7 @@ require("which-key").setup({
           return require("which-key.extras").expand.win()
         end,
       },
+
       -- rm jank
       { "<leader>y", hidden = true },
       { "<leader>p", hidden = true },

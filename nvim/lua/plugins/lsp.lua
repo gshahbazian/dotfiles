@@ -47,28 +47,27 @@ vim.api.nvim_create_autocmd("LspAttach", {
       end
     end
 
-    -- keymaps
     local function map(mode, lhs, rhs, desc)
       vim.keymap.set(mode, lhs, rhs, { buffer = buf, desc = desc, silent = true })
     end
 
-    map("n", "gd", function()
+    -- lsp pickers
+    map("n", "<leader>rd", function()
       Snacks.picker.lsp_definitions()
     end, "Goto Definition")
-    map("n", "gr", function()
+    map("n", "<leader>rr", function()
       Snacks.picker.lsp_references()
     end, "References")
-    map("n", "gI", function()
+    map("n", "<leader>rI", function()
       Snacks.picker.lsp_implementations()
     end, "Goto Implementation")
-    map("n", "gy", function()
+    map("n", "<leader>ry", function()
       Snacks.picker.lsp_type_definitions()
     end, "Goto T[y]pe Definition")
-    map("n", "gD", vim.lsp.buf.declaration, "Goto Declaration")
-    map("n", "gK", vim.lsp.buf.signature_help, "Signature Help")
-    map({ "n", "x" }, "<leader>ca", vim.lsp.buf.code_action, "Code Action")
-    map({ "n", "x" }, "<leader>cc", vim.lsp.codelens.run, "Run Codelens")
-    map("n", "<leader>cr", vim.lsp.buf.rename, "Rename")
+
+    -- default lsp keymaps listed here
+    -- https://neovim.io/doc/user/lsp/#_global-defaults
+
     map("n", "<leader>cR", function()
       Snacks.rename.rename_file()
     end, "Rename File")

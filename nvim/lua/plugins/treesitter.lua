@@ -49,7 +49,10 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = filetypes,
   group = vim.api.nvim_create_augroup("pack_treesitter", { clear = true }),
   callback = function(ev)
-    vim.treesitter.start(ev.buf)
+    if not vim.g.vscode then
+      vim.treesitter.start(ev.buf)
+    end
+
     vim.api.nvim_set_option_value("indentexpr", "v:lua.require'nvim-treesitter'.indentexpr()", { scope = "local" })
     vim.api.nvim_set_option_value("foldmethod", "expr", { scope = "local" })
     vim.api.nvim_set_option_value("foldexpr", "v:lua.vim.treesitter.foldexpr()", { scope = "local" })

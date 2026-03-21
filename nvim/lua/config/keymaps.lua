@@ -18,7 +18,7 @@ map("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "Decrease Window Height" })
 map("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Window Width" })
 map("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Window Width" })
 
--- move Lines
+-- move lines
 map("n", "<A-j>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down" })
 map("n", "<A-k>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up" })
 map("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
@@ -40,6 +40,12 @@ map("n", "<leader>bD", "<cmd>bd<cr>", { desc = "Delete Buffer and Window" })
 map("n", "<leader>br", "<Cmd>BufferLineCloseRight<CR>", { desc = "Delete Buffers to the Right" })
 map("n", "<leader>bl", "<Cmd>BufferLineCloseLeft<CR>", { desc = "Delete Buffers to the Left" })
 map("n", "<leader>bj", "<cmd>BufferLinePick<cr>", { desc = "Pick Buffer" })
+map("n", "<leader>ba", function()
+  Snacks.bufdelete.all()
+end, { desc = "Delete All Buffers" })
+map("n", "<leader><BS>", function()
+  Snacks.bufdelete()
+end, { desc = "Close Buffer" })
 
 map({ "i", "n", "s" }, "<esc>", function()
   vim.cmd("noh")
@@ -119,7 +125,6 @@ map("n", "<leader>lh", "<cmd>checkhealth vim.pack<cr>", { desc = "Plugin health"
 map("n", "<leader>gg", function()
   Snacks.lazygit()
 end, { desc = "Lazygit" })
-
 map({ "n", "x" }, "<leader>gB", function()
   Snacks.gitbrowse()
 end, { desc = "Git Browse (open)" })
@@ -138,9 +143,7 @@ map("n", "<leader>qq", "<cmd>qa<cr>", { desc = "Quit All" })
 map("n", "<leader>-", "<C-W>s", { desc = "Split Window Below", remap = true })
 map("n", "<leader>|", "<C-W>v", { desc = "Split Window Right", remap = true })
 map("n", "<leader>wd", "<C-W>c", { desc = "Delete Window", remap = true })
-
--- tabs
-map("n", "<leader><tab>o", "<cmd>tabonly<cr>", { desc = "Close Other Tabs" })
+map("n", "<leader>w<tab>", "<cmd>tabonly<cr>", { desc = "Close Other Tabs" })
 
 -- flash
 map({ "n", "x", "o" }, "s", function()
@@ -174,21 +177,13 @@ map("n", "<leader>xQ", "<cmd>Trouble qflist toggle<cr>", { desc = "Quickfix List
 map("n", "<leader>xt", "<cmd>Trouble todo toggle<cr>", { desc = "Todo (Trouble)" })
 map("n", "<leader>xT", "<cmd>Trouble todo toggle filter = {tag = {TODO,FIX,FIXME}}<cr>", { desc = "Todo/Fix/Fixme (Trouble)" })
 
--- word reference navigation
-map("n", "]]", function()
-  Snacks.words.jump(vim.v.count1)
-end, { desc = "Next Reference" })
-map("n", "[[", function()
-  Snacks.words.jump(-vim.v.count1)
-end, { desc = "Prev Reference" })
-
 -- noice
 map("n", "<leader>n", "<cmd>Noice history<cr>", { desc = "Notification History" })
 
 -- mason
 map("n", "<leader>cm", "<cmd>Mason<cr>", { desc = "Mason" })
 
--- picker
+-- pickers
 map("n", "<leader><space>", function()
   Snacks.picker.smart({
     filter = { cwd = true },
@@ -236,7 +231,7 @@ map("n", "<leader>fg", function()
 end, { desc = "Git status" })
 map("n", "<leader>e", function()
   Snacks.explorer()
-end, { desc = "Explorer Snacks" })
+end, { desc = "Explorer" })
 map("n", "<leader>,", function()
   Snacks.picker.buffers({
     on_show = function()
@@ -248,12 +243,6 @@ map("n", "<leader>,", function()
     },
   })
 end, { desc = "Buffers" })
-map("n", "<leader>ba", function()
-  Snacks.bufdelete.all()
-end, { desc = "Delete All Buffers" })
-map("n", "<leader><BS>", function()
-  Snacks.bufdelete()
-end, { desc = "Close Buffer" })
 map("n", "<leader>fr", function()
   Snacks.picker.recent({
     filter = { cwd = true },
@@ -282,61 +271,6 @@ map({ "n", "v" }, "<A-l>", "$", { desc = "Go to end of line" })
 
 -- stop ctrl-z from suspending
 map("n", "<c-z>", "<nop>", { silent = true })
-
--- open all git modified files
-map("n", "<leader>gF", function()
-  local cwd = vim.fn.getcwd()
-  local root_res = vim.system({ "git", "rev-parse", "--show-toplevel" }, { text = true }):wait()
-  if root_res.code ~= 0 then
-    return
-  end
-  local git_root = vim.trim(root_res.stdout or "")
-  if git_root == "" then
-    return
-  end
-
-  local relative_cwd = "."
-  if cwd ~= git_root and vim.startswith(cwd, git_root .. "/") then
-    relative_cwd = cwd:sub(#git_root + 2)
-  end
-
-  local status_res = vim.system({ "git", "-C", git_root, "status", "--porcelain=v1", "-z", "--", relative_cwd }, { text = true }):wait()
-  if status_res.code ~= 0 then
-    return
-  end
-
-  local output = status_res.stdout or ""
-  if output == "" then
-    return
-  end
-
-  local items = vim.split(output, "\0", { plain = true })
-  local seen = {}
-  local i = 1
-  while i <= #items do
-    local entry = items[i]
-    if entry == "" then
-      break
-    end
-
-    local status = entry:sub(1, 2)
-    local path = vim.trim(entry:sub(4))
-    if status:find("R", 1, true) or status:find("C", 1, true) then
-      i = i + 1
-      path = items[i] or path
-    end
-
-    if path ~= "" and not seen[path] then
-      seen[path] = true
-      local full_path = git_root .. "/" .. path
-      if vim.fn.filereadable(full_path) == 1 then
-        vim.cmd.edit(vim.fn.fnameescape(full_path))
-      end
-    end
-
-    i = i + 1
-  end
-end, { desc = "Open git modified files" })
 
 map("n", "<leader>jf", function()
   local path = vim.api.nvim_buf_get_name(0)
