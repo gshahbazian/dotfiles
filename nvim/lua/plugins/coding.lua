@@ -32,7 +32,19 @@ ai.setup({
     },
     u = ai.gen_spec.function_call(),
     U = ai.gen_spec.function_call({ name_pattern = "[%w_]" }),
-    g = require("utils.ai").ai_buffer,
+    g = function()
+      local from = { line = 1, col = 1 }
+      local to = {
+        line = vim.fn.line("$"),
+        col = math.max(vim.fn.getline("$"):len(), 1),
+      }
+      return { from = from, to = to }
+    end,
+  },
+  -- use the default lsp an/in
+  mappings = {
+    around_next = "",
+    inside_next = "",
   },
 })
 
