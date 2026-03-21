@@ -110,3 +110,10 @@ require("gitsigns").setup({
 require("stay-centered").setup()
 
 require("persistence").setup()
+
+local hi = require("mini.hipatterns")
+hi.setup({
+  highlighters = {
+    hex_color = hi.gen_highlighter.hex_color(),
+  },
+})
