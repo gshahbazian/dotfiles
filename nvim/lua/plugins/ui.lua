@@ -28,7 +28,16 @@ Snacks.setup({
   statuscolumn = {},
   lazygit = {
     theme = {
+      [241] = { fg = "Special" },
+      activeBorderColor = { fg = "MatchParen", bold = true },
+      cherryPickedCommitBgColor = { fg = "Identifier" },
+      cherryPickedCommitFgColor = { fg = "Function" },
+      defaultFgColor = { fg = "Normal" },
       inactiveBorderColor = { fg = "FoldColumn" },
+      optionsTextColor = { fg = "Function" },
+      searchingActiveBorderColor = { fg = "MatchParen", bold = true },
+      selectedLineBgColor = { bg = "Visual" },
+      unstagedChangesColor = { fg = "DiagnosticError" },
     },
   },
   picker = {
@@ -90,8 +99,12 @@ Snacks.setup({
 
 require("bufferline").setup({
   options = {
-    close_command = Snacks.bufdelete,
-    right_mouse_command = Snacks.bufdelete,
+    close_command = function(n)
+      Snacks.bufdelete(n)
+    end,
+    right_mouse_command = function(n)
+      Snacks.bufdelete(n)
+    end,
     show_buffer_close_icons = false,
     show_close_icon = false,
     diagnostics = "nvim_lsp",

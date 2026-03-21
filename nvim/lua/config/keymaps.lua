@@ -264,7 +264,7 @@ map("n", "<leader>fr", function()
 end, { desc = "Recent files" })
 
 -- yank and paste to system clipboard
-map({ "n", "v" }, "<leader>y", '"+y', { silent = true, desc = "Copy to system clipboard" })
+map({ "n", "x" }, "<leader>y", '"+y', { silent = true, desc = "Copy to system clipboard" })
 map({ "n", "x" }, "<leader>p", '"+p', { desc = "Paste from system clipboard after the cursor position" })
 map({ "n", "x" }, "<leader>P", '"+P', { desc = "Paste from system clipboard before the cursor position" })
 

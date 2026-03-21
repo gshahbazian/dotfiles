@@ -66,10 +66,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end, "Goto T[y]pe Definition")
     map("n", "gD", vim.lsp.buf.declaration, "Goto Declaration")
     map("n", "gK", vim.lsp.buf.signature_help, "Signature Help")
-    map("i", "<c-k>", vim.lsp.buf.signature_help, "Signature Help")
     map({ "n", "x" }, "<leader>ca", vim.lsp.buf.code_action, "Code Action")
     map({ "n", "x" }, "<leader>cc", vim.lsp.codelens.run, "Run Codelens")
-    map("n", "<leader>cC", vim.lsp.codelens.refresh, "Refresh & Display Codelens")
     map("n", "<leader>cr", vim.lsp.buf.rename, "Rename")
     map("n", "<leader>cR", function()
       Snacks.rename.rename_file()
@@ -78,43 +76,20 @@ vim.api.nvim_create_autocmd("LspAttach", {
       Snacks.picker.lsp_config()
     end, "Lsp Info")
 
-    if client.name == "vtsls" then
-      local function code_action(action)
-        return function()
-          vim.lsp.buf.code_action({
-            apply = true,
-            context = { only = { action }, diagnostics = {} },
-          })
-        end
+    local function code_action(action)
+      return function()
+        vim.lsp.buf.code_action({
+          apply = true,
+          context = { only = { action }, diagnostics = {} },
+        })
       end
+    end
 
-      map("n", "<leader>co", code_action("source.organizeImports"), "Organize Imports")
+    map("n", "<leader>co", code_action("source.organizeImports"), "Organize Imports")
+
+    if client.name == "vtsls" then
       map("n", "<leader>cM", code_action("source.addMissingImports.ts"), "Add missing imports")
-      map("n", "<leader>cu", code_action("source.removeUnused.ts"), "Remove unused imports")
       map("n", "<leader>cD", code_action("source.fixAll.ts"), "Fix all diagnostics")
-      map("n", "gD", function()
-        local win = vim.api.nvim_get_current_win()
-        local params = vim.lsp.util.make_position_params(win, "utf-16")
-        client:request("workspace/executeCommand", {
-          command = "typescript.goToSourceDefinition",
-          arguments = { params.textDocument.uri, params.position },
-        }, function(_, result)
-          if result and #result > 0 then
-            vim.lsp.util.show_document(result[1], "utf-16")
-          end
-        end)
-      end, "Goto Source Definition")
-      map("n", "gR", function()
-        client:request("workspace/executeCommand", {
-          command = "typescript.findAllFileReferences",
-          arguments = { vim.uri_from_bufnr(0) },
-        }, function(_, result)
-          if result then
-            vim.fn.setqflist({}, " ", { title = "File References", items = vim.lsp.util.locations_to_items(result, "utf-16") })
-            vim.cmd("copen")
-          end
-        end)
-      end, "File References")
     end
   end,
 })
