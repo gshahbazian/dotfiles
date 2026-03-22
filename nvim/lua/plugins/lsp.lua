@@ -52,6 +52,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end
 
     -- lsp pickers
+    map("n", "gd", function()
+      Snacks.picker.lsp_definitions()
+    end, "Goto Definition")
     map("n", "<leader>rd", function()
       Snacks.picker.lsp_definitions()
     end, "Goto Definition")

@@ -33,9 +33,3 @@ vim.g.rustaceanvim = vim.tbl_deep_extend("keep", vim.g.rustaceanvim or {}, {
     },
   },
 })
-
-require("crates").setup({
-  lsp = {
-    enabled = true,
-  },
-})

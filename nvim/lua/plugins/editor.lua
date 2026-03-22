@@ -1,5 +1,80 @@
 -- ide type plugins that should not load in the vscode extension
 
+require("noice").setup({
+  lsp = {
+    override = {
+      ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+      ["vim.lsp.util.stylize_markdown"] = true,
+    },
+    hover = {
+      silent = true,
+    },
+  },
+  cmdline = { enabled = false },
+  messages = { enabled = false },
+  notify = {
+    view = "mini",
+  },
+  views = {
+    mini = {
+      position = { row = -2 },
+    },
+  },
+  presets = {
+    bottom_search = true,
+    long_message_to_split = true,
+  },
+})
+
+require("which-key").setup({
+  preset = "helix",
+  icons = {
+    mappings = false,
+  },
+  spec = {
+    {
+      mode = { "n", "x" },
+      { "<leader>c", group = "code" },
+      { "<leader>r", group = "lsp pickers" },
+      { "<leader>f", group = "file" },
+      { "<leader>g", group = "git" },
+      { "<leader>gh", group = "hunks" },
+      { "<leader>j", group = "util" },
+      { "<leader>l", group = "vim.pack" },
+      { "<leader>q", group = "quit/session" },
+      { "<leader>s", group = "search" },
+      { "<leader>x", group = "diagnostics/quickfix" },
+      { "[", group = "prev" },
+      { "]", group = "next" },
+      { "g", group = "goto" },
+      { "gr", group = "lsp" },
+      { "gs", group = "surround" },
+      { "z", group = "fold" },
+      {
+        "<leader>b",
+        group = "buffer",
+        expand = function()
+          return require("which-key.extras").expand.buf()
+        end,
+      },
+      {
+        "<leader>w",
+        group = "windows",
+        proxy = "<c-w>",
+        expand = function()
+          return require("which-key.extras").expand.win()
+        end,
+      },
+
+      -- rm jank
+      { "<leader>y", hidden = true },
+      { "<leader>p", hidden = true },
+      { "<leader>P", hidden = true },
+      { "<leader>K", hidden = true },
+    },
+  },
+})
+
 require("blink.cmp").setup({
   keymap = {
     ["<C-y>"] = { "select_and_accept" },

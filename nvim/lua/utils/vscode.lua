@@ -9,8 +9,7 @@ function M.setup()
     "https://github.com/nvim-treesitter/nvim-treesitter-context",
 
     "https://github.com/folke/flash.nvim",
-    "https://github.com/nvim-mini/mini.ai",
-    "https://github.com/nvim-mini/mini.surround",
+    "https://github.com/nvim-mini/mini.nvim",
     "https://github.com/folke/ts-comments.nvim",
   }, {
     load = true,
@@ -19,6 +18,7 @@ function M.setup()
   require("plugins.coding")
   require("plugins.treesitter")
   require("config.keymaps")
+  require("config.autocmds")
 
   local vscode = require("vscode")
 
@@ -89,8 +89,6 @@ function M.setup()
   map("n", "zR", function()
     vscode.action("editor.unfoldAll")
   end)
-
-  require("config.autocmds")
 end
 
 return M

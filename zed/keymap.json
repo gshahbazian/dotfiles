@@ -15,7 +15,8 @@
     // motions / jumps
     "context": "vim_mode == normal",
     "bindings": {
-      "g r": "editor::FindAllReferences",
+      "g r r": "editor::FindAllReferences",
+      "space r r": "editor::FindAllReferences",
       "space j f": "editor::RevealInFileManager",
       "[ h": "editor::GoToPreviousHunk",
       "] h": "editor::GoToHunk",

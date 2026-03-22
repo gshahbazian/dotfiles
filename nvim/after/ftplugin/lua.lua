@@ -1,7 +1,6 @@
-if vim.g.lazydev_setup then
+if vim.g.vscode then
   return
 end
-vim.g.lazydev_setup = true
 
 require("lazydev").setup({
   library = {
