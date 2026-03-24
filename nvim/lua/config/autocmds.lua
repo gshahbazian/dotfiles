@@ -52,23 +52,15 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 vim.api.nvim_create_autocmd("FileType", {
   group = augroup("close_with_q"),
   pattern = {
-    "PlenaryTestPopup",
     "checkhealth",
-    "dap-float",
-    "dbout",
     "gitsigns-blame",
     "help",
-    "lspinfo",
-    "neotest-output",
-    "neotest-output-panel",
-    "neotest-summary",
-    "notify",
     "qf",
-    "startuptime",
-    "tsplayground",
+    "nvim-pack",
   },
   callback = function(event)
     vim.bo[event.buf].buflisted = false
+    vim.opt_local.relativenumber = false
     vim.schedule(function()
       vim.keymap.set("n", "q", function()
         vim.cmd("close")

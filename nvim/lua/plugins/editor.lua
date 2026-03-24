@@ -182,7 +182,9 @@ require("gitsigns").setup({
   end,
 })
 
-require("stay-centered").setup()
+require("stay-centered").setup({
+  skip_filetypes = { "snacks_dashboard" },
+})
 
 require("persistence").setup()
 
