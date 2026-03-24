@@ -1,17 +1,5 @@
 -- coding plugins that are safe to load in the vscode extension
 
-vim.filetype.add({
-  filename = {
-    ["Tiltfile"] = "python",
-    ["vifmrc"] = "vim",
-  },
-  pattern = {
-    ["%.env%.[%w_.-]+"] = "sh",
-    [".*/%.vscode/.*%.json"] = "jsonc",
-    [".*/zed/.*%.json"] = "jsonc",
-  },
-})
-
 require("flash").setup()
 
 local ai = require("mini.ai")

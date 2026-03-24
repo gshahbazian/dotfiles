@@ -1,3 +1,15 @@
+vim.filetype.add({
+  filename = {
+    ["Tiltfile"] = "python",
+    ["vifmrc"] = "vim",
+  },
+  pattern = {
+    ["%.env%.[%w_.-]+"] = "sh",
+    [".*/%.vscode/.*%.json"] = "jsonc",
+    [".*/%.?zed/.*%.json"] = "jsonc",
+  },
+})
+
 vim.diagnostic.config({
   virtual_text = false,
   virtual_lines = { current_line = true },
