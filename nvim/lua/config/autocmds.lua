@@ -1,10 +1,7 @@
-local function augroup(name)
-  return vim.api.nvim_create_augroup("pack_" .. name, { clear = true })
-end
+local backdrop = require("utils.backdrop")
 
 -- check if we need to reload the file when it changed
 vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
-  group = augroup("checktime"),
   callback = function()
     if vim.o.buftype ~= "nofile" then
       vim.cmd("checktime")
@@ -14,7 +11,6 @@ vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
 
 -- highlight on yank
 vim.api.nvim_create_autocmd("TextYankPost", {
-  group = augroup("highlight_yank"),
   callback = function()
     vim.hl.on_yank()
   end,
@@ -22,17 +18,16 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 -- resize splits if window got resized
 vim.api.nvim_create_autocmd({ "VimResized" }, {
-  group = augroup("resize_splits"),
   callback = function()
     local current_tab = vim.fn.tabpagenr()
     vim.cmd("tabdo wincmd =")
     vim.cmd("tabnext " .. current_tab)
+    backdrop.resize()
   end,
 })
 
 -- go to last loc when opening a buffer
 vim.api.nvim_create_autocmd("BufReadPost", {
-  group = augroup("last_loc"),
   callback = function(event)
     local exclude = { "gitcommit" }
     local buf = event.buf
@@ -50,7 +45,6 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 
 -- close some filetypes with <q>
 vim.api.nvim_create_autocmd("FileType", {
-  group = augroup("close_with_q"),
   pattern = {
     "checkhealth",
     "gitsigns-blame",
@@ -72,7 +66,6 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- make it easier to close man-files when opened inline
 vim.api.nvim_create_autocmd("FileType", {
-  group = augroup("man_unlisted"),
   pattern = { "man" },
   callback = function(event)
     vim.bo[event.buf].buflisted = false
@@ -81,7 +74,6 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- wrap in text filetypes
 vim.api.nvim_create_autocmd("FileType", {
-  group = augroup("ft_wrap"),
   pattern = { "text", "plaintex", "typst", "gitcommit", "markdown" },
   callback = function()
     vim.opt_local.wrap = true
@@ -90,12 +82,80 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- auto create dir when saving a file
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-  group = augroup("auto_create_dir"),
   callback = function(event)
     if event.match:match("^%w%w+:[\\/][\\/]") then
       return
     end
     local file = vim.uv.fs_realpath(event.match) or event.match
     vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
+  end,
+})
+
+-- esc to quit mini.files
+vim.api.nvim_create_autocmd("User", {
+  pattern = "MiniFilesBufferCreate",
+  callback = function(event)
+    vim.keymap.set("n", "<Esc>", MiniFiles.close, {
+      buffer = event.data.buf_id,
+      silent = true,
+      desc = "Close mini.files",
+    })
+  end,
+})
+
+-- backdrop behind mini.files
+vim.api.nvim_create_autocmd("User", {
+  pattern = "MiniFilesExplorerOpen",
+  callback = function()
+    backdrop.open()
+  end,
+})
+vim.api.nvim_create_autocmd("User", {
+  pattern = "MiniFilesExplorerClose",
+  callback = function()
+    backdrop.close()
+  end,
+})
+
+-- clean mini.files titlebar
+vim.api.nvim_create_autocmd("User", {
+  pattern = "MiniFilesWindowUpdate",
+  callback = function(args)
+    local win_id = args.data.win_id
+    if not vim.api.nvim_win_is_valid(win_id) then
+      return
+    end
+
+    local state = MiniFiles.get_explorer_state()
+    if not state then
+      return
+    end
+
+    local path
+    for _, window in ipairs(state.windows) do
+      if window.win_id == win_id then
+        path = window.path
+        break
+      end
+    end
+
+    if type(path) ~= "string" then
+      return
+    end
+
+    path = tostring(path):gsub("%z", "")
+    local cwd = vim.uv.fs_realpath(vim.fn.getcwd()) or vim.fn.getcwd()
+    local normalized_path = vim.uv.fs_realpath(path) or path
+    local title
+
+    if normalized_path == cwd then
+      title = vim.fs.basename(cwd)
+    else
+      title = vim.fs.relpath(cwd, path) or path
+    end
+
+    local config = vim.api.nvim_win_get_config(win_id)
+    config.title = string.format(" %s ", title)
+    vim.api.nvim_win_set_config(win_id, config)
   end,
 })

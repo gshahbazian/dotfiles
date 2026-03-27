@@ -1,82 +1,80 @@
-local map = vim.keymap.set
-
 -- better up/down
-map({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
-map({ "n", "x" }, "<Down>", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
-map({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
-map({ "n", "x" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
+vim.keymap.set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
+vim.keymap.set({ "n", "x" }, "<Down>", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
+vim.keymap.set({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
+vim.keymap.set({ "n", "x" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
 
 -- move to window using the <ctrl> hjkl keys
-map("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
-map("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
-map("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
-map("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window", remap = true })
+vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
+vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
+vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
+vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window", remap = true })
 
 -- resize window using <ctrl> arrow keys
-map("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase Window Height" })
-map("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "Decrease Window Height" })
-map("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Window Width" })
-map("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Window Width" })
+vim.keymap.set("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase Window Height" })
+vim.keymap.set("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "Decrease Window Height" })
+vim.keymap.set("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Window Width" })
+vim.keymap.set("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Window Width" })
 
 -- move lines
-map("n", "<A-j>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down" })
-map("n", "<A-k>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up" })
-map("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
-map("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
-map("v", "<A-j>", [[:<C-u>execute "'<,'>move '>+" . v:count1<cr>gv=gv]], { desc = "Move Down" })
-map("v", "<A-k>", [[:<C-u>execute "'<,'>move '<-" . (v:count1 + 1)<cr>gv=gv]], { desc = "Move Up" })
+vim.keymap.set("n", "<A-j>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down" })
+vim.keymap.set("n", "<A-k>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up" })
+vim.keymap.set("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
+vim.keymap.set("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
+vim.keymap.set("v", "<A-j>", [[:<C-u>execute "'<,'>move '>+" . v:count1<cr>gv=gv]], { desc = "Move Down" })
+vim.keymap.set("v", "<A-k>", [[:<C-u>execute "'<,'>move '<-" . (v:count1 + 1)<cr>gv=gv]], { desc = "Move Up" })
 
 -- buffers
-map("n", "<S-h>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })
-map("n", "<S-l>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next Buffer" })
-map("n", "<leader>bb", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
-map("n", "<leader>bd", function()
+vim.keymap.set("n", "<S-h>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })
+vim.keymap.set("n", "<S-l>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next Buffer" })
+vim.keymap.set("n", "<leader>bb", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
+vim.keymap.set("n", "<leader>bd", function()
   Snacks.bufdelete()
 end, { desc = "Delete Buffer" })
-map("n", "<leader>bo", function()
+vim.keymap.set("n", "<leader>bo", function()
   Snacks.bufdelete.other()
 end, { desc = "Delete Other Buffers" })
-map("n", "<leader>bD", "<cmd>bd<cr>", { desc = "Delete Buffer and Window" })
-map("n", "<leader>br", "<Cmd>BufferLineCloseRight<CR>", { desc = "Delete Buffers to the Right" })
-map("n", "<leader>bl", "<Cmd>BufferLineCloseLeft<CR>", { desc = "Delete Buffers to the Left" })
-map("n", "<leader>bj", "<cmd>BufferLinePick<cr>", { desc = "Pick Buffer" })
-map("n", "<leader>ba", function()
+vim.keymap.set("n", "<leader>bD", "<cmd>bd<cr>", { desc = "Delete Buffer and Window" })
+vim.keymap.set("n", "<leader>br", "<Cmd>BufferLineCloseRight<CR>", { desc = "Delete Buffers to the Right" })
+vim.keymap.set("n", "<leader>bl", "<Cmd>BufferLineCloseLeft<CR>", { desc = "Delete Buffers to the Left" })
+vim.keymap.set("n", "<leader>bj", "<cmd>BufferLinePick<cr>", { desc = "Pick Buffer" })
+vim.keymap.set("n", "<leader>ba", function()
   Snacks.bufdelete.all()
 end, { desc = "Delete All Buffers" })
-map("n", "<leader><BS>", function()
+vim.keymap.set("n", "<leader><BS>", function()
   Snacks.bufdelete()
 end, { desc = "Close Buffer" })
 
-map({ "i", "n", "s" }, "<esc>", function()
+vim.keymap.set({ "i", "n", "s" }, "<esc>", function()
   vim.cmd("noh")
   return "<esc>"
 end, { expr = true, desc = "Escape and Clear hlsearch" })
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
-map("n", "n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Next Search Result" })
-map("x", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next Search Result" })
-map("o", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next Search Result" })
-map("n", "N", "'nN'[v:searchforward].'zv'", { expr = true, desc = "Prev Search Result" })
-map("x", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev Search Result" })
-map("o", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev Search Result" })
+vim.keymap.set("n", "n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Next Search Result" })
+vim.keymap.set("x", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next Search Result" })
+vim.keymap.set("o", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next Search Result" })
+vim.keymap.set("n", "N", "'nN'[v:searchforward].'zv'", { expr = true, desc = "Prev Search Result" })
+vim.keymap.set("x", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev Search Result" })
+vim.keymap.set("o", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev Search Result" })
 
 -- add undo break-points
-map("i", ",", ",<c-g>u")
-map("i", ".", ".<c-g>u")
-map("i", ";", ";<c-g>u")
+vim.keymap.set("i", ",", ",<c-g>u")
+vim.keymap.set("i", ".", ".<c-g>u")
+vim.keymap.set("i", ";", ";<c-g>u")
 
-map("n", "<leader>K", "<cmd>norm! K<cr>", { desc = "Keywordprg" })
+vim.keymap.set("n", "<leader>K", "<cmd>norm! K<cr>", { desc = "Keywordprg" })
 
 -- better indenting
-map("x", "<", "<gv")
-map("x", ">", ">gv")
+vim.keymap.set("x", "<", "<gv")
+vim.keymap.set("x", ">", ">gv")
 
-map("n", "gco", "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Below" })
-map("n", "gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Above" })
+vim.keymap.set("n", "gco", "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Below" })
+vim.keymap.set("n", "gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Above" })
 
-map("n", "<leader>fn", "<cmd>enew<cr>", { desc = "New File" })
+vim.keymap.set("n", "<leader>fn", "<cmd>enew<cr>", { desc = "New File" })
 
-map("n", "<leader>xl", function()
+vim.keymap.set("n", "<leader>xl", function()
   local success, err = pcall(vim.fn.getloclist(0, { winid = 0 }).winid ~= 0 and vim.cmd.lclose or vim.cmd.lopen)
   if not success and err then
     vim.notify(err, vim.log.levels.ERROR)
@@ -84,20 +82,20 @@ map("n", "<leader>xl", function()
 end, { desc = "Location List" })
 
 -- quickfix list
-map("n", "<leader>xq", function()
+vim.keymap.set("n", "<leader>xq", function()
   local success, err = pcall(vim.fn.getqflist({ winid = 0 }).winid ~= 0 and vim.cmd.cclose or vim.cmd.copen)
   if not success and err then
     vim.notify(err, vim.log.levels.ERROR)
   end
 end, { desc = "Quickfix List" })
-map("n", "<leader>xc", function()
+vim.keymap.set("n", "<leader>xc", function()
   vim.fn.setqflist({})
   vim.cmd("cclose")
 end, { desc = "Clear Quickfix" })
-map("n", "[q", vim.cmd.cprev, { desc = "Previous Quickfix" })
-map("n", "]q", vim.cmd.cnext, { desc = "Next Quickfix" })
+vim.keymap.set("n", "[q", vim.cmd.cprev, { desc = "Previous Quickfix" })
+vim.keymap.set("n", "]q", vim.cmd.cnext, { desc = "Next Quickfix" })
 
-map({ "n", "x" }, "<leader>cf", function()
+vim.keymap.set({ "n", "x" }, "<leader>cf", function()
   require("conform").format({ bufnr = 0 })
 end, { desc = "Format" })
 
@@ -111,27 +109,27 @@ local function diagnostic_goto(next, severity)
     })
   end
 end
-map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
-map("n", "]d", diagnostic_goto(true), { desc = "Next Diagnostic" })
-map("n", "[d", diagnostic_goto(false), { desc = "Prev Diagnostic" })
-map("n", "]e", diagnostic_goto(true, "ERROR"), { desc = "Next Error" })
-map("n", "[e", diagnostic_goto(false, "ERROR"), { desc = "Prev Error" })
-map("n", "]w", diagnostic_goto(true, "WARN"), { desc = "Next Warning" })
-map("n", "[w", diagnostic_goto(false, "WARN"), { desc = "Prev Warning" })
+vim.keymap.set("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
+vim.keymap.set("n", "]d", diagnostic_goto(true), { desc = "Next Diagnostic" })
+vim.keymap.set("n", "[d", diagnostic_goto(false), { desc = "Prev Diagnostic" })
+vim.keymap.set("n", "]e", diagnostic_goto(true, "ERROR"), { desc = "Next Error" })
+vim.keymap.set("n", "[e", diagnostic_goto(false, "ERROR"), { desc = "Prev Error" })
+vim.keymap.set("n", "]w", diagnostic_goto(true, "WARN"), { desc = "Next Warning" })
+vim.keymap.set("n", "[w", diagnostic_goto(false, "WARN"), { desc = "Prev Warning" })
 
 -- vim.pack
-map("n", "<leader>lu", function()
+vim.keymap.set("n", "<leader>lu", function()
   vim.pack.update()
 end, { desc = "Update plugins" })
-map("n", "<leader>lh", "<cmd>checkhealth vim.pack<cr>", { desc = "Plugin health" })
+vim.keymap.set("n", "<leader>lh", "<cmd>checkhealth vim.pack<cr>", { desc = "Plugin health" })
 
-map("n", "<leader>gg", function()
+vim.keymap.set("n", "<leader>gg", function()
   Snacks.lazygit()
 end, { desc = "Lazygit" })
-map({ "n", "x" }, "<leader>gB", function()
+vim.keymap.set({ "n", "x" }, "<leader>gB", function()
   Snacks.gitbrowse()
 end, { desc = "Git Browse (open)" })
-map({ "n", "x" }, "<leader>gY", function()
+vim.keymap.set({ "n", "x" }, "<leader>gY", function()
   Snacks.gitbrowse({
     open = function(url)
       vim.fn.setreg("+", url)
@@ -140,28 +138,28 @@ map({ "n", "x" }, "<leader>gY", function()
   })
 end, { desc = "Git Browse (copy)" })
 
-map("n", "<leader>qq", "<cmd>qa<cr>", { desc = "Quit All" })
+vim.keymap.set("n", "<leader>qq", "<cmd>qa<cr>", { desc = "Quit All" })
 
 -- windows
-map("n", "<leader>-", "<C-W>s", { desc = "Split Window Below", remap = true })
-map("n", "<leader>|", "<C-W>v", { desc = "Split Window Right", remap = true })
-map("n", "<leader>wd", "<C-W>c", { desc = "Delete Window", remap = true })
-map("n", "<leader>w<tab>", "<cmd>tabonly<cr>", { desc = "Close Other Tabs" })
+vim.keymap.set("n", "<leader>-", "<C-W>s", { desc = "Split Window Below", remap = true })
+vim.keymap.set("n", "<leader>|", "<C-W>v", { desc = "Split Window Right", remap = true })
+vim.keymap.set("n", "<leader>wd", "<C-W>c", { desc = "Delete Window", remap = true })
+vim.keymap.set("n", "<leader>w<tab>", "<cmd>tabonly<cr>", { desc = "Close Other Tabs" })
 
 -- flash
-map({ "n", "x", "o" }, "s", function()
+vim.keymap.set({ "n", "x", "o" }, "s", function()
   require("flash").jump()
 end, { desc = "Flash" })
-map({ "n", "o", "x" }, "S", function()
+vim.keymap.set({ "n", "o", "x" }, "S", function()
   require("flash").treesitter()
 end, { desc = "Flash Treesitter" })
-map("o", "r", function()
+vim.keymap.set("o", "r", function()
   require("flash").remote()
 end, { desc = "Remote Flash" })
-map({ "o", "x" }, "R", function()
+vim.keymap.set({ "o", "x" }, "R", function()
   require("flash").treesitter_search()
 end, { desc = "Treesitter Search" })
-map({ "n", "o", "x" }, "<c-space>", function()
+vim.keymap.set({ "n", "o", "x" }, "<c-space>", function()
   require("flash").treesitter({
     actions = {
       ["<c-space>"] = "next",
@@ -171,58 +169,58 @@ map({ "n", "o", "x" }, "<c-space>", function()
 end, { desc = "Treesitter Incremental Selection" })
 
 -- trouble
-map("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics (Trouble)" })
-map("n", "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", { desc = "Buffer Diagnostics (Trouble)" })
-map("n", "<leader>cs", "<cmd>Trouble symbols toggle<cr>", { desc = "Symbols (Trouble)" })
-map("n", "<leader>cS", "<cmd>Trouble lsp toggle<cr>", { desc = "LSP references/definitions/... (Trouble)" })
-map("n", "<leader>xL", "<cmd>Trouble loclist toggle<cr>", { desc = "Location List (Trouble)" })
-map("n", "<leader>xQ", "<cmd>Trouble qflist toggle<cr>", { desc = "Quickfix List (Trouble)" })
+vim.keymap.set("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics (Trouble)" })
+vim.keymap.set("n", "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", { desc = "Buffer Diagnostics (Trouble)" })
+vim.keymap.set("n", "<leader>cs", "<cmd>Trouble symbols toggle<cr>", { desc = "Symbols (Trouble)" })
+vim.keymap.set("n", "<leader>cS", "<cmd>Trouble lsp toggle<cr>", { desc = "LSP references/definitions/... (Trouble)" })
+vim.keymap.set("n", "<leader>xL", "<cmd>Trouble loclist toggle<cr>", { desc = "Location List (Trouble)" })
+vim.keymap.set("n", "<leader>xQ", "<cmd>Trouble qflist toggle<cr>", { desc = "Quickfix List (Trouble)" })
 
 -- noice
-map("n", "<leader>n", "<cmd>Noice history<cr>", { desc = "Notification History" })
+vim.keymap.set("n", "<leader>n", "<cmd>Noice history<cr>", { desc = "Notification History" })
 
 -- mason
-map("n", "<leader>cm", "<cmd>Mason<cr>", { desc = "Mason" })
+vim.keymap.set("n", "<leader>cm", "<cmd>Mason<cr>", { desc = "Mason" })
 
 -- pickers
-map("n", "<leader><space>", function()
+vim.keymap.set("n", "<leader><space>", function()
   Snacks.picker.smart({
     filter = { cwd = true },
   })
 end, { desc = "Find Files" })
-map("n", "<leader>/", function()
+vim.keymap.set("n", "<leader>/", function()
   Snacks.picker.grep()
 end, { desc = "Grep" })
-map("n", '<leader>s"', function()
+vim.keymap.set("n", '<leader>s"', function()
   Snacks.picker.registers()
 end, { desc = "Registers" })
-map("n", "<leader>sj", function()
+vim.keymap.set("n", "<leader>sj", function()
   Snacks.picker.jumps()
 end, { desc = "Jumps" })
-map("n", "<leader>sk", function()
+vim.keymap.set("n", "<leader>sk", function()
   Snacks.picker.keymaps()
 end, { desc = "Keymaps" })
-map("n", "<leader>sr", function()
+vim.keymap.set("n", "<leader>sr", function()
   Snacks.picker.resume({
     on_show = function()
       vim.cmd.stopinsert()
     end,
   })
 end, { desc = "Resume" })
-map({ "n", "x" }, "<leader>sw", function()
+vim.keymap.set({ "n", "x" }, "<leader>sw", function()
   Snacks.picker.grep_word({
     on_show = function()
       vim.cmd.stopinsert()
     end,
   })
 end, { desc = "Visual selection or word" })
-map("n", "<leader>sm", function()
+vim.keymap.set("n", "<leader>sm", function()
   Snacks.picker.marks()
 end, { desc = "Marks" })
-map("n", "<leader>sf", function()
+vim.keymap.set("n", "<leader>sf", function()
   Snacks.picker.grep({ regex = false })
 end, { desc = "Search string" })
-map("n", "<leader>fg", function()
+vim.keymap.set("n", "<leader>fg", function()
   Snacks.picker.git_status({
     ignored = false,
     on_show = function()
@@ -230,10 +228,14 @@ map("n", "<leader>fg", function()
     end,
   })
 end, { desc = "Git status" })
-map("n", "<leader>e", function()
-  Snacks.explorer()
-end, { desc = "Explorer" })
-map("n", "<leader>,", function()
+vim.keymap.set("n", "<leader>e", function()
+  local mini_files = require("mini.files")
+  if not mini_files.close() then
+    local path = vim.api.nvim_buf_get_name(0)
+    mini_files.open(path ~= "" and path or nil, false)
+  end
+end, { desc = "mini.files" })
+vim.keymap.set("n", "<leader>,", function()
   Snacks.picker.buffers({
     on_show = function()
       vim.cmd.stopinsert()
@@ -244,7 +246,7 @@ map("n", "<leader>,", function()
     },
   })
 end, { desc = "Buffers" })
-map("n", "<leader>fr", function()
+vim.keymap.set("n", "<leader>fr", function()
   Snacks.picker.recent({
     filter = { cwd = true },
     on_show = function()
@@ -254,37 +256,37 @@ map("n", "<leader>fr", function()
 end, { desc = "Recent files" })
 
 -- yank and paste to system clipboard
-map({ "n", "x" }, "<leader>y", '"+y', { silent = true, desc = "Copy to system clipboard" })
-map({ "n", "x" }, "<leader>p", '"+p', { desc = "Paste from system clipboard after the cursor position" })
-map({ "n", "x" }, "<leader>P", '"+P', { desc = "Paste from system clipboard before the cursor position" })
+vim.keymap.set({ "n", "x" }, "<leader>y", '"+y', { silent = true, desc = "Copy to system clipboard" })
+vim.keymap.set({ "n", "x" }, "<leader>p", '"+p', { desc = "Paste from system clipboard after the cursor position" })
+vim.keymap.set({ "n", "x" }, "<leader>P", '"+P', { desc = "Paste from system clipboard before the cursor position" })
 
 -- cmd+s to save
-map("n", "<D-s>", "<cmd>w<cr>", { silent = true, desc = "Save" })
-map("i", "<D-s>", "<Esc><cmd>w<cr>", { silent = true, desc = "Save" })
+vim.keymap.set("n", "<D-s>", "<cmd>w<cr>", { silent = true, desc = "Save" })
+vim.keymap.set("i", "<D-s>", "<Esc><cmd>w<cr>", { silent = true, desc = "Save" })
 
 -- change macro keys
-map("n", "q", "<nop>", { silent = true })
-map("n", "<C-M-q>", "q", { desc = "Record macro" })
+vim.keymap.set("n", "q", "<nop>", { silent = true })
+vim.keymap.set("n", "<C-M-q>", "q", { desc = "Record macro" })
 
 -- alt+h/l to go to start/end of line
-map({ "n", "v" }, "<A-h>", "^", { desc = "Go to start of line" })
-map({ "n", "v" }, "<A-l>", "$", { desc = "Go to end of line" })
+vim.keymap.set({ "n", "v" }, "<A-h>", "^", { desc = "Go to start of line" })
+vim.keymap.set({ "n", "v" }, "<A-l>", "$", { desc = "Go to end of line" })
 
 -- stop ctrl-z from suspending
-map("n", "<c-z>", "<nop>", { silent = true })
+vim.keymap.set("n", "<c-z>", "<nop>", { silent = true })
 
-map("n", "<leader>jf", function()
+vim.keymap.set("n", "<leader>jf", function()
   local path = vim.api.nvim_buf_get_name(0)
   vim.fn.jobstart({ "open", "-R", path }, { detach = true })
 end, { silent = true, desc = "Reveal in Finder" })
 
-map("n", "<leader>jp", function()
+vim.keymap.set("n", "<leader>jp", function()
   local path = vim.fn.expand("%:.")
   vim.fn.setreg("+", path)
   print(path)
 end, { desc = "Copy file path" })
 
-map("n", "<leader>jc", function()
+vim.keymap.set("n", "<leader>jc", function()
   local file_path = vim.fn.expand("%:p")
   local line = vim.fn.line(".")
   local col = vim.fn.col(".")
@@ -294,9 +296,9 @@ map("n", "<leader>jc", function()
   vim.fn.jobstart({ "zed", cwd, goto_arg }, { detach = true })
 end, { silent = true, desc = "Open in Zed" })
 
-map("v", "<leader>jy", function()
+vim.keymap.set("v", "<leader>jy", function()
   local yank = require("utils.yank")
   yank.yank_visual_with_path(yank.get_buffer_cwd_relative(), "relative")
 end, { desc = "[Y]ank selection with [R]elative path" })
 
-map("n", "<leader>jW", "<cmd>noautocmd write<CR>", { desc = "Save without formatting" })
+vim.keymap.set("n", "<leader>jW", "<cmd>noautocmd write<CR>", { desc = "Save without formatting" })

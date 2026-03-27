@@ -47,7 +47,6 @@ end
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = filetypes,
-  group = vim.api.nvim_create_augroup("pack_treesitter", { clear = true }),
   callback = function(ev)
     if not vim.g.vscode then
       vim.treesitter.start(ev.buf)
@@ -92,7 +91,6 @@ local function attach_textobjects(buf)
 end
 
 vim.api.nvim_create_autocmd("FileType", {
-  group = vim.api.nvim_create_augroup("pack_treesitter_textobjects", { clear = true }),
   callback = function(ev)
     attach_textobjects(ev.buf)
   end,

@@ -74,7 +74,6 @@ require("conform").setup({
 
 -- format on save
 vim.api.nvim_create_autocmd("BufWritePre", {
-  group = vim.api.nvim_create_augroup("pack_format_on_save", { clear = true }),
   callback = function(event)
     require("conform").format({ bufnr = event.buf })
   end,

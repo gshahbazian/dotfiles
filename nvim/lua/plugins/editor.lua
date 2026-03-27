@@ -8,6 +8,11 @@ require("noice").setup({
     },
     hover = {
       silent = true,
+      opts = {
+        border = {
+          style = "single",
+        },
+      },
     },
   },
   cmdline = { enabled = false },
@@ -23,6 +28,7 @@ require("noice").setup({
   presets = {
     bottom_search = true,
     long_message_to_split = true,
+    lsp_doc_border = true,
   },
 })
 
@@ -30,6 +36,9 @@ require("which-key").setup({
   preset = "helix",
   icons = {
     mappings = false,
+  },
+  win = {
+    border = "single",
   },
   spec = {
     {
@@ -73,6 +82,36 @@ require("which-key").setup({
       { "<leader>K", hidden = true },
     },
   },
+})
+
+require("mini.files").setup({
+  content = {
+    filter = function(fs_entry)
+      return not vim.tbl_contains({
+        ".git",
+        "node_modules",
+        "vendor",
+        "dist",
+        "out",
+        ".DS_Store",
+        ".next",
+      }, fs_entry.name)
+    end,
+  },
+  mappings = {
+    go_in = "L",
+    go_in_plus = "l",
+  },
+  windows = {
+    preview = true,
+  },
+})
+
+vim.api.nvim_create_autocmd("User", {
+  pattern = "MiniFilesActionRename",
+  callback = function(event)
+    Snacks.rename.on_rename_file(event.data.from, event.data.to)
+  end,
 })
 
 require("blink.cmp").setup({
@@ -183,7 +222,7 @@ require("gitsigns").setup({
 })
 
 require("stay-centered").setup({
-  skip_filetypes = { "snacks_dashboard" },
+  skip_filetypes = { "snacks_dashboard", "minifiles" },
 })
 
 require("persistence").setup()

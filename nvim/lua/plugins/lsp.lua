@@ -44,7 +44,6 @@ require("mason-lspconfig").setup({
 })
 
 vim.api.nvim_create_autocmd("LspAttach", {
-  group = vim.api.nvim_create_augroup("pack_lsp_attach", { clear = true }),
   callback = function(ev)
     local buf = ev.buf
     local client = vim.lsp.get_client_by_id(ev.data.client_id)
@@ -59,36 +58,32 @@ vim.api.nvim_create_autocmd("LspAttach", {
       end
     end
 
-    local function map(mode, lhs, rhs, desc)
-      vim.keymap.set(mode, lhs, rhs, { buffer = buf, desc = desc, silent = true })
-    end
-
     -- lsp pickers
-    map("n", "gd", function()
+    vim.keymap.set("n", "gd", function()
       Snacks.picker.lsp_definitions()
-    end, "Goto Definition")
-    map("n", "<leader>rd", function()
+    end, { buffer = buf, desc = "Goto Definition", silent = true })
+    vim.keymap.set("n", "<leader>rd", function()
       Snacks.picker.lsp_definitions()
-    end, "Goto Definition")
-    map("n", "<leader>rr", function()
+    end, { buffer = buf, desc = "Goto Definition", silent = true })
+    vim.keymap.set("n", "<leader>rr", function()
       Snacks.picker.lsp_references()
-    end, "References")
-    map("n", "<leader>rI", function()
+    end, { buffer = buf, desc = "References", silent = true })
+    vim.keymap.set("n", "<leader>rI", function()
       Snacks.picker.lsp_implementations()
-    end, "Goto Implementation")
-    map("n", "<leader>ry", function()
+    end, { buffer = buf, desc = "Goto Implementation", silent = true })
+    vim.keymap.set("n", "<leader>ry", function()
       Snacks.picker.lsp_type_definitions()
-    end, "Goto T[y]pe Definition")
+    end, { buffer = buf, desc = "Goto T[y]pe Definition", silent = true })
 
     -- default lsp keymaps listed here
     -- https://neovim.io/doc/user/lsp/#_global-defaults
 
-    map("n", "<leader>cR", function()
+    vim.keymap.set("n", "<leader>cR", function()
       Snacks.rename.rename_file()
-    end, "Rename File")
-    map("n", "<leader>cl", function()
+    end, { buffer = buf, desc = "Rename File", silent = true })
+    vim.keymap.set("n", "<leader>cl", function()
       Snacks.picker.lsp_config()
-    end, "Lsp Info")
+    end, { buffer = buf, desc = "Lsp Info", silent = true })
 
     local function code_action(action)
       return function()
@@ -99,11 +94,23 @@ vim.api.nvim_create_autocmd("LspAttach", {
       end
     end
 
-    map("n", "<leader>co", code_action("source.organizeImports"), "Organize Imports")
+    vim.keymap.set("n", "<leader>co", code_action("source.organizeImports"), {
+      buffer = buf,
+      desc = "Organize Imports",
+      silent = true,
+    })
 
     if client.name == "vtsls" then
-      map("n", "<leader>cM", code_action("source.addMissingImports.ts"), "Add missing imports")
-      map("n", "<leader>cD", code_action("source.fixAll.ts"), "Fix all diagnostics")
+      vim.keymap.set("n", "<leader>cM", code_action("source.addMissingImports.ts"), {
+        buffer = buf,
+        desc = "Add missing imports",
+        silent = true,
+      })
+      vim.keymap.set("n", "<leader>cD", code_action("source.fixAll.ts"), {
+        buffer = buf,
+        desc = "Fix all diagnostics",
+        silent = true,
+      })
     end
   end,
 })

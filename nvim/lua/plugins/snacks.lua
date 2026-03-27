@@ -19,6 +19,10 @@ Snacks.setup({
       selectedLineBgColor = { bg = "Visual" },
       unstagedChangesColor = { fg = "DiagnosticError" },
     },
+    win = {
+      backdrop = 60,
+      border = true,
+    },
   },
   picker = {
     hidden = true,
@@ -37,16 +41,8 @@ Snacks.setup({
         hidden = true,
         ignored = true,
       },
-      explorer = {
-        layout = {
-          layout = {
-            position = "right",
-          },
-        },
-      },
     },
   },
-  explorer = {},
   dashboard = {
     width = 20,
     preset = {
