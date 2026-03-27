@@ -20,7 +20,7 @@
   "which_key": {
     "enabled": true,
   },
-  "restore_on_startup": "last_session",
+  "restore_on_startup": "launchpad",
   "tab_bar": {
     "show_nav_history_buttons": false,
   },

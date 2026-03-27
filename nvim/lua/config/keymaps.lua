@@ -90,7 +90,10 @@ map("n", "<leader>xq", function()
     vim.notify(err, vim.log.levels.ERROR)
   end
 end, { desc = "Quickfix List" })
-
+map("n", "<leader>xc", function()
+  vim.fn.setqflist({})
+  vim.cmd("cclose")
+end, { desc = "Clear Quickfix" })
 map("n", "[q", vim.cmd.cprev, { desc = "Previous Quickfix" })
 map("n", "]q", vim.cmd.cnext, { desc = "Next Quickfix" })
 
@@ -174,8 +177,6 @@ map("n", "<leader>cs", "<cmd>Trouble symbols toggle<cr>", { desc = "Symbols (Tro
 map("n", "<leader>cS", "<cmd>Trouble lsp toggle<cr>", { desc = "LSP references/definitions/... (Trouble)" })
 map("n", "<leader>xL", "<cmd>Trouble loclist toggle<cr>", { desc = "Location List (Trouble)" })
 map("n", "<leader>xQ", "<cmd>Trouble qflist toggle<cr>", { desc = "Quickfix List (Trouble)" })
-map("n", "<leader>xt", "<cmd>Trouble todo toggle<cr>", { desc = "Todo (Trouble)" })
-map("n", "<leader>xT", "<cmd>Trouble todo toggle filter = {tag = {TODO,FIX,FIXME}}<cr>", { desc = "Todo/Fix/Fixme (Trouble)" })
 
 -- noice
 map("n", "<leader>n", "<cmd>Noice history<cr>", { desc = "Notification History" })
@@ -285,10 +286,11 @@ end, { desc = "Copy file path" })
 
 map("n", "<leader>jc", function()
   local file_path = vim.fn.expand("%:p")
-  local cwd = vim.fn.getcwd()
   local line = vim.fn.line(".")
   local col = vim.fn.col(".")
   local goto_arg = file_path .. ":" .. line .. ":" .. col
+
+  local cwd = vim.fn.getcwd()
   vim.fn.jobstart({ "zed", cwd, goto_arg }, { detach = true })
 end, { silent = true, desc = "Open in Zed" })
 
