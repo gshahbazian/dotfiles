@@ -1,6 +1,17 @@
-# nvim config
+```
+          .          .
+        ';;,.        ::'
+      ,:::;,,        :ccc,
+     ,::c::,,,,.     :cccc,
+     ,cccc:;;;;;.    cllll,
+     ,cccc;.;;;;;,   cllll;
+     :cccc; .;;;;;;. coooo;
+     ;llll;   ,:::::'loooo;
+     ;llll:    ':::::loooo:
+     :oooo:     .::::llodd:
+     .;ooo:       ;cclooo:.
+       .;oc        'coo;.
+         .'         .,.
+```
 
 Requires nvim 0.12+
-
-- [vim.pack](https://neovim.io/doc/user/pack)
-- [lazyvim](https://github.com/LazyVim/LazyVim) ported and simplified
