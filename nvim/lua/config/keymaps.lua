@@ -302,3 +302,7 @@ vim.keymap.set("v", "<leader>jy", function()
 end, { desc = "[Y]ank selection with [R]elative path" })
 
 vim.keymap.set("n", "<leader>jW", "<cmd>noautocmd write<CR>", { desc = "Save without formatting" })
+
+vim.keymap.set("n", "<leader>cu", function()
+  require("undotree").open()
+end, { desc = "Undotree" })

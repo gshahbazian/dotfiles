@@ -51,6 +51,7 @@ vim.api.nvim_create_autocmd("FileType", {
     "help",
     "qf",
     "nvim-pack",
+    "nvim-undotree",
   },
   callback = function(event)
     vim.bo[event.buf].buflisted = false
@@ -91,18 +92,6 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   end,
 })
 
--- esc to quit mini.files
-vim.api.nvim_create_autocmd("User", {
-  pattern = "MiniFilesBufferCreate",
-  callback = function(event)
-    vim.keymap.set("n", "<Esc>", MiniFiles.close, {
-      buffer = event.data.buf_id,
-      silent = true,
-      desc = "Close mini.files",
-    })
-  end,
-})
-
 -- backdrop behind mini.files
 vim.api.nvim_create_autocmd("User", {
   pattern = "MiniFilesExplorerOpen",
@@ -114,48 +103,5 @@ vim.api.nvim_create_autocmd("User", {
   pattern = "MiniFilesExplorerClose",
   callback = function()
     backdrop.close()
-  end,
-})
-
--- clean mini.files titlebar
-vim.api.nvim_create_autocmd("User", {
-  pattern = "MiniFilesWindowUpdate",
-  callback = function(args)
-    local win_id = args.data.win_id
-    if not vim.api.nvim_win_is_valid(win_id) then
-      return
-    end
-
-    local state = MiniFiles.get_explorer_state()
-    if not state then
-      return
-    end
-
-    local path
-    for _, window in ipairs(state.windows) do
-      if window.win_id == win_id then
-        path = window.path
-        break
-      end
-    end
-
-    if type(path) ~= "string" then
-      return
-    end
-
-    path = tostring(path):gsub("%z", "")
-    local cwd = vim.uv.fs_realpath(vim.fn.getcwd()) or vim.fn.getcwd()
-    local normalized_path = vim.uv.fs_realpath(path) or path
-    local title
-
-    if normalized_path == cwd then
-      title = vim.fs.basename(cwd)
-    else
-      title = vim.fs.relpath(cwd, path) or path
-    end
-
-    local config = vim.api.nvim_win_get_config(win_id)
-    config.title = string.format(" %s ", title)
-    vim.api.nvim_win_set_config(win_id, config)
   end,
 })
