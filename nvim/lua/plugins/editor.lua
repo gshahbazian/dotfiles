@@ -170,9 +170,6 @@ vim.api.nvim_create_autocmd("User", {
 })
 
 require("blink.cmp").setup({
-  keymap = {
-    ["<C-y>"] = { "select_and_accept" },
-  },
   completion = {
     menu = {
       draw = { treesitter = { "lsp" } },
