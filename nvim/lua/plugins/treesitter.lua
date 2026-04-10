@@ -30,6 +30,10 @@ local ensure_installed = {
   "yaml",
 }
 
+local ignored_indent_filetypes = {
+  lua = true,
+}
+
 local isnt_installed = function(lang)
   return #vim.api.nvim_get_runtime_file("parser/" .. lang .. ".*", false) == 0
 end
@@ -52,7 +56,9 @@ vim.api.nvim_create_autocmd("FileType", {
       vim.treesitter.start(ev.buf)
     end
 
-    vim.api.nvim_set_option_value("indentexpr", "v:lua.require'nvim-treesitter'.indentexpr()", { scope = "local" })
+    if not ignored_indent_filetypes[vim.bo[ev.buf].filetype] then
+      vim.api.nvim_set_option_value("indentexpr", "v:lua.require'nvim-treesitter'.indentexpr()", { scope = "local" })
+    end
     vim.api.nvim_set_option_value("foldmethod", "expr", { scope = "local" })
     vim.api.nvim_set_option_value("foldexpr", "v:lua.vim.treesitter.foldexpr()", { scope = "local" })
   end,
