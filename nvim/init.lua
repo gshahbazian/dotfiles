@@ -28,7 +28,8 @@ vim.pack.add({
   "https://github.com/gshahbazian/vesper.nvim",
 }, { load = true })
 
-require("plugins.colorscheme")
+vim.cmd.colorscheme("vesper")
+
 require("config.keymaps")
 require("config.autocmds")
 

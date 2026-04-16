@@ -122,7 +122,9 @@ vim.keymap.set("n", "<leader>lu", function()
   vim.pack.update()
 end, { desc = "Update plugins" })
 vim.keymap.set("n", "<leader>lh", "<cmd>checkhealth vim.pack<cr>", { desc = "Plugin health" })
+vim.keymap.set("n", "<leader>lm", "<cmd>Mason<cr>", { desc = "Mason" })
 
+-- git
 vim.keymap.set("n", "<leader>gg", function()
   Snacks.lazygit()
 end, { desc = "Lazygit" })
@@ -178,9 +180,6 @@ vim.keymap.set("n", "<leader>xQ", "<cmd>Trouble qflist toggle<cr>", { desc = "Qu
 
 -- noice
 vim.keymap.set("n", "<leader>n", "<cmd>Noice history<cr>", { desc = "Notification History" })
-
--- mason
-vim.keymap.set("n", "<leader>cm", "<cmd>Mason<cr>", { desc = "Mason" })
 
 -- pickers
 vim.keymap.set("n", "<leader><space>", function()

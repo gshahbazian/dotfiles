@@ -42,6 +42,11 @@ Snacks.setup({
         ignored = true,
       },
     },
+    previewers = {
+      diff = {
+        style = "syntax",
+      },
+    },
   },
   dashboard = {
     width = 20,
