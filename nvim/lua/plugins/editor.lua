@@ -169,6 +169,13 @@ vim.api.nvim_create_autocmd("User", {
   end,
 })
 
+vim.api.nvim_create_autocmd("User", {
+  pattern = "MiniFilesExplorerOpen",
+  callback = function()
+    MiniFiles.set_bookmark("w", vim.fn.getcwd, { desc = "Working directory" })
+  end,
+})
+
 require("blink.cmp").setup({
   completion = {
     menu = {
@@ -278,13 +285,14 @@ require("stay-centered").setup({
 require("persistence").setup()
 
 local hi = require("mini.hipatterns")
+local hi_words = MiniExtra.gen_highlighter.words
 hi.setup({
   highlighters = {
     -- Highlight standalone 'FIXME', 'HACK', 'TODO', 'NOTE'
-    fixme = { pattern = "%f[%w]()FIXME()%f[%W]", group = "MiniHipatternsFixme" },
-    hack = { pattern = "%f[%w]()HACK()%f[%W]", group = "MiniHipatternsHack" },
-    todo = { pattern = "%f[%w]()TODO()%f[%W]", group = "MiniHipatternsTodo" },
-    note = { pattern = "%f[%w]()NOTE()%f[%W]", group = "MiniHipatternsNote" },
+    fixme = hi_words({ "FIXME" }, "MiniHipatternsFixme"),
+    hack = hi_words({ "HACK" }, "MiniHipatternsHack"),
+    todo = hi_words({ "TODO" }, "MiniHipatternsTodo"),
+    note = hi_words({ "NOTE" }, "MiniHipatternsNote"),
 
     hex_color = hi.gen_highlighter.hex_color(),
   },
