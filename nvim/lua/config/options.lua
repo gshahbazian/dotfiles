@@ -25,7 +25,6 @@ vim.opt.listchars = { tab = "-»", trail = "·", nbsp = "␣" }
 vim.opt.mouse = "a"
 vim.opt.number = true
 vim.opt.nrformats = "unsigned"
-vim.opt.relativenumber = true
 vim.opt.ruler = false
 vim.opt.shiftround = true
 vim.opt.shiftwidth = 2

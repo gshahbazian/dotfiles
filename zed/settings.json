@@ -20,7 +20,6 @@
   "which_key": {
     "enabled": true,
   },
-  "restore_on_startup": "launchpad",
   "tab_bar": {
     "show_nav_history_buttons": false,
   },
@@ -55,18 +54,23 @@
     "dark": "One Dark",
   },
   "vim": {
-    "toggle_relative_line_numbers": true,
     "use_system_clipboard": "on_yank",
     "use_smartcase_find": true,
   },
   "vim_mode": true,
   "languages": {
     "Starlark": {
-      "language_servers": ["tilt", "!starpls", "!buck2-lsp"],
+      "language_servers": [
+        "tilt",
+        "!starpls",
+        "!buck2-lsp"
+      ],
     },
   },
   "file_types": {
-    "Starlark": ["Tiltfile"],
+    "Starlark": [
+      "Tiltfile"
+    ],
   },
   "lsp": {
     "biome": {
