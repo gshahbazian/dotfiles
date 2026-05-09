@@ -314,7 +314,7 @@ async function selectThreadsInteractive(
 
   const input = `${lines.join("\n")}\n`
   const result =
-    await $`printf '%s' ${input} | fzf --multi --with-nth=2.. --delimiter='\t' --prompt='Select comments (Tab toggle, Enter confirm) > ' --header='Tab: toggle  Enter: confirm'`
+    await $`printf '%s' ${input} | fzf --wrap=word --multi --with-nth=2.. --delimiter='\t' --prompt='Select comments (Tab toggle, Enter confirm) > ' --header='Tab: toggle  Enter: confirm'`
       .quiet()
       .nothrow()
 

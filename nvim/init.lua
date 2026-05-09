@@ -67,9 +67,9 @@ Config.now_if_args(function()
     "https://github.com/nvim-treesitter/nvim-treesitter-context",
 
     -- lsp
-    "https://github.com/neovim/nvim-lspconfig",
-    "https://github.com/mason-org/mason.nvim",
-    "https://github.com/mason-org/mason-lspconfig.nvim",
+    { src = "https://github.com/neovim/nvim-lspconfig", version = vim.version.range("*") },
+    { src = "https://github.com/mason-org/mason.nvim", version = vim.version.range("*") },
+    { src = "https://github.com/mason-org/mason-lspconfig.nvim", version = vim.version.range("*") },
 
     -- ft specific
     "https://github.com/folke/lazydev.nvim",

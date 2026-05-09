@@ -39,8 +39,10 @@ ai.setup({
 
   -- use the default lsp an/in
   mappings = {
-    around_next = "",
-    inside_next = "",
+    around_next = "aN",
+    inside_next = "iN",
+    around_last = "aL",
+    inside_last = "iL",
   },
 })
 
