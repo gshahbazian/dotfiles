@@ -105,7 +105,7 @@
       "src": "https://github.com/folke/ts-comments.nvim"
     },
     "vesper.nvim": {
-      "rev": "b9452b7c3336faab61d60a96ceb8b2cfc767769e",
+      "rev": "941fff7cec825c1adbf1f7c86a3ba7652dab48b7",
       "src": "https://github.com/gshahbazian/vesper.nvim"
     },
     "which-key.nvim": {
