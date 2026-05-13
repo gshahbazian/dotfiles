@@ -21,7 +21,7 @@ vim.opt.ignorecase = true
 vim.opt.laststatus = 3
 vim.opt.linebreak = true
 vim.opt.list = true
-vim.opt.listchars = { tab = "-»", trail = "·", nbsp = "␣" }
+vim.opt.listchars = { tab = "»·", trail = "·", nbsp = "␣" }
 vim.opt.mouse = "a"
 vim.opt.number = true
 vim.opt.nrformats = "unsigned"
@@ -34,9 +34,10 @@ vim.opt.signcolumn = "yes"
 vim.opt.smartcase = true
 vim.opt.smartindent = true
 vim.opt.smoothscroll = true
+vim.opt.softtabstop = 2
 vim.opt.splitbelow = true
 vim.opt.splitright = true
-vim.opt.tabstop = 2
+vim.opt.tabstop = 4
 vim.opt.timeoutlen = vim.g.vscode and 1000 or 300
 vim.opt.undofile = true
 vim.opt.winborder = "single"

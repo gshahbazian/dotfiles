@@ -119,50 +119,6 @@ vim.api.nvim_create_autocmd("User", {
 })
 
 vim.api.nvim_create_autocmd("User", {
-  pattern = "MiniFilesWindowUpdate",
-  callback = function(args)
-    -- clean mini.files titlebar
-
-    local win_id = args.data.win_id
-    if not vim.api.nvim_win_is_valid(win_id) then
-      return
-    end
-
-    local state = MiniFiles.get_explorer_state()
-    if not state then
-      return
-    end
-
-    local path
-    for _, window in ipairs(state.windows) do
-      if window.win_id == win_id then
-        path = window.path
-        break
-      end
-    end
-
-    if type(path) ~= "string" then
-      return
-    end
-
-    path = tostring(path):gsub("%z", "")
-    local cwd = vim.uv.fs_realpath(vim.fn.getcwd()) or vim.fn.getcwd()
-    local normalized_path = vim.uv.fs_realpath(path) or path
-    local title
-
-    if normalized_path == cwd then
-      title = vim.fs.basename(cwd)
-    else
-      title = vim.fs.relpath(cwd, path) or path
-    end
-
-    local config = vim.api.nvim_win_get_config(win_id)
-    config.title = string.format(" %s ", title)
-    vim.api.nvim_win_set_config(win_id, config)
-  end,
-})
-
-vim.api.nvim_create_autocmd("User", {
   pattern = "MiniFilesExplorerOpen",
   callback = function()
     MiniFiles.set_bookmark("w", vim.fn.getcwd, { desc = "Working directory" })
