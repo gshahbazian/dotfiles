@@ -183,12 +183,10 @@ vim.keymap.set("n", "<leader>n", "<cmd>Noice history<cr>", { desc = "Notificatio
 
 -- pickers
 vim.keymap.set("n", "<leader><space>", function()
-  Snacks.picker.smart({
-    filter = { cwd = true },
-  })
+  require("fff").find_files()
 end, { desc = "Find Files" })
 vim.keymap.set("n", "<leader>/", function()
-  Snacks.picker.grep()
+  require("fff").live_grep()
 end, { desc = "Grep" })
 vim.keymap.set("n", '<leader>s"', function()
   Snacks.picker.registers()
@@ -199,33 +197,18 @@ end, { desc = "Jumps" })
 vim.keymap.set("n", "<leader>sk", function()
   Snacks.picker.keymaps()
 end, { desc = "Keymaps" })
-vim.keymap.set("n", "<leader>sr", function()
-  Snacks.picker.resume({
-    on_show = function()
-      vim.cmd.stopinsert()
-    end,
-  })
-end, { desc = "Resume" })
+-- TODO: figure out how to get <leader>sr to resume fff
 vim.keymap.set({ "n", "x" }, "<leader>sw", function()
-  Snacks.picker.grep_word({
-    on_show = function()
-      vim.cmd.stopinsert()
-    end,
-  })
+  require("fff").live_grep({ query = vim.fn.expand("<cword>") })
 end, { desc = "Visual selection or word" })
 vim.keymap.set("n", "<leader>sm", function()
   Snacks.picker.marks()
 end, { desc = "Marks" })
 vim.keymap.set("n", "<leader>sf", function()
-  Snacks.picker.grep({ regex = false })
+  require("fff").live_grep({ grep = { modes = { "fuzzy", "plain" } } })
 end, { desc = "Search string" })
 vim.keymap.set("n", "<leader>fg", function()
-  Snacks.picker.git_status({
-    ignored = false,
-    on_show = function()
-      vim.cmd.stopinsert()
-    end,
-  })
+  require("fff").find_files({ query = "git:modified " })
 end, { desc = "Git status" })
 vim.keymap.set("n", "<leader>e", function()
   local mini_files = require("mini.files")

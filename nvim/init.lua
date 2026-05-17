@@ -9,6 +9,17 @@ if vim.g.vscode then
   return
 end
 
+require("vim._core.ui2").enable({
+  enable = true,
+  msg = {
+    target = "cmd",
+    pager = { height = 1 },
+    msg = { height = 0.5, timeout = 4500 },
+    dialog = { height = 0.5 },
+    cmd = { height = 0.5 },
+  },
+})
+
 vim.api.nvim_create_autocmd("PackChanged", {
   callback = function(ev)
     local name, kind = ev.data.spec.name, ev.data.kind
@@ -18,6 +29,13 @@ vim.api.nvim_create_autocmd("PackChanged", {
         vim.cmd.packadd("nvim-treesitter")
       end
       vim.cmd("TSUpdate")
+    end
+
+    if name == "fff.nvim" and (kind == "install" or kind == "update") then
+      if not ev.data.active then
+        vim.cmd.packadd("fff.nvim")
+      end
+      require("fff.download").download_or_build_binary()
     end
   end,
 })
@@ -99,6 +117,7 @@ Config.later(function()
     { src = "https://github.com/lewis6991/gitsigns.nvim", version = vim.version.range("*") },
     "https://github.com/arnamak/stay-centered.nvim",
     "https://github.com/folke/persistence.nvim",
+    { src = "https://github.com/dmtrKovalenko/fff.nvim" },
 
     -- formatting
     "https://github.com/stevearc/conform.nvim",

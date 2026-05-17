@@ -248,3 +248,8 @@ hi.setup({
 })
 
 vim.cmd("packadd nvim.undotree")
+
+require("fff").setup({
+  layout = { prompt_position = "top" },
+  prompt = "> ",
+})

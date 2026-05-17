@@ -105,3 +105,19 @@ vim.api.nvim_create_autocmd("User", {
     backdrop.close()
   end,
 })
+
+-- backdrop behind fff.nvim
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "fff_input",
+  callback = function(event)
+    backdrop.open({ zindex = 50 })
+
+    vim.api.nvim_create_autocmd("BufWipeout", {
+      buffer = event.buf,
+      once = true,
+      callback = function()
+        backdrop.close()
+      end,
+    })
+  end,
+})

@@ -3,6 +3,7 @@ local M = {}
 local state = {
   buf = nil,
   win = nil,
+  zindex = nil,
 }
 
 function M.close()
@@ -12,12 +13,15 @@ function M.close()
 
   state.win = nil
   state.buf = nil
+  state.zindex = nil
 end
 
-function M.open()
+function M.open(opts)
+  opts = opts or {}
   M.close()
 
   local buf = vim.api.nvim_create_buf(false, true)
+  local zindex = opts.zindex or 98
   local win = vim.api.nvim_open_win(buf, false, {
     relative = "editor",
     row = 0,
@@ -27,7 +31,7 @@ function M.open()
     style = "minimal",
     border = "none",
     focusable = false,
-    zindex = 98,
+    zindex = zindex,
     noautocmd = true,
   })
 
@@ -37,6 +41,7 @@ function M.open()
 
   state.buf = buf
   state.win = win
+  state.zindex = zindex
 end
 
 function M.resize()
@@ -53,7 +58,7 @@ function M.resize()
     style = "minimal",
     border = "none",
     focusable = false,
-    zindex = 98,
+    zindex = state.zindex or 98,
     noautocmd = true,
   })
 end
