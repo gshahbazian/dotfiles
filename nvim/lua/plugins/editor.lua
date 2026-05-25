@@ -235,6 +235,26 @@ require("persistence").setup()
 
 local hi = require("mini.hipatterns")
 local hi_words = MiniExtra.gen_highlighter.words
+local colors = require("mini.colors")
+
+local function oklch_to_hex(match)
+  local l, c, h = match:match("oklch%(%s*([%d%.]+%%?)%s+([%d%.]+%%?)%s+([%d%.]+)")
+  if not l then
+    return nil
+  end
+
+  local function scale(x, pct, num)
+    local n = tonumber((x:gsub("%%$", "")))
+    return x:sub(-1) == "%" and n * pct or n * num
+  end
+
+  return colors.convert({
+    l = scale(l, 1, 100),
+    c = scale(c, 0.4, 100),
+    h = tonumber(h),
+  }, "hex", { adjust_lightness = false, gamut_clip = "chroma" })
+end
+
 hi.setup({
   highlighters = {
     -- Highlight standalone 'FIXME', 'HACK', 'TODO', 'NOTE'
@@ -244,6 +264,17 @@ hi.setup({
     note = hi_words({ "NOTE" }, "MiniHipatternsNote"),
 
     hex_color = hi.gen_highlighter.hex_color(),
+
+    oklch_color = {
+      pattern = "oklch%([^)]+%)",
+      group = function(_, match)
+        local hex = oklch_to_hex(match)
+        if type(hex) ~= "string" then
+          return nil
+        end
+        return hi.compute_hex_color_group(hex, "bg")
+      end,
+    },
   },
 })
 
