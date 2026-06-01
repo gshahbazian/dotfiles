@@ -283,4 +283,5 @@ vim.cmd("packadd nvim.undotree")
 require("fff").setup({
   layout = { prompt_position = "top" },
   prompt = "> ",
+  prompt_vim_mode = true,
 })
