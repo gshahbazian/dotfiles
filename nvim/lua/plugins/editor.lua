@@ -280,8 +280,20 @@ hi.setup({
 
 vim.cmd("packadd nvim.undotree")
 
+-- fix fff preview highlighting the matches
+local function fff_preview_hl()
+  vim.api.nvim_set_hl(0, "FFFPreviewMatchLine", {})
+end
+fff_preview_hl()
+vim.api.nvim_create_autocmd("ColorScheme", { callback = fff_preview_hl })
+
 require("fff").setup({
   layout = { prompt_position = "top" },
   prompt = "> ",
   prompt_vim_mode = true,
+  hl = {
+    winhl = {
+      preview = "Normal:NormalFloat,FloatBorder:FloatBorder,FloatTitle:Title,CursorLine:FFFPreviewMatchLine",
+    },
+  },
 })

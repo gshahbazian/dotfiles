@@ -11,7 +11,7 @@ macos-titlebar-style = hidden
 mouse-hide-while-typing = true
 quick-terminal-animation-duration = 0
 quick-terminal-position = center
-shell-integration-features = no-cursor
+shell-integration-features = no-cursor,ssh-env,ssh-terminfo
 split-divider-color = #2e2e2e
 working-directory = /Users/gabe/development
 
