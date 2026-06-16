@@ -1,5 +1,3 @@
-export DOTFILES_DIR="$HOME/development/gshahbazian/dotfiles"
-
 export EDITOR="nvim"
 export CLICOLOR=1
 
@@ -30,6 +28,7 @@ setopt extended_glob
 unsetopt nomatch
 
 fpath+=("$HOME/.zfunc")
+autoload -Uz compinit && compinit
 
 # -----------------------
 # aliases
@@ -47,22 +46,8 @@ alias g='git'
 alias lg='lazygit'
 
 # -----------------------
-# path
+# package managers
 # -----------------------
-eval "$(/opt/homebrew/bin/brew shellenv)"
-
-export GOPATH="$HOME/development/go"
-typeset -U path PATH
-path=(
-  $DOTFILES_DIR/bin
-  $HOME/.npm-global/bin
-  $GOPATH/bin
-  $HOME/.local/bin
-  $path
-)
-
-autoload -Uz compinit && compinit
-
 eval "$(fnm env --log-level=quiet --use-on-cd --version-file-strategy=recursive --corepack-enabled --shell zsh)"
 eval "$(uv generate-shell-completion zsh)"
 

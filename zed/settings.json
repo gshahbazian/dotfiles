@@ -1,4 +1,8 @@
 {
+  "session": {
+    "trust_all_worktrees": true
+  },
+  "cli_default_open_behavior": "new_window",
   "semantic_tokens": "combined",
   "terminal": {
     "button": false,
