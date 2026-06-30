@@ -9,7 +9,7 @@ export GOPATH="$HOME/development/go"
 typeset -U path PATH
 path=(
   $DOTFILES_DIR/bin
-  $HOME/.npm-global/bin
+  $HOME/.local/npm/bin
   $GOPATH/bin
   $HOME/.local/bin
   $path

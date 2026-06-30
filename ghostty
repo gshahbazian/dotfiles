@@ -2,6 +2,7 @@
 
 # auto-update-channel = tip
 
+copy-on-select = clipboard
 cursor-click-to-move = true
 cursor-style-blink = false
 font-family = "Berkeley Mono"
