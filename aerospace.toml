@@ -1,5 +1,8 @@
 # https://nikitabobko.github.io/AeroSpace/guide
-# available commands : https://nikitabobko.github.io/aerospace/commands
+# available commands: https://nikitabobko.github.io/AeroSpace/commands
+
+# see: https://nikitabobko.github.io/AeroSpace/guide#config-version
+config-version = 2
 
 after-startup-command = [
   'exec-and-forget /opt/homebrew/bin/borders active_color=0xfffffaf3 width=6.0 hidpi=on'
@@ -7,6 +10,10 @@ after-startup-command = [
 
 # start aerospace at login
 start-at-login = true
+
+# automatically reload the config when the config file is saved.
+# after setting this to true, reload once manually to start the auto-reloading.
+auto-reload-config = true
 
 # normalizations. see: https://nikitabobko.github.io/aerospace/guide#normalization
 enable-normalization-flatten-containers = true
@@ -33,10 +40,38 @@ default-root-container-orientation = 'auto'
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 on-focus-changed = ['move-mouse window-lazy-center']
 
+# possible values: true|false
+focus-follows-mouse.enabled = false
+
 # you can effectively turn off macos "hide application" (cmd-h) feature by toggling this flag
 # useful if you don't use this macos feature, but accidentally hit cmd-h or cmd-alt-h key
 # also see: https://nikitabobko.github.io/aerospace/goodies#disable-hide-app
 automatically-unhide-macos-hidden-apps = false
+
+# workspaces that should stay alive even when they contain no windows.
+# this config option is only available since config-version = 2.
+persistent-workspaces = ['1', '2', '3', '4', 'G']
+
+on-window-detected = [
+  {
+    if = 'test %{app-bundle-id} = com.google.Chrome && test %{window-title} ~= "(devtools|untitled)"',
+    run = 'layout floating',
+  },
+  {
+    if = 'test %{app-bundle-id} = com.spotify.client',
+    run = [
+      'move-node-to-workspace G',
+      'layout floating',
+      'exec-and-forget open -g "raycast://extensions/raycast/window-management/center"',
+    ],
+  },
+
+  # float all but the apps in the negative regex
+  {
+    if = 'test-not %{app-name} ~= "\b(ghostty|chrome)\b"',
+    run = 'layout floating',
+  },
+]
 
 # possible values: (qwerty|dvorak|colemak)
 # see https://nikitabobko.github.io/aerospace/guide#key-mapping
@@ -90,10 +125,10 @@ automatically-unhide-macos-hidden-apps = false
   alt-shift-ctrl-w = 'fullscreen'
 
   # see: https://nikitabobko.github.io/aerospace/commands#focus
-  alt-shift-ctrl-h = 'focus left'
+  alt-shift-ctrl-h = 'focus --wrap-around left'
   alt-shift-ctrl-j = 'focus down'
   alt-shift-ctrl-k = 'focus up'
-  alt-shift-ctrl-l = 'focus right'
+  alt-shift-ctrl-l = 'focus --wrap-around right'
 
   # see: https://nikitabobko.github.io/aerospace/commands#move
   alt-shift-h = 'move left'
@@ -142,20 +177,6 @@ automatically-unhide-macos-hidden-apps = false
 
   # sticky is not yet supported https://github.com/nikitabobko/aerospace/issues/2
   #s = ['layout sticky tiling', 'mode main']
-
-[[on-window-detected]]
-  if.app-id = 'com.google.Chrome'
-  if.window-title-regex-substring = '(devtools|untitled)'
-  run = ['layout floating']
-
-[[on-window-detected]]
-  if.app-id = 'com.spotify.client'
-  run = ['move-node-to-workspace G', 'layout floating', 'exec-and-forget open -g "raycast://extensions/raycast/window-management/center"']
-
-# float all but the apps in the negative regex
-[[on-window-detected]]
-  if.app-name-regex-substring = '^(?!.*\b(?:ghostty|chrome)\b).+$'
-  run = ['layout floating']
 
 [workspace-to-monitor-force-assignment]
   G = ['secondary', 'main']
