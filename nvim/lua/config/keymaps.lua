@@ -98,6 +98,7 @@ vim.keymap.set("n", "]q", vim.cmd.cnext, { desc = "Next Quickfix" })
 vim.keymap.set({ "n", "x" }, "<leader>cf", function()
   require("conform").format({ bufnr = 0 })
 end, { desc = "Format" })
+vim.keymap.set("n", "<leader>cr", "<cmd>lsp restart<cr>", { desc = "Restart LSP" })
 
 -- diagnostic
 local function diagnostic_goto(next, severity)
