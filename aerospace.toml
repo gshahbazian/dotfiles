@@ -5,7 +5,7 @@
 config-version = 2
 
 after-startup-command = [
-  'exec-and-forget /opt/homebrew/bin/borders active_color=0xfffffaf3 width=6.0 hidpi=on'
+  'exec-and-forget /opt/homebrew/bin/borders active_color=0xfffffaf3 width=6.0 hidpi=on blacklist="iPhone Mirroring,ChatGPT"'
 ]
 
 # start aerospace at login
@@ -170,7 +170,7 @@ on-window-detected = [
   esc = ['reload-config', 'mode main']
   r = ['flatten-workspace-tree', 'mode main'] # reset layout
   backspace = ['close-all-windows-but-current', 'mode main']
-  b = ['exec-and-forget /opt/homebrew/bin/borders active_color=0xfffffaf3 width=6.0 hidpi=on', 'mode main']
+  b = ['exec-and-forget /opt/homebrew/bin/borders active_color=0xfffffaf3 width=6.0 hidpi=on blacklist="iPhone Mirroring,ChatGPT"', 'mode main']
 
   # sticky is not yet supported https://github.com/nikitabobko/aerospace/issues/2
   #s = ['layout sticky tiling', 'mode main']

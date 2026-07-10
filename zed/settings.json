@@ -1,4 +1,5 @@
 {
+  "use_smartcase_search": true,
   "session": {
     "trust_all_worktrees": true
   },
@@ -62,20 +63,6 @@
     "use_smartcase_find": true,
   },
   "vim_mode": true,
-  "languages": {
-    "Starlark": {
-      "language_servers": [
-        "tilt",
-        "!starpls",
-        "!buck2-lsp"
-      ],
-    },
-  },
-  "file_types": {
-    "Starlark": [
-      "Tiltfile"
-    ],
-  },
   "lsp": {
     "biome": {
       "settings": {

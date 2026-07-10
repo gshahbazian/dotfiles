@@ -1,0 +1,11 @@
+onboarding = false
+
+[ui]
+prompt_new_tab_name = false
+
+[theme]
+name = "vesper"
+auto_switch = false
+
+[ui.toast]
+delivery = "terminal"
