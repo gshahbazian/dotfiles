@@ -9,3 +9,9 @@ auto_switch = false
 
 [ui.toast]
 delivery = "terminal"
+
+[[keys.command]]
+key = "cmd+k"
+type = "shell"
+command = 'herdr pane run "$HERDR_ACTIVE_PANE_ID" clear'
+description = "clear scrollback"
