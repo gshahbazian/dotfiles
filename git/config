@@ -10,7 +10,7 @@
 
 [core]
   editor = nvim
-  excludesfile = /Users/gabe/development/gshahbazian/dotfiles/.gitignore_global
+  excludesfile = ~/.config/git/ignore
   pager = delta
 
 [alias]
