@@ -35,10 +35,49 @@ mr.refresh(function()
 end)
 
 require("mason-lspconfig").setup({
-  ensure_installed = { "lua_ls", "vtsls", "eslint", "jsonls", "tailwindcss", "bashls" },
+  ensure_installed = { "lua_ls", "tsgo", "eslint", "jsonls", "tailwindcss", "bashls" },
   automatic_enable = {
     exclude = { "rust_analyzer" },
   },
+})
+
+-- https://github.com/LazyVim/LazyVim/discussions/6889#discussioncomment-16604801
+vim.api.nvim_create_autocmd("LspAttach", {
+  once = true,
+  callback = function()
+    local method = "textDocument/inlayHint"
+    local max_length = 30
+    local ellipsis = "…"
+    local original_handler = vim.lsp.handlers[method]
+
+    vim.lsp.handlers[method] = function(err, result, ctx, config)
+      if result then
+        for _, hint in ipairs(result) do
+          local label = hint.label
+          if type(label) == "string" then
+            hint.label = #label > max_length and (label:sub(1, max_length) .. ellipsis) or label
+          else
+            local length = 0
+            local previous_length = 0
+            local part_count = #label
+
+            label = vim.tbl_filter(function(part)
+              previous_length, length = length, length + #part.value
+              return previous_length < max_length
+            end, label)
+
+            if #label < part_count then
+              table.insert(label, { value = ellipsis })
+            end
+
+            hint.label = label
+          end
+        end
+      end
+
+      return original_handler(err, result, ctx, config)
+    end
+  end,
 })
 
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -97,18 +136,5 @@ vim.api.nvim_create_autocmd("LspAttach", {
       desc = "Organize Imports",
       silent = true,
     })
-
-    if client.name == "vtsls" then
-      vim.keymap.set("n", "<leader>cM", code_action("source.addMissingImports.ts"), {
-        buffer = buf,
-        desc = "Add missing imports",
-        silent = true,
-      })
-      vim.keymap.set("n", "<leader>cD", code_action("source.fixAll.ts"), {
-        buffer = buf,
-        desc = "Fix all diagnostics",
-        silent = true,
-      })
-    end
   end,
 })
