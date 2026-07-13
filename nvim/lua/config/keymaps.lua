@@ -254,9 +254,8 @@ vim.keymap.set({ "n", "x" }, "<leader>y", '"+y', { silent = true, desc = "Copy t
 vim.keymap.set({ "n", "x" }, "<leader>p", '"+p', { desc = "Paste from system clipboard after the cursor position" })
 vim.keymap.set({ "n", "x" }, "<leader>P", '"+P', { desc = "Paste from system clipboard before the cursor position" })
 
--- cmd+s to save
-vim.keymap.set("n", "<D-s>", "<cmd>w<cr>", { silent = true, desc = "Save" })
-vim.keymap.set("i", "<D-s>", "<Esc><cmd>w<cr>", { silent = true, desc = "Save" })
+-- ctrl+s to save
+vim.keymap.set({ "n", "i" }, "<C-s>", "<Esc><cmd>w<cr>", { silent = true, desc = "Save" })
 
 -- change macro keys
 vim.keymap.set("n", "q", "<nop>", { silent = true })

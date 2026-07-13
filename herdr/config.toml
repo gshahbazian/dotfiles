@@ -10,6 +10,10 @@ auto_switch = false
 [ui.toast]
 delivery = "terminal"
 
+[keys]
+previous_workspace = "prefix+shift+up"
+next_workspace = "prefix+shift+down"
+
 [[keys.command]]
 key = "cmd+k"
 type = "shell"
