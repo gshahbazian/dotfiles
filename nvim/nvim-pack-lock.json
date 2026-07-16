@@ -18,7 +18,7 @@
       "src": "https://github.com/stevearc/conform.nvim"
     },
     "fff.nvim": {
-      "rev": "44a5b259570730a4236ecbf06673d43ef7b2263e",
+      "rev": "b14c31d137e108b7c520d0d9e0b0017a1a88141d",
       "src": "https://github.com/dmtrKovalenko/fff.nvim"
     },
     "flash.nvim": {
@@ -53,7 +53,7 @@
       "version": ">=0.0.0"
     },
     "mini.nvim": {
-      "rev": "db41c4076105a63caec12612d11228348f55a109",
+      "rev": "9459d7f41ae77d909579dab0aea2bdd3210fac9f",
       "src": "https://github.com/nvim-mini/mini.nvim"
     },
     "noice.nvim": {

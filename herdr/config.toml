@@ -3,12 +3,15 @@ onboarding = false
 [ui]
 prompt_new_tab_name = false
 
+[ui.toast]
+delivery = "terminal"
+
+[ui.sidebar.spaces]
+row_gap = 1
+
 [theme]
 name = "vesper"
 auto_switch = false
-
-[ui.toast]
-delivery = "terminal"
 
 [keys]
 previous_workspace = "prefix+shift+up"

@@ -1,12 +1,11 @@
 {
-  "lastChangelogVersion": "0.80.6",
+  "lastChangelogVersion": "0.80.10",
   "theme": "dark",
   "defaultProjectTrust": "always",
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.6-sol",
   "defaultThinkingLevel": "high",
   "packages": [
-    "npm:pi-web-access",
     "npm:@ff-labs/pi-fff",
     "npm:pi-herdr-squad"
   ],

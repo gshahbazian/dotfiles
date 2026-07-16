@@ -351,9 +351,4 @@ export default function answer(pi: ExtensionAPI) {
     handler: async (_args, ctx) => answerHandler(ctx),
   })
 
-  pi.registerShortcut("ctrl+.", {
-    description:
-      "Extract and answer questions from the last assistant response",
-    handler: answerHandler,
-  })
 }
