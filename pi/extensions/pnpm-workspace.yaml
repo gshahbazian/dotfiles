@@ -1,0 +1,7 @@
+packages:
+  - "web-search"
+nodeLinker: hoisted
+autoInstallPeers: false
+allowBuilds:
+  "@google/genai": true
+  protobufjs: true

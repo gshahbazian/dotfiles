@@ -1,0 +1,5 @@
+# herdr manages this file; don't reformat it
+herdr-agent-state.ts
+
+# generated lockfile
+pnpm-lock.yaml
