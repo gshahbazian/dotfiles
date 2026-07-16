@@ -17,15 +17,14 @@ import {
 } from "./fetch"
 import { cleanupCache, savePage } from "./files"
 
-// simplified openai-only rewrite of `pi-web-access`
+// Simplified openai-only rewrite of `pi-web-access`.
 
-// Cap a display string, keeping the total length at `max` (ellipsis included).
 function truncate(text: string, max: number): string {
   if (text.length <= max) return text
   return text.slice(0, max - 3) + "..."
 }
 
-// Cap long text for the expanded tool-result preview shown in the TUI.
+// Cap long text for the expanded tool-result preview.
 function previewText(text: string): string {
   if (text.length <= 4000) return text
   return text.slice(0, 4000) + "\n..."
@@ -46,6 +45,18 @@ function stringList(single: unknown, multi: unknown): string[] {
   return toRawList(single, multi).filter(
     (u): u is string => typeof u === "string",
   )
+}
+
+function errorResult(message: string) {
+  return {
+    content: [{ type: "text" as const, text: `Error: ${message}` }],
+    details: { error: message },
+  }
+}
+
+function progressBar(progress: number): string {
+  const filled = Math.floor(progress * 10)
+  return "█".repeat(filled) + "░".repeat(10 - filled)
 }
 
 // A fetched page: save the full markdown to a file, then hand the agent the
@@ -111,26 +122,12 @@ export default function webSearch(pi: ExtensionAPI) {
 
     async execute(_callId, params, signal, onUpdate, ctx) {
       const queries = collectQueries(params.query, params.queries)
-
       if (queries.length === 0) {
-        return {
-          content: [
-            {
-              type: "text",
-              text: "Error: No query provided. Use 'query' or 'queries'.",
-            },
-          ],
-          details: { error: "No query provided" },
-        }
+        return errorResult("No query provided. Use 'query' or 'queries'.")
       }
 
       const auth = await resolveOpenAIAuth(ctx)
-      if (!auth) {
-        return {
-          content: [{ type: "text", text: `Error: ${AUTH_HELP}` }],
-          details: { error: "OpenAI web search unavailable" },
-        }
-      }
+      if (!auth) return errorResult(AUTH_HELP)
 
       const options: SearchOptions = {
         numResults: params.numResults,
@@ -149,12 +146,9 @@ export default function webSearch(pi: ExtensionAPI) {
               text: `Searching ${i + 1}/${queries.length}: "${query}"...`,
             },
           ],
-          details: {
-            phase: "search",
-            progress: i / queries.length,
-            currentQuery: query,
-          },
+          details: { progress: i / queries.length, currentQuery: query },
         })
+
         try {
           const { answer, results } = await searchWithOpenAI(
             query,
@@ -168,7 +162,6 @@ export default function webSearch(pi: ExtensionAPI) {
         }
       }
 
-      // Build the model-facing text.
       let output = ""
       for (const { query, answer, results, error } of queryResults) {
         if (queries.length > 1) output += `## Query: "${query}"\n\n`
@@ -183,19 +176,15 @@ export default function webSearch(pi: ExtensionAPI) {
         output += `${formatSearchSummary(results, answer)}\n\n`
       }
 
-      const successful = queryResults.filter((r) => !r.error).length
-      const totalResults = queryResults.reduce(
-        (sum, r) => sum + r.results.length,
-        0,
-      )
-
       return {
         content: [{ type: "text", text: output.trim() }],
         details: {
-          queries,
           queryCount: queries.length,
-          successfulQueries: successful,
-          totalResults,
+          successfulQueries: queryResults.filter((r) => !r.error).length,
+          totalResults: queryResults.reduce(
+            (sum, r) => sum + r.results.length,
+            0,
+          ),
         },
       }
     },
@@ -204,6 +193,7 @@ export default function webSearch(pi: ExtensionAPI) {
       const input = args as { query?: unknown; queries?: unknown }
       const queries = collectQueries(input.query, input.queries)
       const title = theme.fg("toolTitle", theme.bold("search "))
+
       if (queries.length === 0) {
         return new Text(title + theme.fg("error", "(no query)"), 0, 0)
       }
@@ -211,6 +201,7 @@ export default function webSearch(pi: ExtensionAPI) {
         const display = truncate(queries[0]!, 60)
         return new Text(title + theme.fg("accent", `"${display}"`), 0, 0)
       }
+
       const lines = [title + theme.fg("accent", `${queries.length} queries`)]
       for (const q of queries.slice(0, 5)) {
         lines.push(theme.fg("muted", `  "${truncate(q, 50)}"`))
@@ -227,19 +218,15 @@ export default function webSearch(pi: ExtensionAPI) {
         queryCount?: number
         successfulQueries?: number
         totalResults?: number
-        phase?: string
         progress?: number
         currentQuery?: string
       }
 
       if (isPartial) {
-        const progress = details?.progress ?? 0
-        const filled = Math.floor(progress * 10)
-        const bar = "█".repeat(filled) + "░".repeat(10 - filled)
+        const bar = progressBar(details?.progress ?? 0)
         const display = truncate(details?.currentQuery ?? "", 40)
         return new Text(theme.fg("accent", `[${bar}] ${display}`), 0, 0)
       }
-
       if (details?.error) {
         return new Text(theme.fg("error", `Error: ${details.error}`), 0, 0)
       }
@@ -258,6 +245,8 @@ export default function webSearch(pi: ExtensionAPI) {
       if (!expanded) {
         const box = new Box(1, 0, (t) => theme.bg("toolSuccessBg", t))
         box.addChild(new Text(statusLine, 0, 0))
+
+        // First line of the synthesized answer as a teaser.
         const firstLine = textContent.split("\n").find((l) => {
           const t = l.trim()
           if (!t) return false
@@ -301,17 +290,8 @@ export default function webSearch(pi: ExtensionAPI) {
       const urls = stringList(params.url, params.urls)
         .map((u) => u.trim())
         .filter((u) => u.length > 0)
-
       if (urls.length === 0) {
-        return {
-          content: [
-            {
-              type: "text",
-              text: "Error: No URL provided. Use 'url' or 'urls'.",
-            },
-          ],
-          details: { error: "No URL provided" },
-        }
+        return errorResult("No URL provided. Use 'url' or 'urls'.")
       }
 
       let done = 0
@@ -330,7 +310,7 @@ export default function webSearch(pi: ExtensionAPI) {
               content: [
                 { type: "text", text: `Fetched ${done}/${urls.length}...` },
               ],
-              details: { phase: "fetch", progress: done / urls.length },
+              details: { progress: done / urls.length },
             })
           }
         },
@@ -341,12 +321,11 @@ export default function webSearch(pi: ExtensionAPI) {
         .map((page, i) => formatFetchBlock(page, multi ? i : undefined))
         .join("\n\n")
 
-      const succeeded = extracted.filter((c) => !c.error).length
       return {
         content: [{ type: "text", text: output.trim() }],
         details: {
           urlCount: extracted.length,
-          successfulUrls: succeeded,
+          successfulUrls: extracted.filter((c) => !c.error).length,
         },
       }
     },
@@ -355,6 +334,7 @@ export default function webSearch(pi: ExtensionAPI) {
       const input = args as { url?: unknown; urls?: unknown }
       const urls = stringList(input.url, input.urls)
       const title = theme.fg("toolTitle", theme.bold("fetch "))
+
       if (urls.length === 0) {
         return new Text(title + theme.fg("error", "(no url)"), 0, 0)
       }
@@ -373,17 +353,13 @@ export default function webSearch(pi: ExtensionAPI) {
         error?: string
         urlCount?: number
         successfulUrls?: number
-        phase?: string
         progress?: number
       }
 
       if (isPartial) {
-        const progress = details?.progress ?? 0
-        const filled = Math.floor(progress * 10)
-        const bar = "█".repeat(filled) + "░".repeat(10 - filled)
+        const bar = progressBar(details?.progress ?? 0)
         return new Text(theme.fg("accent", `[${bar}] fetching`), 0, 0)
       }
-
       if (details?.error) {
         return new Text(theme.fg("error", `Error: ${details.error}`), 0, 0)
       }
@@ -392,14 +368,14 @@ export default function webSearch(pi: ExtensionAPI) {
         "success",
         `${details?.successfulUrls ?? 0}/${details?.urlCount ?? 0} pages fetched`,
       )
-      const textContent =
-        result.content.find((c) => c.type === "text")?.text ?? ""
-
       if (!expanded) {
         const box = new Box(1, 0, (t) => theme.bg("toolSuccessBg", t))
         box.addChild(new Text(statusLine, 0, 0))
         return box
       }
+
+      const textContent =
+        result.content.find((c) => c.type === "text")?.text ?? ""
       return new Text(
         statusLine + "\n\n" + theme.fg("dim", previewText(textContent)),
         0,

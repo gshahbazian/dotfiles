@@ -4,16 +4,12 @@ import { extractAccountId, isCodexJwt } from "./auth"
 const OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses"
 const CODEX_RESPONSES_URL = "https://chatgpt.com/backend-api/codex/responses"
 const SEARCH_TIMEOUT_MS = 60_000
+const MAX_RESULTS = 20
+const MAX_FILTER_DOMAINS = 100
 
 export interface SearchResult {
   title: string
   url: string
-  snippet: string
-}
-
-interface SearchResponse {
-  answer: string
-  results: SearchResult[]
 }
 
 export interface SearchOptions {
@@ -30,143 +26,147 @@ export interface QueryResultData {
   error: string | null
 }
 
-interface NormalizedDomains {
-  allowedDomains?: string[]
-  blockedDomains?: string[]
+interface DomainFilters {
+  allowed: string[]
+  blocked: string[]
+}
+
+// The response payloads are untyped JSON; narrow object nodes through this.
+function asRec(value: unknown): Record<string, any> | null {
+  if (value && typeof value === "object") return value as Record<string, any>
+  return null
 }
 
 function normalizeDomain(value: string): string | null {
-  let input = value.trim().toLowerCase()
+  const input = value.trim().toLowerCase().replace(/^-\s*/, "")
   if (!input) return null
-  if (input.startsWith("-")) input = input.slice(1).trim()
-  if (!input) return null
+
+  let host: string
   try {
-    const parsed = input.includes("://")
-      ? new URL(input)
-      : new URL(`https://${input}`)
-    input = parsed.hostname
+    host = new URL(input.includes("://") ? input : `https://${input}`).hostname
   } catch {
-    input = input.split("/")[0]?.split(":")[0] ?? ""
+    return null
   }
-  input = input.replace(/^\.+|\.+$/g, "")
-  return /^[a-z0-9][a-z0-9.-]*\.[a-z]{2,}$/i.test(input) ? input : null
+
+  host = host.replace(/^\.+|\.+$/g, "")
+  if (!/^[a-z0-9][a-z0-9.-]*\.[a-z]{2,}$/i.test(host)) return null
+  return host
 }
 
-function normalizeDomainFilters(
+function parseDomainFilters(
   domainFilter: string[] | undefined,
-): NormalizedDomains | null {
+): DomainFilters | null {
   if (!domainFilter?.length) return null
-  const allowedDomains: string[] = []
-  const blockedDomains: string[] = []
+
+  const allowed: string[] = []
+  const blocked: string[] = []
   for (const raw of domainFilter) {
     const domain = normalizeDomain(raw)
     if (!domain) continue
-    const target = raw.trim().startsWith("-") ? blockedDomains : allowedDomains
+    const target = raw.trim().startsWith("-") ? blocked : allowed
     if (!target.includes(domain)) target.push(domain)
   }
-  if (allowedDomains.length === 0 && blockedDomains.length === 0) return null
-  const result: NormalizedDomains = {}
-  if (allowedDomains.length) {
-    result.allowedDomains = allowedDomains.slice(0, 100)
+
+  if (allowed.length === 0 && blocked.length === 0) return null
+  return {
+    allowed: allowed.slice(0, MAX_FILTER_DOMAINS),
+    blocked: blocked.slice(0, MAX_FILTER_DOMAINS),
   }
-  if (blockedDomains.length) {
-    result.blockedDomains = blockedDomains.slice(0, 100)
-  }
-  return result
 }
 
-function buildInstructions(options: SearchOptions): string {
+const RECENCY_LABELS = {
+  day: "past 24 hours",
+  week: "past week",
+  month: "past month",
+  year: "past year",
+}
+
+function buildInstructions(
+  options: SearchOptions,
+  filters: DomainFilters | null,
+): string {
   const lines = [
     "Search the web and return a concise answer grounded only in the web results.",
     "Include clickable source citations in the response text when possible.",
   ]
   if (options.recencyFilter) {
-    const labels: Record<string, string> = {
-      day: "past 24 hours",
-      week: "past week",
-      month: "past month",
-      year: "past year",
-    }
-    lines.push(`Prefer sources from the ${labels[options.recencyFilter]}.`)
-  }
-  if (typeof options.numResults === "number" && options.numResults > 0) {
     lines.push(
-      `Prefer around ${Math.min(Math.floor(options.numResults), 20)} distinct sources.`,
+      `Prefer sources from the ${RECENCY_LABELS[options.recencyFilter]}.`,
     )
   }
-  const filters = normalizeDomainFilters(options.domainFilter)
-  if (filters?.allowedDomains?.length) {
-    lines.push(`Only use sources from: ${filters.allowedDomains.join(", ")}.`)
+  if (typeof options.numResults === "number" && options.numResults > 0) {
+    const count = Math.min(Math.floor(options.numResults), MAX_RESULTS)
+    lines.push(`Prefer around ${count} distinct sources.`)
   }
-  if (filters?.blockedDomains?.length) {
-    lines.push(`Do not use sources from: ${filters.blockedDomains.join(", ")}.`)
+  if (filters?.allowed.length) {
+    lines.push(`Only use sources from: ${filters.allowed.join(", ")}.`)
+  }
+  if (filters?.blocked.length) {
+    lines.push(`Do not use sources from: ${filters.blocked.join(", ")}.`)
   }
   return lines.join(" ")
 }
 
-function buildWebSearchTool(options: SearchOptions): Record<string, unknown> {
-  const tool: Record<string, unknown> = { type: "web_search" }
-  const filters = normalizeDomainFilters(options.domainFilter)
-  if (!filters) return tool
+function buildWebSearchTool(
+  filters: DomainFilters | null,
+): Record<string, unknown> {
+  if (!filters) return { type: "web_search" }
 
   const apiFilters: Record<string, unknown> = {}
-  if (filters.allowedDomains) {
-    apiFilters.allowed_domains = filters.allowedDomains
-  }
-  if (filters.blockedDomains) {
-    apiFilters.blocked_domains = filters.blockedDomains
-  }
-  tool.filters = apiFilters
-  return tool
+  if (filters.allowed.length) apiFilters.allowed_domains = filters.allowed
+  if (filters.blocked.length) apiFilters.blocked_domains = filters.blocked
+  return { type: "web_search", filters: apiFilters }
 }
 
+// The request sets stream:true (the Codex backend requires it), so the body is
+// usually an SSE stream; tolerate a plain JSON body too.
 async function parseOpenAIResponse(
   response: Response,
 ): Promise<Record<string, unknown>> {
-  const text = await response.text()
-  const trimmed = text.trim()
-  if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+  const text = (await response.text()).trim()
+
+  if (text.startsWith("{") || text.startsWith("[")) {
+    let parsed: unknown
     try {
-      const parsed = JSON.parse(trimmed)
-      if (Array.isArray(parsed)) return { output: parsed }
-      if (parsed && typeof parsed === "object") {
-        return parsed as Record<string, unknown>
-      }
-      return { output: [] }
+      parsed = JSON.parse(text)
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
       throw new Error(`OpenAI API returned invalid JSON: ${message}`)
     }
+    if (Array.isArray(parsed)) return { output: parsed }
+    return asRec(parsed) ?? { output: [] }
   }
 
-  // Server-sent event stream: collect completed output items.
+  // SSE stream: collect completed output items.
   const outputItems: unknown[] = []
   let completed: Record<string, unknown> | null = null
   for (const line of text.split("\n")) {
     if (!line.startsWith("data: ")) continue
     const data = line.slice(6).trim()
     if (!data || data === "[DONE]") continue
+
+    let event: Record<string, any> | null
     try {
-      const parsed = JSON.parse(data) as Record<string, unknown>
-      if (parsed.type === "response.output_item.done" && parsed.item) {
-        outputItems.push(parsed.item)
-      }
-      if (
-        (parsed.type === "response.done" ||
-          parsed.type === "response.completed") &&
-        parsed.response &&
-        typeof parsed.response === "object"
-      ) {
-        completed = parsed.response as Record<string, unknown>
-      }
+      event = asRec(JSON.parse(data))
     } catch {
-      // Skip malformed SSE lines.
+      continue // skip malformed SSE lines
+    }
+    if (!event) continue
+
+    if (event.type === "response.output_item.done" && event.item) {
+      outputItems.push(event.item)
+    }
+    const isDone =
+      event.type === "response.done" || event.type === "response.completed"
+    if (isDone && asRec(event.response)) {
+      completed = event.response
     }
   }
 
   if (completed) {
-    const output = Array.isArray(completed.output) ? completed.output : []
-    if (output.length > 0) return completed
+    if (Array.isArray(completed.output) && completed.output.length > 0) {
+      return completed
+    }
     return { ...completed, output: outputItems }
   }
   if (outputItems.length > 0) return { output: outputItems }
@@ -185,34 +185,20 @@ function cleanSourceUrl(rawUrl: string): string {
   }
 }
 
-function snippetAround(text: string, start: unknown, end: unknown): string {
-  if (typeof start !== "number" || typeof end !== "number" || !text) return ""
-  const before = Math.max(0, start - 100)
-  const after = Math.min(text.length, end + 100)
-  const snippet = text
-    .slice(before, after)
-    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
-    .trim()
-  return snippet.length > 300 ? `${snippet.slice(0, 297)}...` : snippet
-}
-
 function addResult(
   results: SearchResult[],
   seen: Set<string>,
   url: unknown,
   title: unknown,
-  snippet = "",
 ): void {
-  if (typeof url !== "string" || url.trim().length === 0) return
+  if (typeof url !== "string" || !url.trim()) return
+
   const cleanUrl = cleanSourceUrl(url)
   if (seen.has(cleanUrl)) return
   seen.add(cleanUrl)
-  results.push({
-    title:
-      typeof title === "string" && title.trim().length > 0 ? title : cleanUrl,
-    url: cleanUrl,
-    snippet,
-  })
+
+  const hasTitle = typeof title === "string" && title.trim().length > 0
+  results.push({ title: hasTitle ? title : cleanUrl, url: cleanUrl })
 }
 
 function extractSearchResults(
@@ -221,102 +207,55 @@ function extractSearchResults(
 ): SearchResult[] {
   const results: SearchResult[] = []
   const seen = new Set<string>()
+  const items = output.map(asRec)
 
   // Citations attached to the synthesized message.
-  for (const item of output) {
-    if (
-      !item ||
-      typeof item !== "object" ||
-      (item as { type?: unknown }).type !== "message"
-    ) {
-      continue
-    }
-    const content = (item as { content?: unknown }).content
-    if (!Array.isArray(content)) continue
-    for (const part of content) {
-      if (!part || typeof part !== "object") continue
-      const rawText = (part as { text?: unknown }).text
-      const text = typeof rawText === "string" ? rawText : ""
-      const annotations = (part as { annotations?: unknown }).annotations
-      if (!Array.isArray(annotations)) continue
-      for (const annotation of annotations) {
-        if (
-          !annotation ||
-          typeof annotation !== "object" ||
-          (annotation as { type?: unknown }).type !== "url_citation"
-        ) {
-          continue
-        }
-        addResult(
-          results,
-          seen,
-          (annotation as { url?: unknown }).url,
-          (annotation as { title?: unknown }).title,
-          snippetAround(
-            text,
-            (annotation as { start_index?: unknown }).start_index,
-            (annotation as { end_index?: unknown }).end_index,
-          ),
-        )
+  for (const item of items) {
+    if (item?.type !== "message" || !Array.isArray(item.content)) continue
+    for (const part of item.content.map(asRec)) {
+      if (!Array.isArray(part?.annotations)) continue
+      for (const note of part.annotations.map(asRec)) {
+        if (note?.type !== "url_citation") continue
+        addResult(results, seen, note.url, note.title)
       }
     }
   }
 
   // Sources surfaced by the web_search tool call itself.
-  for (const item of output) {
-    if (
-      !item ||
-      typeof item !== "object" ||
-      (item as { type?: unknown }).type !== "web_search_call"
-    ) {
-      continue
-    }
-    const value = item as {
-      action?: unknown
-      sources?: unknown
-      results?: unknown
-    }
-    const actionSources =
-      value.action && typeof value.action === "object"
-        ? (value.action as { sources?: unknown }).sources
-        : undefined
-    for (const group of [actionSources, value.sources, value.results]) {
+  for (const item of items) {
+    if (item?.type !== "web_search_call") continue
+    for (const group of [
+      asRec(item.action)?.sources,
+      item.sources,
+      item.results,
+    ]) {
       if (!Array.isArray(group)) continue
-      for (const source of group) {
-        if (!source || typeof source !== "object") continue
-        const record = source as Record<string, unknown>
+      for (const source of group.map(asRec)) {
+        if (!source) continue
         addResult(
           results,
           seen,
-          record.url ?? record.source_website_url,
-          record.title ?? record.caption,
+          source.url ?? source.source_website_url,
+          source.title ?? source.caption,
         )
       }
     }
   }
 
   if (typeof numResults === "number" && numResults > 0) {
-    return results.slice(0, Math.min(Math.floor(numResults), 20))
+    return results.slice(0, Math.min(Math.floor(numResults), MAX_RESULTS))
   }
   return results
 }
 
 function extractAnswer(output: unknown[]): string {
   const parts: string[] = []
-  for (const item of output) {
-    if (
-      !item ||
-      typeof item !== "object" ||
-      (item as { type?: unknown }).type !== "message"
-    ) {
-      continue
-    }
-    const content = (item as { content?: unknown }).content
-    if (!Array.isArray(content)) continue
-    for (const part of content) {
-      if (!part || typeof part !== "object") continue
-      const text = (part as { text?: unknown }).text
-      if (typeof text === "string" && text.trim().length > 0) parts.push(text)
+  for (const item of output.map(asRec)) {
+    if (item?.type !== "message" || !Array.isArray(item.content)) continue
+    for (const part of item.content.map(asRec)) {
+      if (typeof part?.text === "string" && part.text.trim()) {
+        parts.push(part.text)
+      }
     }
   }
   return parts.join("\n").trim()
@@ -326,13 +265,14 @@ export async function searchWithOpenAI(
   query: string,
   options: SearchOptions,
   auth: OpenAIAuth,
-): Promise<SearchResponse> {
+): Promise<{ answer: string; results: SearchResult[] }> {
   const headers: Record<string, string> = {
     ...auth.headers,
     Authorization: `Bearer ${auth.apiKey}`,
     "Content-Type": "application/json",
     "OpenAI-Beta": "responses=experimental",
   }
+
   const useCodex = auth.provider === "openai-codex" || isCodexJwt(auth.apiKey)
   if (useCodex) {
     const accountId = extractAccountId(auth.apiKey)
@@ -340,11 +280,12 @@ export async function searchWithOpenAI(
     headers.originator = "pi"
   }
 
+  const filters = parseDomainFilters(options.domainFilter)
   const body = {
     model: auth.model,
-    instructions: buildInstructions(options),
+    instructions: buildInstructions(options, filters),
     input: [{ role: "user", content: [{ type: "input_text", text: query }] }],
-    tools: [buildWebSearchTool(options)],
+    tools: [buildWebSearchTool(filters)],
     include: ["web_search_call.action.sources"],
     store: false,
     stream: true,
@@ -352,10 +293,8 @@ export async function searchWithOpenAI(
     parallel_tool_calls: true,
   }
 
-  const timeout = AbortSignal.timeout(SEARCH_TIMEOUT_MS)
-  const signal = options.signal
-    ? AbortSignal.any([timeout, options.signal])
-    : timeout
+  const signals = [AbortSignal.timeout(SEARCH_TIMEOUT_MS)]
+  if (options.signal) signals.push(options.signal)
 
   const response = await fetch(
     useCodex ? CODEX_RESPONSES_URL : OPENAI_RESPONSES_URL,
@@ -363,10 +302,9 @@ export async function searchWithOpenAI(
       method: "POST",
       headers,
       body: JSON.stringify(body),
-      signal,
+      signal: AbortSignal.any(signals),
     },
   )
-
   if (!response.ok) {
     const errorText = await response.text()
     throw new Error(
@@ -389,12 +327,9 @@ export function formatSearchSummary(
   answer: string,
 ): string {
   const sources = results
-    .map((r, i) => {
-      let line = `${i + 1}. ${r.title}\n   ${r.url}`
-      if (r.snippet) line += `\n   ${r.snippet}`
-      return line
-    })
-    .join("\n\n")
+    .map((r, i) => `${i + 1}. ${r.title}\n   ${r.url}`)
+    .join("\n")
+
   if (!answer) return sources
   return `${answer}\n\n---\n\n**Sources:**\n${sources}`
 }
@@ -404,10 +339,10 @@ export function normalizeQueryList(raw: unknown[]): string[] {
   const out: string[] = []
   for (const item of raw) {
     if (typeof item !== "string") continue
-    const q = item.trim()
-    if (!q || seen.has(q)) continue
-    seen.add(q)
-    out.push(q)
+    const query = item.trim()
+    if (!query || seen.has(query)) continue
+    seen.add(query)
+    out.push(query)
   }
   return out
 }

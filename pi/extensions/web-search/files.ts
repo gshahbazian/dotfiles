@@ -35,14 +35,13 @@ function slugify(text: string): string {
   return slug || "page"
 }
 
-// Build a markdown H1-H3 outline so the agent knows what a file contains and
-// where to read/grep. Each entry is tagged with its line number in the saved
-// file (`lineOffset` accounts for the header we prepend), so the agent can
-// jump straight to a section with an offset read. Skips fenced code blocks so
-// `# comment` lines inside code aren't mistaken for headings.
+// Markdown H1-H3 outline, each heading tagged with its line number in the
+// saved file so the agent can jump straight to a section with an offset read.
+// Skips fenced code blocks so `# comment` lines aren't mistaken for headings.
 function buildOutline(markdown: string, lineOffset: number): string {
   const headings: string[] = []
   let inFence = false
+
   const lines = markdown.split("\n")
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]!
@@ -51,32 +50,31 @@ function buildOutline(markdown: string, lineOffset: number): string {
       continue
     }
     if (inFence) continue
+
     const match = /^(#{1,3})\s+(.+?)\s*#*$/.exec(line)
     if (!match) continue
     const text = match[2]!.trim()
     if (!text) continue
-    const level = match[1]!.length
-    const indent = "  ".repeat(level - 1)
+
+    const indent = "  ".repeat(match[1]!.length - 1)
     headings.push(`${indent}${match[1]} ${text}  [L${i + 1 + lineOffset}]`)
     if (headings.length >= MAX_OUTLINE_HEADINGS) break
   }
   return headings.join("\n")
 }
 
-// Write extracted markdown to a temp file and return its path plus a structural
-// outline. The agent reads/greps the file itself.
 export function savePage(content: ExtractedContent): SavedPage {
   mkdirSync(CACHE_DIR, { recursive: true })
+
   const path = join(CACHE_DIR, `${generateId()}-${slugify(content.title)}.md`)
   const header = `# ${content.title}\n${content.url}\n\n`
   const body = `${header}${content.content}\n`
   writeFileSync(path, body, { mode: 0o600 })
+
   return {
     path,
     chars: body.length,
     lines: body.split("\n").length,
-    // Content starts after the header, so offset heading line numbers to match
-    // the file the agent will read.
     outline: buildOutline(content.content, header.split("\n").length - 1),
   }
 }
@@ -87,15 +85,16 @@ export function cleanupCache(): void {
   try {
     entries = readdirSync(CACHE_DIR)
   } catch {
-    return // dir doesn't exist yet — nothing to clean
+    return // dir doesn't exist yet
   }
+
   const now = Date.now()
   for (const name of entries) {
     const path = join(CACHE_DIR, name)
     try {
       if (now - statSync(path).mtimeMs > MAX_AGE_MS) rmSync(path)
     } catch {
-      // Ignore files that vanish mid-sweep or can't be stat'd.
+      // Ignore files that vanish mid-sweep.
     }
   }
 }
