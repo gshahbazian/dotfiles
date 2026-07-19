@@ -3,11 +3,15 @@
   "theme": "dark",
   "defaultProjectTrust": "always",
   "defaultProvider": "openai-codex",
-  "defaultModel": "gpt-5.6-sol",
+  "defaultModel": "gpt-5.6-terra",
   "defaultThinkingLevel": "high",
   "packages": [
     "npm:@ff-labs/pi-fff",
     "npm:pi-herdr-squad"
   ],
-  "hideThinkingBlock": false
+  "hideThinkingBlock": false,
+  "enabledModels": [
+    "openai-codex/gpt-5.6-sol",
+    "opencode/grok-4.5"
+  ]
 }

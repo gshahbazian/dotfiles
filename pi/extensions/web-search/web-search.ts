@@ -11,84 +11,28 @@ import {
   type SearchOptions,
 } from "./search"
 import {
-  fetchAndExtract,
-  mapWithConcurrency,
-  type ExtractedContent,
-} from "./fetch"
-import { cleanupCache, savePage } from "./files"
+  errorResult,
+  previewText,
+  progressBar,
+  toRawList,
+  truncate,
+} from "../shared/render"
 
 // Simplified openai-only rewrite of `pi-web-access`.
-
-function truncate(text: string, max: number): string {
-  if (text.length <= max) return text
-  return text.slice(0, max - 3) + "..."
-}
-
-// Cap long text for the expanded tool-result preview.
-function previewText(text: string): string {
-  if (text.length <= 4000) return text
-  return text.slice(0, 4000) + "\n..."
-}
-
-// Both tools accept a single value or an array; normalize to a raw list.
-function toRawList(single: unknown, multi: unknown): unknown[] {
-  if (Array.isArray(multi)) return multi
-  if (single !== undefined) return [single]
-  return []
-}
 
 function collectQueries(single: unknown, multi: unknown): string[] {
   return normalizeQueryList(toRawList(single, multi))
 }
 
-function stringList(single: unknown, multi: unknown): string[] {
-  return toRawList(single, multi).filter(
-    (u): u is string => typeof u === "string",
-  )
-}
-
-function errorResult(message: string) {
-  return {
-    content: [{ type: "text" as const, text: `Error: ${message}` }],
-    details: { error: message },
-  }
-}
-
-function progressBar(progress: number): string {
-  const filled = Math.floor(progress * 10)
-  return "█".repeat(filled) + "░".repeat(10 - filled)
-}
-
-// A fetched page: save the full markdown to a file, then hand the agent the
-// path plus a heading outline so it can grep/read exactly what it needs.
-function formatFetchBlock(page: ExtractedContent, index?: number): string {
-  const label = index === undefined ? "" : `[${index}] `
-  const header = `## ${label}${page.title}\n${page.url}`
-  if (page.error) return `${header}\n\nError: ${page.error}`
-
-  const saved = savePage(page)
-  let block = `${header}\nSaved to: ${saved.path}  (${saved.chars} chars, ${saved.lines} lines)\n`
-  if (saved.outline) {
-    block += `\nOutline:\n${saved.outline}`
-  } else {
-    const lead = page.content.slice(0, 400).trim()
-    const more = page.content.length > 400 ? "\n..." : ""
-    block += `\nNo headings found. Lead:\n${lead}${more}`
-  }
-  return block
-}
-
 export default function webSearch(pi: ExtensionAPI) {
-  cleanupCache()
-
   // ----- web_search -------------------------------------------------------
   pi.registerTool({
     name: "web_search",
     label: "Web Search",
     description:
-      "Search the web via OpenAI's web_search (Codex subscription or OpenAI API key). Returns an AI-synthesized answer with source citations. For research, prefer {queries:[...]} with 2-4 varied angles over a single query — each query gets its own synthesized answer, so varying phrasing and scope gives much broader coverage.",
+      "Search the web and get back an AI-synthesized answer with source citations. For research, prefer {queries:[...]} with 2-4 varied angles over a single query — each query gets its own synthesized answer, so varying phrasing and scope gives much broader coverage. To read a specific URL you already have, use read_page instead.",
     promptSnippet:
-      "Use for web research questions. Prefer {queries:[...]} with 2-4 varied angles over a single query for broader coverage.",
+      "Use for open-ended web research. Prefer {queries:[...]} with 2-4 varied angles over a single query for broader coverage. To read a specific known URL, use read_page instead.",
     parameters: Type.Object({
       query: Type.Optional(
         Type.String({
@@ -261,121 +205,6 @@ export default function webSearch(pi: ExtensionAPI) {
         return box
       }
 
-      return new Text(
-        statusLine + "\n\n" + theme.fg("dim", previewText(textContent)),
-        0,
-        0,
-      )
-    },
-  })
-
-  // ----- fetch_content ----------------------------------------------------
-  pi.registerTool({
-    name: "fetch_content",
-    label: "Fetch Content",
-    description:
-      "Fetch web page(s), extract the readable content as markdown, and save each to a file under the OS temp dir. Returns the file path and a heading outline (each heading tagged with its line number, e.g. [L42]) for each page — use your normal file tools to read a section by line offset or grep the file for the full content. Accepts a single 'url' or multiple 'urls' (fetched concurrently). Private/loopback addresses are refused.",
-    promptSnippet:
-      "Use to fetch web page URLs. Each page is saved to a file with a line-numbered heading outline; read by line offset or grep the returned path for full content.",
-    parameters: Type.Object({
-      url: Type.Optional(Type.String({ description: "Single URL to fetch" })),
-      urls: Type.Optional(
-        Type.Array(Type.String(), {
-          description: "Multiple URLs (concurrent)",
-        }),
-      ),
-    }),
-
-    async execute(_callId, params, signal, onUpdate) {
-      const urls = stringList(params.url, params.urls)
-        .map((u) => u.trim())
-        .filter((u) => u.length > 0)
-      if (urls.length === 0) {
-        return errorResult("No URL provided. Use 'url' or 'urls'.")
-      }
-
-      let done = 0
-      const extracted = await mapWithConcurrency(
-        urls,
-        3,
-        async (url): Promise<ExtractedContent> => {
-          try {
-            return await fetchAndExtract(url, signal)
-          } catch (err) {
-            const message = err instanceof Error ? err.message : String(err)
-            return { url, title: url, content: "", error: message }
-          } finally {
-            done++
-            onUpdate?.({
-              content: [
-                { type: "text", text: `Fetched ${done}/${urls.length}...` },
-              ],
-              details: { progress: done / urls.length },
-            })
-          }
-        },
-      )
-
-      const multi = extracted.length > 1
-      const output = extracted
-        .map((page, i) => formatFetchBlock(page, multi ? i : undefined))
-        .join("\n\n")
-
-      return {
-        content: [{ type: "text", text: output.trim() }],
-        details: {
-          urlCount: extracted.length,
-          successfulUrls: extracted.filter((c) => !c.error).length,
-        },
-      }
-    },
-
-    renderCall(args, theme) {
-      const input = args as { url?: unknown; urls?: unknown }
-      const urls = stringList(input.url, input.urls)
-      const title = theme.fg("toolTitle", theme.bold("fetch "))
-
-      if (urls.length === 0) {
-        return new Text(title + theme.fg("error", "(no url)"), 0, 0)
-      }
-      if (urls.length === 1) {
-        return new Text(
-          title + theme.fg("accent", truncate(urls[0]!, 60)),
-          0,
-          0,
-        )
-      }
-      return new Text(title + theme.fg("accent", `${urls.length} URLs`), 0, 0)
-    },
-
-    renderResult(result, { expanded, isPartial }, theme) {
-      const details = result.details as {
-        error?: string
-        urlCount?: number
-        successfulUrls?: number
-        progress?: number
-      }
-
-      if (isPartial) {
-        const bar = progressBar(details?.progress ?? 0)
-        return new Text(theme.fg("accent", `[${bar}] fetching`), 0, 0)
-      }
-      if (details?.error) {
-        return new Text(theme.fg("error", `Error: ${details.error}`), 0, 0)
-      }
-
-      const statusLine = theme.fg(
-        "success",
-        `${details?.successfulUrls ?? 0}/${details?.urlCount ?? 0} pages fetched`,
-      )
-      if (!expanded) {
-        const box = new Box(1, 0, (t) => theme.bg("toolSuccessBg", t))
-        box.addChild(new Text(statusLine, 0, 0))
-        return box
-      }
-
-      const textContent =
-        result.content.find((c) => c.type === "text")?.text ?? ""
       return new Text(
         statusLine + "\n\n" + theme.fg("dim", previewText(textContent)),
         0,

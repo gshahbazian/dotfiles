@@ -350,5 +350,4 @@ export default function answer(pi: ExtensionAPI) {
       "Extract questions from the last assistant response and answer them interactively",
     handler: async (_args, ctx) => answerHandler(ctx),
   })
-
 }

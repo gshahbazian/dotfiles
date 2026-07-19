@@ -1,9 +1,13 @@
 {
-  "name": "web-search",
+  "name": "read-web-page",
   "version": "0.1.0",
-  "description": "openai web search tool",
+  "description": "fetch web pages and extract readable markdown",
   "type": "module",
   "private": true,
+  "dependencies": {
+    "defuddle": "^0.18.1",
+    "linkedom": "^0.18.13"
+  },
   "peerDependencies": {
     "@earendil-works/pi-ai": "*",
     "@earendil-works/pi-coding-agent": "*",
@@ -12,7 +16,7 @@
   },
   "pi": {
     "extensions": [
-      "./web-search.ts"
+      "./read-web-page.ts"
     ]
   }
 }

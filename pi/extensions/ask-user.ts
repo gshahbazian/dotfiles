@@ -36,6 +36,15 @@ interface AskParams {
   questions?: QuestionInput[]
 }
 
+/**
+ * Send a desktop notification via the OSC 777 escape sequence so the user
+ * knows the agent is waiting on an answer. No external dependencies.
+ * Supported terminals: Ghostty, iTerm2, WezTerm, rxvt-unicode.
+ */
+function notify(title: string, body: string): void {
+  process.stdout.write(`\x1b]777;notify;${title};${body}\x07`)
+}
+
 const OptionSchema = Type.Object({
   title: Type.String({ description: "Short option title" }),
   description: Type.Optional(
@@ -218,6 +227,9 @@ export default function askUser(pi: ExtensionAPI) {
         content: [{ type: "text", text: "Waiting for the user..." }],
         details: { questions, answers: [], cancelled: false },
       })
+
+      const notifyBody = questions[0]?.question ?? "Your input is needed"
+      notify("pi needs your input", notifyBody)
 
       const answers = await promptWithQuestions(ctx, questions, signal)
 

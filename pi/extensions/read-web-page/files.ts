@@ -11,7 +11,7 @@ import type { ExtractedContent } from "./fetch"
 
 // Fetched pages are written here so the agent can grep/read them with its own
 // file tools instead of us paging content back through the model context.
-const CACHE_DIR = join(tmpdir(), "pi-web-search")
+const CACHE_DIR = join(tmpdir(), "pi-read-web-page")
 const MAX_AGE_MS = 24 * 60 * 60 * 1000
 const MAX_OUTLINE_HEADINGS = 60
 

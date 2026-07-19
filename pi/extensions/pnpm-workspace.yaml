@@ -1,5 +1,6 @@
 packages:
   - "web-search"
+  - "read-web-page"
 nodeLinker: hoisted
 autoInstallPeers: false
 allowBuilds:
