@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# Print a file/dir's absolute path and copy it to the clipboard.
+# Usage: pfd [path]   (defaults to .)
+
+path=$(realpath "${1:-.}")
+echo "$path"
+printf '%s' "$path" | pbcopy
