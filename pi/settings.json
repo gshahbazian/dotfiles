@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.80.10",
+  "lastChangelogVersion": "0.81.1",
   "theme": "dark",
   "defaultProjectTrust": "always",
   "defaultProvider": "openai-codex",
@@ -8,7 +8,6 @@
   "packages": [
     "npm:@ff-labs/pi-fff"
   ],
-  "hideThinkingBlock": false,
   "enabledModels": [
     "openai-codex/gpt-5.6-sol",
     "xai/grok-4.5",

@@ -1,5 +1,8 @@
 onboarding = false
 
+[experimental]
+kitty_graphics = true
+
 [ui]
 prompt_new_tab_name = false
 

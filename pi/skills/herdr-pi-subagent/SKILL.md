@@ -45,13 +45,15 @@ herdr agent start <name> --kind pi --pane <pane-id> -- \
 
 Equivalent model shorthand also works: `--model openai-codex/gpt-5.6-terra:low`. Prefer the explicit `--thinking low` flag so the level is obvious in logs.
 
-Also put these rules in every worker prompt:
+Also put these rules in every worker prompt (workers are leaves — never coordinators):
 
 1. Never create, edit, delete, move, or overwrite files.
 2. Never commit, push, install packages, migrate data, or change system state.
 3. Only use read-only tools and read-only shell commands (`rg`, `git show`, `git log`, `git diff`, `ls`, `cat`/`read`, tests that do not write, etc.).
-4. If a step seems to require mutation, stop and report that instead of doing it.
-5. Return a concise evidence-backed report: findings, file paths, and residual uncertainty. No drive-by refactors or suggested patches as applied changes.
+4. Never spawn sub-agents or parallel workers. Never load `herdr-pi-subagent` or `herdr`. Never run `herdr agent start`, `herdr tab create`, `herdr pane split`, or any Herdr command that creates layout or agents.
+5. Do all investigation yourself. If scope is too large, report what you covered and what remains — do not delegate.
+6. If a step seems to require mutation, stop and report that instead of doing it.
+7. Return a concise evidence-backed report: findings, file paths, and residual uncertainty. No drive-by refactors or suggested patches as applied changes.
 
 ## Workflow
 
@@ -122,12 +124,16 @@ Submit work with `--wait`:
 
 ```bash
 herdr agent prompt scout-api "$(cat <<'EOF'
-You are a read-only investigation sub-agent.
+You are a leaf read-only investigation sub-agent (not a coordinator).
 
 Hard rules:
 - Never create or modify files.
 - Never run mutating commands.
 - Use only read-only tools/commands.
+- Never spawn sub-agents or parallel workers.
+- Never load herdr / herdr-pi-subagent.
+- Never run herdr agent/tab/pane create/start/split commands.
+- If scope is too large, report partial findings + remaining work. Do not delegate.
 - If mutation seems required, stop and report that.
 
 Task:
@@ -180,5 +186,5 @@ Do not close the caller's tab or any tab/pane you did not create. If the user as
 - Target workers by unique name or explicit pane ID; do not rely on another client's focused pane.
 - Parse tab/pane/agent IDs from JSON responses.
 - Do not close panes/tabs/workspaces you did not create unless the user asks.
-- Do not nest another Herdr fan-out inside a worker.
+- Do not nest another Herdr fan-out inside a worker. Every worker prompt must include the leaf rules above so workers never spawn agents themselves.
 - Prefer closing the sub-agent tab after collection unless the user wants to inspect it.
