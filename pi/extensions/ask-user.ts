@@ -18,6 +18,8 @@ import {
 } from "@earendil-works/pi-tui"
 import { Type } from "typebox"
 
+import { notify } from "./notify"
+
 interface QuestionOption {
   title: string
   description?: string
@@ -612,15 +614,6 @@ interface AskParams {
   options?: QuestionOption[]
   allowMultiple?: boolean
   questions?: QuestionInput[]
-}
-
-/**
- * Send a desktop notification via the OSC 777 escape sequence so the user
- * knows the agent is waiting on an answer. No external dependencies.
- * Supported terminals: Ghostty, iTerm2, WezTerm, rxvt-unicode.
- */
-function notify(title: string, body: string): void {
-  process.stdout.write(`\x1b]777;notify;${title};${body}\x07`)
 }
 
 const OptionSchema = Type.Object({
