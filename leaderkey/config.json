@@ -23,31 +23,6 @@
           "value": "/Users/gabe/development"
         },
         {
-          "key": "g",
-          "label": "github",
-          "type": "url",
-          "value": "https://github.com/"
-        },
-        {
-          "key": "y",
-          "label": "youtube",
-          "type": "url",
-          "value": "https://www.youtube.com/"
-        },
-        {
-          "key": ";",
-          "label": "chatgpt",
-          "type": "url",
-          "value": "https://chatgpt.com/"
-        }
-      ],
-      "key": "l",
-      "label": "quicklinks",
-      "type": "group"
-    },
-    {
-      "actions": [
-        {
           "key": "s",
           "type": "application",
           "value": "/Applications/Spotify.app"
@@ -56,25 +31,10 @@
           "key": "z",
           "type": "application",
           "value": "/Applications/Zed.app"
-        },
-        {
-          "key": "c",
-          "type": "application",
-          "value": "/Applications/Visual Studio Code.app"
-        },
-        {
-          "key": "t",
-          "type": "application",
-          "value": "/Applications/TablePlus.app"
-        },
-        {
-          "key": "o",
-          "type": "application",
-          "value": "/Applications/OrbStack.app"
         }
       ],
-      "key": "a",
-      "label": "apps",
+      "key": "l",
+      "label": "quicklinks",
       "type": "group"
     },
     {

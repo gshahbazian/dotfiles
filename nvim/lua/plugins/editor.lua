@@ -52,7 +52,7 @@ require("which-key").setup({
       { "<leader>l", group = "vim.pack" },
       { "<leader>q", group = "quit/session" },
       { "<leader>s", group = "search" },
-      { "<leader>x", group = "diagnostics/quickfix" },
+      { "<leader>t", group = "toggle" },
       { "[", group = "prev" },
       { "]", group = "next" },
       { "g", group = "goto" },
@@ -155,14 +155,6 @@ require("blink.cmp").setup({
         end,
       },
       ghost_text = { enabled = true },
-    },
-  },
-})
-
-require("trouble").setup({
-  modes = {
-    lsp = {
-      win = { position = "right" },
     },
   },
 })

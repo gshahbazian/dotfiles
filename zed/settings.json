@@ -1,4 +1,12 @@
 {
+  "soft_wrap": "editor_width",
+  "toolbar": {
+    "breadcrumbs": true
+  },
+  "sticky_scroll": {
+    "enabled": true
+  },
+  "cursor_blink": false,
   "use_smartcase_search": true,
   "session": {
     "trust_all_worktrees": true
@@ -12,7 +20,6 @@
     "runnables": false,
     "breakpoints": false,
   },
-  "format_on_save": "off",
   "collaboration_panel": {
     "button": false,
   },
@@ -23,6 +30,7 @@
     "dock": "right",
   },
   "which_key": {
+    "delay_ms": 250,
     "enabled": true,
   },
   "tab_bar": {
@@ -40,12 +48,7 @@
   "base_keymap": "VSCode",
   "buffer_font_size": 14,
   "buffer_font_family": "Berkeley Mono",
-  "cursor_blink": false,
   "inlay_hints": {
-    "show_other_hints": true,
-    "show_value_hints": true,
-    "show_type_hints": true,
-    "show_parameter_hints": true,
     "show_background": true,
     "enabled": true,
   },
@@ -53,50 +56,9 @@
   "tabs": {
     "git_status": true,
   },
-  "theme": {
-    "mode": "system",
-    "light": "One Light",
-    "dark": "One Dark",
-  },
   "vim": {
     "use_system_clipboard": "on_yank",
     "use_smartcase_find": true,
   },
   "vim_mode": true,
-  "lsp": {
-    "biome": {
-      "settings": {
-        "require_config_file": true,
-      },
-    },
-    "vtsls": {
-      "settings": {
-        "vtsls": {
-          "experimental": {
-            "maxInlayHintLength": 30,
-          },
-        },
-        "typescript": {
-          "inlayHints": {
-            "parameterNames": {
-              "enabled": "literals",
-              "suppressWhenArgumentMatchesName": true,
-            },
-            "variableTypes": {
-              "enabled": true,
-            },
-            "propertyDeclarationTypes": {
-              "enabled": true,
-            },
-            "functionLikeReturnTypes": {
-              "enabled": true,
-            },
-            "enumMemberValues": {
-              "enabled": true,
-            },
-          },
-        },
-      },
-    },
-  },
 }

@@ -108,7 +108,6 @@ Config.later(function()
     "https://github.com/folke/which-key.nvim",
     { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("1.*") },
     "https://github.com/rafamadriz/friendly-snippets",
-    "https://github.com/folke/trouble.nvim",
     { src = "https://github.com/lewis6991/gitsigns.nvim", version = vim.version.range("*") },
     "https://github.com/arnamak/stay-centered.nvim",
     "https://github.com/folke/persistence.nvim",

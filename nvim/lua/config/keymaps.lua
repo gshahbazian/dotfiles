@@ -74,24 +74,6 @@ vim.keymap.set("n", "gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = 
 
 vim.keymap.set("n", "<leader>fn", "<cmd>enew<cr>", { desc = "New File" })
 
-vim.keymap.set("n", "<leader>xl", function()
-  local success, err = pcall(vim.fn.getloclist(0, { winid = 0 }).winid ~= 0 and vim.cmd.lclose or vim.cmd.lopen)
-  if not success and err then
-    vim.notify(err, vim.log.levels.ERROR)
-  end
-end, { desc = "Location List" })
-
--- quickfix list
-vim.keymap.set("n", "<leader>xq", function()
-  local success, err = pcall(vim.fn.getqflist({ winid = 0 }).winid ~= 0 and vim.cmd.cclose or vim.cmd.copen)
-  if not success and err then
-    vim.notify(err, vim.log.levels.ERROR)
-  end
-end, { desc = "Quickfix List" })
-vim.keymap.set("n", "<leader>xc", function()
-  vim.fn.setqflist({})
-  vim.cmd("cclose")
-end, { desc = "Clear Quickfix" })
 vim.keymap.set("n", "[q", vim.cmd.cprev, { desc = "Previous Quickfix" })
 vim.keymap.set("n", "]q", vim.cmd.cnext, { desc = "Next Quickfix" })
 
@@ -143,6 +125,14 @@ end, { desc = "Git Browse (copy)" })
 
 vim.keymap.set("n", "<leader>qq", "<cmd>qa<cr>", { desc = "Quit All" })
 
+-- toggles
+vim.keymap.set("n", "<leader>tw", function()
+  vim.wo.wrap = not vim.wo.wrap
+end, { desc = "Toggle Wrap" })
+vim.keymap.set("n", "<leader>th", function()
+  vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 }), { bufnr = 0 })
+end, { desc = "Toggle Inlay Hints" })
+
 -- windows
 vim.keymap.set("n", "<leader>-", "<C-W>s", { desc = "Split Window Below", remap = true })
 vim.keymap.set("n", "<leader>|", "<C-W>v", { desc = "Split Window Right", remap = true })
@@ -170,14 +160,6 @@ vim.keymap.set({ "n", "o", "x" }, "<c-space>", function()
     },
   })
 end, { desc = "Treesitter Incremental Selection" })
-
--- trouble
-vim.keymap.set("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics (Trouble)" })
-vim.keymap.set("n", "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", { desc = "Buffer Diagnostics (Trouble)" })
-vim.keymap.set("n", "<leader>cs", "<cmd>Trouble symbols toggle<cr>", { desc = "Symbols (Trouble)" })
-vim.keymap.set("n", "<leader>cS", "<cmd>Trouble lsp toggle<cr>", { desc = "LSP references/definitions/... (Trouble)" })
-vim.keymap.set("n", "<leader>xL", "<cmd>Trouble loclist toggle<cr>", { desc = "Location List (Trouble)" })
-vim.keymap.set("n", "<leader>xQ", "<cmd>Trouble qflist toggle<cr>", { desc = "Quickfix List (Trouble)" })
 
 -- noice
 vim.keymap.set("n", "<leader>n", "<cmd>Noice history<cr>", { desc = "Notification History" })
@@ -216,6 +198,12 @@ end, { desc = "Marks" })
 vim.keymap.set("n", "<leader>sf", function()
   require("fff").live_grep({ grep = { modes = { "fuzzy", "plain" } } })
 end, { desc = "Search string" })
+vim.keymap.set("n", "<leader>sq", function()
+  local success, err = pcall(vim.fn.getqflist({ winid = 0 }).winid ~= 0 and vim.cmd.cclose or vim.cmd.copen)
+  if not success and err then
+    vim.notify(err, vim.log.levels.ERROR)
+  end
+end, { desc = "Quickfix List" })
 vim.keymap.set("n", "<leader>fg", function()
   require("fff").find_files({ query = "git:modified " })
   vim.schedule(function()

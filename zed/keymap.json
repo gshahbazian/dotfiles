@@ -1,14 +1,11 @@
 // Zed keymap
 // https://zed.dev/docs/key-bindings
-//
-// attemp at getting some of my nvim keybinds here.
 [
   {
     "context": "vim_mode == normal || vim_mode == visual",
     "bindings": {
       "alt-k": "editor::MoveLineUp",
       "alt-j": "editor::MoveLineDown",
-      "space g b": "editor::CopyPermalinkToLine",
     },
   },
   {
@@ -20,7 +17,6 @@
       "space j f": "editor::RevealInFileManager",
       "[ h": "editor::GoToPreviousHunk",
       "] h": "editor::GoToHunk",
-      "space b o": "workspace::CloseInactiveTabsAndPanes",
       "alt-h": "vim::FirstNonWhitespace",
       "alt-l": "vim::EndOfLine"
     },
@@ -46,6 +42,7 @@
       "space space": "file_finder::Toggle",
       "space e": "workspace::ToggleRightDock",
       "space backspace": "pane::CloseActiveItem",
+      "space b o": "workspace::CloseInactiveTabsAndPanes",
       "shift-h": "pane::ActivatePreviousItem",
       "shift-l": "pane::ActivateNextItem",
     },
