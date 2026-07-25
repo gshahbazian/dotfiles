@@ -52,9 +52,7 @@ end
 vim.api.nvim_create_autocmd("FileType", {
   pattern = filetypes,
   callback = function(ev)
-    if not vim.g.vscode then
-      vim.treesitter.start(ev.buf)
-    end
+    vim.treesitter.start(ev.buf)
 
     if not ignored_indent_filetypes[vim.bo[ev.buf].filetype] then
       vim.api.nvim_set_option_value("indentexpr", "v:lua.require'nvim-treesitter'.indentexpr()", { scope = "local" })

@@ -4,11 +4,6 @@ _G.Config = {}
 
 require("config.options")
 
-if vim.g.vscode then
-  require("utils.vscode").setup()
-  return
-end
-
 require("vim._core.ui2").enable({
   enable = true,
   msg = {

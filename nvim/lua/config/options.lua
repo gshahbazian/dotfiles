@@ -29,7 +29,7 @@ vim.opt.ruler = false
 vim.opt.shiftround = true
 vim.opt.shiftwidth = 2
 vim.opt.shortmess:append({ W = true, I = true, c = true, C = true })
-vim.opt.showmode = vim.g.vscode and true or false
+vim.opt.showmode = false
 vim.opt.signcolumn = "yes"
 vim.opt.smartcase = true
 vim.opt.smartindent = true
@@ -38,7 +38,7 @@ vim.opt.softtabstop = 2
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.tabstop = 4
-vim.opt.timeoutlen = vim.g.vscode and 1000 or 300
+vim.opt.timeoutlen = 300
 vim.opt.undofile = true
 vim.opt.winborder = "single"
 vim.opt.wrap = false

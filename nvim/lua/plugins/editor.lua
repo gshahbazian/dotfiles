@@ -1,4 +1,4 @@
--- ide type plugins that should not load in the vscode extension
+-- ide type plugins
 
 require("noice").setup({
   lsp = {

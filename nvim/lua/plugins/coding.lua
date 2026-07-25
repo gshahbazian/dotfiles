@@ -1,4 +1,4 @@
--- coding plugins that are safe to load in the vscode extension
+-- coding plugins
 
 require("flash").setup()
 
