@@ -1,0 +1,827 @@
+#!/usr/bin/env bash
+
+# Nicely formatted git log
+#   j/k     move selection
+#   o       open PR (or commit) on GitHub
+#   y       copy that URL to the clipboard
+#   space   load 5 more commits
+#   q       quit
+#
+# Usage:
+#   git ll
+#   git ll -20
+#   git ll main..HEAD
+#   git ll --author=gabe
+
+page_size=5
+
+# --- tty / colors ------------------------------------------------------------
+if [[ -t 1 ]]; then
+  is_tty=1
+  use_color=1
+  c_reset=$'\033[0m'
+  c_hash=$'\033[1;33m'  # bold yellow
+  c_author=$'\033[36m'  # cyan
+  c_title=$'\033[1;37m' # bold white
+  c_pr=$'\033[1;35m'    # bold magenta
+  c_date=$'\033[2;37m'  # dim white
+  c_dim=$'\033[2m'
+  # Subtle dark stripe on every second row (the 2nd, 4th, ... one drawn, which
+  # is an odd 0-based row_index). 235 is #262626, step 4 of the 24-step xterm
+  # grayscale ramp. Erase-to-EOL keeps it full width.
+  c_row_bg=$'\033[48;5;235m'
+  # Selected row: slightly brighter blue-gray.
+  c_sel_bg=$'\033[48;5;24m'
+else
+  is_tty=0
+  use_color=0
+  c_reset='' c_hash='' c_author='' c_title='' c_pr='' c_date='' c_dim='' c_row_bg='' c_sel_bg=''
+fi
+
+# --- helper return slots -----------------------------------------------------
+# Two conventions hold for every helper below.
+#
+# They are all prefixed _ll_ so none of them shadow a real command -- there is
+# a /usr/bin/truncate, for one.
+#
+# The ones that produce a value assign it to a named global instead of printing
+# it, because $(...) forks a subshell and these run once per field, per row, per
+# keypress. The slots:
+#   _ll_truncate and _ll_fit    -> _ll_out (_ll_fit also takes a target name)
+#   _ll_parse_subject           -> _ll_pr_num, _ll_title
+#   _ll_read_key                -> _ll_key
+#   _ll_term_size               -> cached_cols, cached_rows, max_live
+#   _ll_measure_widths          -> hash_w, author_w, date_w, pr_w, title_w
+#   _ll_live_bounds             -> live_first
+_ll_out=
+_ll_pr_num=
+_ll_title=
+_ll_key=
+
+# OSC 8 hyperlink wrappers
+link_start=$'\033]8;;'
+link_text=$'\033\\'
+link_end=$'\033]8;;\033\\'
+
+# --- github base url (once, local only) --------------------------------------
+_ll_github_base() {
+  local url
+  url=$(git remote get-url origin 2>/dev/null) || return 0
+  url="${url%.git}"
+  url="${url%/}"
+
+  # [:/] covers both scp-style (git@github.com:owner/repo) and url-style
+  # (https://github.com/owner/repo, ssh://git@github.com/owner/repo).
+  if [[ "$url" =~ github\.com[:/]([^/]+)/([^/]+)$ ]]; then
+    printf 'https://github.com/%s/%s' "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}"
+  fi
+}
+
+repo_url=$(_ll_github_base || true)
+
+# --- column widths -----------------------------------------------------------
+# Measured from every commit currently loaded, on each full draw. Nothing is
+# locked from the first page, so appending commits can widen a column but can
+# never truncate one. In particular the hash column adapts to whatever git
+# actually emits: --abbrev is a *minimum*, and git grows %h for uniqueness.
+hash_w_min=8
+date_w_min=12
+author_w_min=6
+title_w_min=20
+hash_w=$hash_w_min
+date_w=$date_w_min
+author_w=$author_w_min
+title_w=$title_w_min
+pr_w=0
+
+# Terminal size (cached). stty on every key would lag j/k.
+# Sets cached_cols, cached_rows and max_live.
+cached_cols=0
+cached_rows=0
+max_live=1
+_ll_term_size() {
+  local sz r='' c=''
+  ((cached_cols > 0 && cached_rows > 0)) && return 0
+
+  if ((is_tty)); then
+    sz=$(stty size </dev/tty 2>/dev/null) || sz=''
+    if [[ "$sz" =~ ^([0-9]+)[[:space:]]+([0-9]+)$ ]]; then
+      r="${BASH_REMATCH[1]}"
+      c="${BASH_REMATCH[2]}"
+    fi
+  fi
+  if [[ ! "$c" =~ ^[0-9]+$ && "${COLUMNS:-}" =~ ^[0-9]+$ ]]; then
+    c=$COLUMNS
+  fi
+  if [[ ! "$r" =~ ^[0-9]+$ && "${LINES:-}" =~ ^[0-9]+$ ]]; then
+    r=$LINES
+  fi
+  if [[ ! "$c" =~ ^[0-9]+$ ]]; then
+    c=$(tput cols 2>/dev/null) || c=''
+  fi
+  if [[ ! "$r" =~ ^[0-9]+$ ]]; then
+    r=$(tput lines 2>/dev/null) || r=''
+  fi
+  if [[ ! "$c" =~ ^[0-9]+$ ]] || ((c < 1)); then
+    c=120
+  fi
+  if [[ ! "$r" =~ ^[0-9]+$ ]] || ((r < 1)); then
+    r=24
+  fi
+
+  cached_cols=$c
+  cached_rows=$r
+  # Commit rows we can still reach with the cursor: the viewport minus the
+  # status line, minus the blank line the cursor parks on below the block.
+  max_live=$((cached_rows - 2))
+  ((max_live < 1)) && max_live=1
+  return 0
+}
+
+# Shrink title_w so a whole row fits in $1 columns.
+_ll_fit_title_to_cols() {
+  local cols="$1"
+  local fixed max_title gutters
+
+  # Five columns means four single-space gutters -- three when the PR column is
+  # dropped entirely (no loaded commit has a PR).
+  fixed=$((hash_w + author_w + date_w))
+  if ((pr_w > 0)); then
+    fixed=$((fixed + pr_w))
+    gutters=4
+  else
+    gutters=3
+  fi
+
+  max_title=$((cols - fixed - gutters))
+  ((max_title < 1)) && max_title=1
+  ((title_w > max_title)) && title_w=$max_title
+  return 0
+}
+
+# Truncate to max visible width, appending … if anything was cut. Sets _ll_out.
+_ll_truncate() {
+  local s="$1" max="$2"
+
+  if ((max < 0 || ${#s} <= max)); then
+    _ll_out="$s"
+  elif ((max <= 1)); then
+    _ll_out='…'
+  else
+    _ll_out="${s:0:max-1}…"
+  fi
+}
+
+# Truncate $1 then left-justify pad it to exactly $2 columns, into variable $3.
+_ll_fit() {
+  local width="$2"
+
+  if ((width < 0)); then
+    printf -v "$3" '%s' "$1"
+    return 0
+  fi
+  _ll_truncate "$1" "$width"
+  printf -v "$3" '%-*s' "$width" "$_ll_out"
+}
+
+# Extract a PR number from a subject and strip "(#N)" from the displayed title.
+# Sets _ll_pr_num and _ll_title.
+_ll_parse_subject() {
+  local subject="$1"
+  _ll_pr_num=
+  _ll_title="$subject"
+
+  # The leading .* is greedy, so this reports the LAST (#N) in the subject:
+  # 'Revert "fix thing (#12)" (#345)' is PR 345, not PR 12.
+  if [[ "$subject" =~ .*\(#([0-9]+)\) ]]; then
+    _ll_pr_num="${BASH_REMATCH[1]}"
+    _ll_title="${subject//(#${_ll_pr_num})/}"
+    # Removing the marker can leave a run of spaces; collapse all of them, not
+    # just the first pair (a single pass turns "a   b" into "a  b").
+    while [[ "$_ll_title" == *"  "* ]]; do
+      _ll_title="${_ll_title//  / }"
+    done
+    _ll_title="${_ll_title# }"
+    _ll_title="${_ll_title% }"
+    return 0
+  fi
+
+  if [[ "$subject" =~ [Pp]ull\ [Rr]equest\ #([0-9]+) ]]; then
+    _ll_pr_num="${BASH_REMATCH[1]}"
+    return 0
+  fi
+
+  if [[ "$subject" =~ \#([0-9]+)$ ]]; then
+    _ll_pr_num="${BASH_REMATCH[1]}"
+  fi
+}
+
+# _ll_format_line <record> <row_index> <selected>
+# row_index is 0-based and only picks the zebra stripe. Column widths come from
+# the globals _ll_measure_widths set; the caller owns lines_drawn.
+_ll_format_line() {
+  local rec="$1" row_index="$2" selected="$3"
+  local hash author subject date
+  local h a t d pr_display pr_field line
+  local row_bg='' field_end=$c_reset
+
+  IFS=$'\x1f' read -r hash author subject date <<<"$rec"
+  _ll_parse_subject "$subject"
+
+  _ll_fit "$hash" "$hash_w" h
+  _ll_fit "$author" "$author_w" a
+  _ll_fit "$_ll_title" "$title_w" t
+  _ll_fit "$date" "$date_w" d
+
+  if [[ -n "$_ll_pr_num" ]]; then
+    pr_display="#${_ll_pr_num}"
+  else
+    pr_display=''
+  fi
+  _ll_fit "$pr_display" "$pr_w" pr_field
+
+  if ((use_color)); then
+    if ((selected)); then
+      row_bg=$c_sel_bg
+      field_end="${c_reset}${row_bg}"
+    elif ((row_index % 2 == 1)); then
+      row_bg=$c_row_bg
+      field_end="${c_reset}${row_bg}"
+    fi
+
+    if [[ -n "$repo_url" ]]; then
+      h="${link_start}${repo_url}/commit/${hash}${link_text}${c_hash}${h}${field_end}${link_end}"
+    else
+      h="${c_hash}${h}${field_end}"
+    fi
+
+    a="${c_author}${a}${field_end}"
+    t="${c_title}${t}${field_end}"
+    d="${c_date}${d}${field_end}"
+
+    if [[ -n "$_ll_pr_num" && -n "$repo_url" ]]; then
+      # Link only the visible "#123" so the underline stops there, then pad
+      # separately. Width is clamped at 0: printf reads a negative width as
+      # "left-justify to that many columns", which would widen the row.
+      local shown pad padw
+      _ll_truncate "$pr_display" "$pr_w"
+      shown=$_ll_out
+      padw=$((pr_w - ${#shown}))
+      ((padw < 0)) && padw=0
+      printf -v pad '%*s' "$padw" ''
+      pr_field="${link_start}${repo_url}/pull/${_ll_pr_num}${link_text}${c_pr}${shown}${field_end}${link_end}${pad}"
+    elif [[ -n "$_ll_pr_num" ]]; then
+      pr_field="${c_pr}${pr_field}${field_end}"
+    fi
+  fi
+
+  line="${row_bg}${h} ${a} ${t}"
+  ((pr_w > 0)) && line+=" ${pr_field}"
+  line+=" ${d}"
+
+  if ((use_color)); then
+    # \033[K while bg is active paints the stripe to the right edge.
+    printf '%s\033[K%s\n' "$line" "$c_reset"
+  else
+    printf '%s\n' "$line"
+  fi
+}
+
+# Sets hash_w / author_w / date_w / pr_w / title_w from the given records.
+_ll_measure_widths() {
+  local rec hash author subject date n
+  local hash_max=$hash_w_min author_max=$author_w_min
+  local date_max=$date_w_min title_max=$title_w_min pr_max=0
+
+  for rec in "$@"; do
+    IFS=$'\x1f' read -r hash author subject date <<<"$rec"
+    _ll_parse_subject "$subject"
+
+    n=${#hash}
+    ((n > hash_max)) && hash_max=$n
+    n=${#author}
+    ((n > author_max)) && author_max=$n
+    n=${#date}
+    ((n > date_max)) && date_max=$n
+    n=${#_ll_title}
+    ((n > title_max)) && title_max=$n
+
+    if [[ -n "$_ll_pr_num" ]]; then
+      n=$((${#_ll_pr_num} + 1))
+      ((n > pr_max)) && pr_max=$n
+    fi
+  done
+
+  hash_w=$hash_max
+  author_w=$author_max
+  date_w=$date_max
+  title_w=$title_max
+  pr_w=$pr_max
+}
+
+# Measure the loaded commits, then cap the title to the terminal.
+_ll_apply_widths() {
+  _ll_measure_widths "$@"
+  if ((is_tty)); then
+    _ll_term_size
+    _ll_fit_title_to_cols "$cached_cols"
+  fi
+}
+
+_ll_run_log() {
+  git --no-pager log \
+    --abbrev=8 \
+    --date=format-local:'%b %d %H:%M' \
+    --pretty=tformat:'%h%x1f%al%x1f%s%x1f%ad' \
+    "$@"
+}
+
+# --- non-interactive: dump everything ----------------------------------------
+_ll_dump_stream() {
+  local hash author subject date rec
+  local page=()
+  local i=0
+
+  while IFS=$'\x1f' read -r hash author subject date; do
+    [[ -z "$hash" ]] && continue
+    page+=("${hash}"$'\x1f'"${author}"$'\x1f'"${subject}"$'\x1f'"${date}")
+  done
+
+  ((${#page[@]} == 0)) && return 0
+
+  _ll_apply_widths "${page[@]}"
+  for rec in "${page[@]}"; do
+    _ll_format_line "$rec" "$i" 0
+    i=$((i + 1))
+  done
+}
+
+# --- interactive UI ----------------------------------------------------------
+# Drawing is append-only: each commit is printed exactly once and scrolls off
+# the top permanently, so the terminal's own scrollback ends up holding one
+# correctly ordered list and native wheel scrolling keeps working.
+#
+# The flip side is that a row which has scrolled off can never be repainted --
+# terminals do not let you edit scrollback. Two consequences run through
+# everything below: selection is clamped to the rows still on screen (the
+# status line reports how many are above), and column widths have to freeze
+# once rows start scrolling off, or the frozen ones would no longer line up
+# with the rows drawn after them.
+page=()
+peek_rec=
+has_more=0
+selection=-1
+# How many lines of ours sit above the cursor (commit rows + status line).
+lines_drawn=0
+prev_selection=-1
+# Commit rows already emitted to the terminal. Only the last max_live of them
+# are still on screen; anything older is frozen in scrollback.
+printed=0
+# Index of the oldest row still repaintable; _ll_live_bounds keeps this fresh.
+live_first=0
+# Is a status line currently the last thing we printed?
+status_drawn=0
+# Once rows start freezing, the widths they were drawn with are permanent.
+widths_locked=0
+
+# Append up to page_size commits from the log stream into page[].
+_ll_load_more() {
+  local hash author subject date
+  local target=$((${#page[@]} + page_size))
+
+  if [[ -n "$peek_rec" ]]; then
+    page+=("$peek_rec")
+    peek_rec=
+  fi
+
+  while ((${#page[@]} < target)) && IFS=$'\x1f' read -r hash author subject date <&3; do
+    [[ -z "$hash" ]] && continue
+    page+=("${hash}"$'\x1f'"${author}"$'\x1f'"${subject}"$'\x1f'"${date}")
+  done
+
+  if IFS=$'\x1f' read -r hash author subject date <&3; then
+    peek_rec="${hash}"$'\x1f'"${author}"$'\x1f'"${subject}"$'\x1f'"${date}"
+    has_more=1
+  else
+    peek_rec=
+    has_more=0
+  fi
+}
+
+# Oldest row index still on screen. Everything before it has scrolled off and
+# is frozen in scrollback: unreachable by the cursor, so also unselectable.
+_ll_live_bounds() {
+  live_first=$((printed - max_live))
+  ((live_first < 0)) && live_first=0
+  return 0
+}
+
+_ll_print_status_line() {
+  local status more_hint frozen_hint=''
+
+  if ((has_more)); then
+    more_hint='  space more'
+  else
+    more_hint='  (end)'
+  fi
+
+  # Explain why the rows above cannot be selected.
+  _ll_live_bounds
+  ((live_first > 0)) && frozen_hint="  ↑${live_first} frozen"
+
+  if ((selection < 0)); then
+    status="j/k select  o open  y yank${more_hint}${frozen_hint}  q quit"
+  else
+    status="j/k move  o open  y yank${more_hint}${frozen_hint}  q quit"
+  fi
+
+  printf '%s-- %s --%s\033[K\n' "$c_dim" "$status" "$c_reset"
+}
+
+# Append rows [$1, end) below what is already on screen. Anything that scrolls
+# off the top is frozen there, in order, forever.
+_ll_append_rows() {
+  local start="$1"
+  local total=${#page[@]}
+  local i selected new_first reselect=0
+
+  # A row must lose its highlight *before* it scrolls off, or it stays
+  # highlighted in scrollback for good. It is still reachable right now.
+  new_first=$((total - max_live))
+  ((new_first < 0)) && new_first=0
+
+  # Hide cursor + synchronized update (Ghostty/iTerm/kitty).
+  printf '\033[?25l\033[?2026h'
+
+  if ((selection >= 0 && selection < new_first)); then
+    _ll_paint_at_index "$selection" 0
+    selection=$new_first
+    reselect=1
+  fi
+
+  # Overwrite the status line so it never freezes into the middle of the list.
+  if ((status_drawn)); then
+    printf '\033[1A\r\033[J'
+    status_drawn=0
+  fi
+
+  for ((i = start; i < total; i++)); do
+    selected=0
+    ((selection == i)) && selected=1
+    _ll_format_line "${page[$i]}" "$i" "$selected"
+  done
+
+  printed=$total
+  lines_drawn=$((printed + 1))
+  _ll_print_status_line
+  status_drawn=1
+
+  # If the clamped selection landed on a row we did not just print, paint it.
+  if ((reselect && selection < start)); then
+    _ll_paint_at_index "$selection" 1
+  fi
+
+  printf '\033[?2026l\033[?25h'
+  prev_selection=$selection
+  return 0
+}
+
+# Rewrite every row in place. Only valid while the whole block still fits on
+# screen -- reprinting a frozen row would duplicate it in scrollback.
+_ll_repaint_block() {
+  local i selected
+  local prev_lines=$lines_drawn
+
+  printf '\033[?25l\033[?2026h'
+  if ((prev_lines > 0)); then
+    printf '\033[%dA\033[J' "$prev_lines"
+  fi
+
+  for i in "${!page[@]}"; do
+    selected=0
+    ((selection == i)) && selected=1
+    _ll_format_line "${page[$i]}" "$i" "$selected"
+  done
+
+  printed=${#page[@]}
+  lines_drawn=$((printed + 1))
+  _ll_print_status_line
+  status_drawn=1
+
+  printf '\033[?2026l\033[?25h'
+  prev_selection=$selection
+  return 0
+}
+
+# Show the current page, choosing between a full rewrite and an append.
+_ll_render() {
+  local start=$printed
+  local total=${#page[@]}
+
+  if ((total == 0)); then
+    printf '%sno commits%s\033[K\n' "$c_dim" "$c_reset"
+    return 0
+  fi
+
+  if ((start == 0)); then
+    # Nothing on screen yet: measure over what we are about to print, then
+    # print it. A first page taller than the viewport locks widths immediately.
+    _ll_apply_widths "${page[@]}"
+    ((total > max_live)) && widths_locked=1
+    _ll_append_rows 0
+    return 0
+  fi
+
+  if ((widths_locked || total > max_live)); then
+    # Rows have frozen, or are about to on this very append. Their widths are
+    # permanent, so reuse them and only emit what is new -- re-measuring here
+    # would misalign the frozen rows against the ones below.
+    widths_locked=1
+    _ll_append_rows "$start"
+    return 0
+  fi
+
+  # Everything still fits, so every row is repaintable and widths may grow.
+  _ll_apply_widths "${page[@]}"
+  _ll_repaint_block
+}
+
+# Repaint one commit row in place, assuming the cursor sits just below the
+# block. Leaves the cursor back below the block. Does not touch lines_drawn.
+_ll_paint_at_index() {
+  local idx="$1" selected="$2" up
+
+  _ll_live_bounds
+  # Frozen in scrollback; the cursor cannot get back to it.
+  ((idx < live_first)) && return 0
+
+  # One relative move, not up-to-top-then-down: cursor-up clamps at the top of
+  # the viewport, which silently breaks the math once the block is taller.
+  up=$((lines_drawn - idx))
+  printf '\033[%dA\r' "$up"
+  _ll_format_line "${page[$idx]}" "$idx" "$selected"
+  # That ended with \n, so the cursor is now at the start of row idx+1.
+  ((up > 1)) && printf '\033[%dB' "$((up - 1))"
+  return 0
+}
+
+# Fast path: only selection changed. Repaint 1-2 rows + status.
+_ll_redraw_selection_only() {
+  local old=$prev_selection new=$selection
+
+  # Layout is fixed: one line per commit + status.
+  printf '\033[?25l\033[?2026h'
+
+  ((old >= 0 && old != new)) && _ll_paint_at_index "$old" 0
+  ((new >= 0)) && _ll_paint_at_index "$new" 1
+
+  # Refresh status (text changes on first select).
+  printf '\033[1A\r'
+  _ll_print_status_line
+
+  printf '\033[?2026l\033[?25h'
+  prev_selection=$selection
+}
+
+# Read one keypress into _ll_key. Optional timeout seconds as $1 (empty =
+# block). Returns 1 on timeout; sets _ll_key=q on EOF.
+_ll_read_key() {
+  local timeout="${1:-}"
+  local rest
+  _ll_key=
+
+  if [[ -n "$timeout" ]]; then
+    IFS= read -r -n1 -s -t "$timeout" _ll_key </dev/tty || return 1
+  elif ! IFS= read -r -n1 -s _ll_key </dev/tty; then
+    _ll_key=q
+    return 0
+  fi
+
+  if [[ "$_ll_key" == $'\033' ]]; then
+    IFS= read -r -n1 -s -t 0.05 rest </dev/tty || true
+    if [[ "$rest" == '[' ]]; then
+      IFS= read -r -n1 -s -t 0.05 rest </dev/tty || true
+      case "$rest" in
+      A)
+        _ll_key=k
+        return 0
+        ;;
+      B)
+        _ll_key=j
+        return 0
+        ;;
+      esac
+    fi
+    _ll_key=esc
+    return 0
+  fi
+
+  if [[ -z "$_ll_key" || "$_ll_key" == $'\n' || "$_ll_key" == $'\r' ]]; then
+    _ll_key=enter
+  fi
+  return 0
+}
+
+_ll_move_selection() {
+  local dir="$1" last
+  ((printed == 0)) && return 0
+
+  # Movement is bounded by what is still on screen, not by what is loaded.
+  _ll_live_bounds
+  last=$((printed - 1))
+
+  if ((selection >= 0 && selection < live_first)); then
+    selection=$live_first
+    return 0
+  fi
+
+  if [[ "$dir" == j ]]; then
+    if ((selection < 0)); then
+      selection=$live_first
+    elif ((selection < last)); then
+      selection=$((selection + 1))
+    fi
+  else
+    if ((selection < 0)); then
+      selection=$last
+    elif ((selection > live_first)); then
+      selection=$((selection - 1))
+    fi
+  fi
+}
+
+# Resolve selected commit -> PR URL, or commit URL if no PR.
+# Prints the URL on stdout; returns 1 if there is nothing to open.
+_ll_selected_url() {
+  local hash subject
+
+  ((selection < 0 || ${#page[@]} == 0)) && return 1
+  [[ -z "$repo_url" ]] && return 1
+
+  IFS=$'\x1f' read -r hash _ subject _ <<<"${page[$selection]}"
+  _ll_parse_subject "$subject"
+
+  if [[ -n "$_ll_pr_num" ]]; then
+    printf '%s' "${repo_url}/pull/${_ll_pr_num}"
+  else
+    printf '%s' "${repo_url}/commit/${hash}"
+  fi
+}
+
+_ll_open_selected() {
+  local url
+  url=$(_ll_selected_url) || return 0
+  open "$url" >/dev/null 2>&1 &
+}
+
+_ll_yank_selected() {
+  local url
+  url=$(_ll_selected_url) || return 0
+  printf '%s' "$url" | pbcopy
+}
+
+# Drop the highlight and the shortcut line so scrollback is left holding
+# nothing but the ordered commit list. Used by quit and by Ctrl-C / SIGTERM.
+_ll_finish_ui() {
+  if ((selection >= 0)); then
+    _ll_paint_at_index "$selection" 0 2>/dev/null || true
+    selection=-1
+  fi
+  if ((status_drawn)); then
+    # Erase the status line and leave the cursor on it, so the shell prompt
+    # lands directly under the last commit.
+    printf '\033[1A\r\033[J' 2>/dev/null || true
+    status_drawn=0
+  fi
+  # Show cursor again in case we died mid-frame.
+  printf '\033[?25h\033[?2026l' 2>/dev/null || true
+}
+
+_ll_page_more() {
+  ((has_more)) || return 0
+  _ll_load_more
+  _ll_render
+}
+
+# Close the log stream and surface whatever git had to say, returning its exit
+# status. Call only after the UI is torn down: git's stderr is buffered to a
+# file precisely so a stray "fatal:" can never land inside the frame.
+_ll_finish_log() {
+  local status=0
+
+  exec 3<&-
+
+  # Quitting early closes the pipe under git, which kills it with a write
+  # error. Only a stream we drained to EOF has a status worth reporting.
+  ((has_more)) && return 0
+
+  if [[ -n "$git_pid" ]]; then
+    wait "$git_pid" 2>/dev/null
+    status=$?
+    # Some bash versions forget a process-substitution pid and report 127.
+    # Do not turn that into a failure when git said nothing.
+    if ((status == 127)) && [[ ! -s "$git_err" ]]; then
+      status=0
+    fi
+  fi
+
+  if [[ -n "$git_err" && -s "$git_err" ]]; then
+    cat "$git_err" >&2
+  fi
+  return "$status"
+}
+
+_ll_interactive() {
+  local key
+
+  _ll_load_more
+  if ((${#page[@]} == 0)); then
+    # Nothing came back. Tell "git failed" apart from "no matching commits".
+    _ll_finish_log || return $?
+    printf 'no commits\n'
+    return 0
+  fi
+
+  trap '_ll_finish_ui; exit 130' INT
+  trap '_ll_finish_ui; exit 143' TERM
+
+  _ll_render
+
+  while true; do
+    _ll_read_key || _ll_key=q
+    key=$_ll_key
+
+    case "$key" in
+    q | Q | esc)
+      break
+      ;;
+    j | k)
+      _ll_move_selection "$key"
+      # Coalesce held/repeated movement keys into one paint.
+      while _ll_read_key 0.001; do
+        case "$_ll_key" in
+        j | k) _ll_move_selection "$_ll_key" ;;
+        *)
+          key=$_ll_key
+          break
+          ;;
+        esac
+      done
+      ((prev_selection != selection)) && _ll_redraw_selection_only
+      if [[ "$key" != j && "$key" != k ]]; then
+        case "$key" in
+        q | Q | esc) break ;;
+        o | O) _ll_open_selected ;;
+        y | Y) _ll_yank_selected ;;
+        ' ') _ll_page_more ;;
+        esac
+      fi
+      ;;
+    o | O)
+      _ll_open_selected
+      ;;
+    y | Y)
+      _ll_yank_selected
+      ;;
+    ' ')
+      _ll_page_more
+      ;;
+    esac
+  done
+
+  trap - INT TERM
+  _ll_finish_ui
+  _ll_finish_log
+}
+
+# --- main --------------------------------------------------------------------
+git_err=
+git_pid=
+
+_ll_cleanup() {
+  [[ -n "$git_err" ]] && rm -f "$git_err"
+  # Restore the cursor in case we exited mid-frame for any reason.
+  ((is_tty)) && printf '\033[?25h\033[?2026l' 2>/dev/null
+  return 0
+}
+
+if ((is_tty)); then
+  git_err=$(mktemp 2>/dev/null) || git_err=
+  trap _ll_cleanup EXIT
+
+  # Keep the log streaming on fd 3 so the UI can still read keys from /dev/tty,
+  # and keep git's stderr off the terminal so it cannot desync the redraw.
+  if [[ -n "$git_err" ]]; then
+    exec 3< <(_ll_run_log "$@" 2>"$git_err")
+  else
+    exec 3< <(_ll_run_log "$@" 2>/dev/null)
+  fi
+  git_pid=$!
+
+  _ll_interactive
+  exit $?
+else
+  # stderr already bypasses the pipe, so it needs no help; the exit status does.
+  _ll_run_log "$@" | _ll_dump_stream
+  exit "${PIPESTATUS[0]}"
+fi
