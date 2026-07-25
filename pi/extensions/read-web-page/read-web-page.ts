@@ -1,6 +1,7 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent"
 import { Box, Text } from "@earendil-works/pi-tui"
 import { Type } from "typebox"
+import { mapWithConcurrency } from "../shared/concurrency"
 import {
   errorResult,
   previewText,
@@ -8,16 +9,14 @@ import {
   toRawList,
   truncate,
 } from "../shared/render"
-import {
-  fetchAndExtract,
-  mapWithConcurrency,
-  type ExtractedContent,
-} from "./fetch"
-import { cleanupCache, savePage } from "./files"
+import { fetchAndExtract, type ExtractedContent } from "./fetch"
+import { cleanupCache, savePage, type SavedPage } from "./files"
 
 // Fetch web page(s) -> readable markdown saved to a file, with a line-numbered
 // heading outline the agent can grep/read. Split out of the web-search
 // extension so reading pages and searching the web are independent tools.
+
+const FETCH_CONCURRENCY = 3
 
 function stringList(single: unknown, multi: unknown): string[] {
   return toRawList(single, multi).filter(
@@ -25,15 +24,20 @@ function stringList(single: unknown, multi: unknown): string[] {
   )
 }
 
-// A fetched page: save the full markdown to a file, then hand the agent the
-// path plus a heading outline so it can grep/read exactly what it needs.
-function formatFetchBlock(page: ExtractedContent, index?: number): string {
-  const label = index === undefined ? "" : `[${index}] `
+// The full markdown already lives in `saved`; hand the agent its path plus a
+// heading outline so it can grep/read exactly what it needs.
+function formatFetchBlock(
+  page: ExtractedContent,
+  saved: SavedPage | undefined,
+  label: string,
+): string {
   const header = `## ${label}${page.title}\n${page.url}`
-  if (page.error) return `${header}\n\nError: ${page.error}`
+  if (!saved) return `${header}\n\nError: ${page.error ?? "could not be saved"}`
 
-  const saved = savePage(page)
-  let block = `${header}\nSaved to: ${saved.path}  (${saved.chars} chars, ${saved.lines} lines)\n`
+  const truncatedNote = page.truncated
+    ? "  [TRUNCATED - the page was longer than this file]"
+    : ""
+  let block = `${header}\nSaved to: ${saved.path}  (${saved.chars} chars, ${saved.lines} lines)${truncatedNote}\n`
   if (saved.outline) {
     block += `\nOutline:\n${saved.outline}`
   } else {
@@ -45,7 +49,9 @@ function formatFetchBlock(page: ExtractedContent, index?: number): string {
 }
 
 export default function readWebPage(pi: ExtensionAPI) {
-  cleanupCache()
+  // Pi runs extension factories in invocations that never open a session, so
+  // the stale-file sweep waits for the first call that actually uses the cache.
+  let swept = false
 
   pi.registerTool({
     name: "read_page",
@@ -71,16 +77,27 @@ export default function readWebPage(pi: ExtensionAPI) {
         return errorResult("No URL provided. Use 'url' or 'urls'.")
       }
 
+      if (!swept) {
+        swept = true
+        void cleanupCache()
+      }
+
       let done = 0
       const extracted = await mapWithConcurrency(
         urls,
-        3,
+        FETCH_CONCURRENCY,
         async (url): Promise<ExtractedContent> => {
           try {
             return await fetchAndExtract(url, signal)
           } catch (err) {
             const message = err instanceof Error ? err.message : String(err)
-            return { url, title: url, content: "", error: message }
+            return {
+              url,
+              title: url,
+              content: "",
+              truncated: false,
+              error: message,
+            }
           } finally {
             done++
             onUpdate?.({
@@ -95,7 +112,13 @@ export default function readWebPage(pi: ExtensionAPI) {
 
       const multi = extracted.length > 1
       const output = extracted
-        .map((page, i) => formatFetchBlock(page, multi ? i : undefined))
+        .map((page, i) =>
+          formatFetchBlock(
+            page,
+            page.error ? undefined : savePage(page),
+            multi ? `[${i}] ` : "",
+          ),
+        )
         .join("\n\n")
 
       return {

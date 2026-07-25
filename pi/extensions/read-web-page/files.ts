@@ -1,19 +1,18 @@
-import {
-  mkdirSync,
-  readdirSync,
-  rmSync,
-  statSync,
-  writeFileSync,
-} from "node:fs"
+import { mkdirSync, writeFileSync } from "node:fs"
+import { readdir, rm, stat } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import type { ExtractedContent } from "./fetch"
+import { MAX_STORED_CHARS, type ExtractedContent } from "./fetch"
 
 // Fetched pages are written here so the agent can grep/read them with its own
 // file tools instead of us paging content back through the model context.
 const CACHE_DIR = join(tmpdir(), "pi-read-web-page")
 const MAX_AGE_MS = 24 * 60 * 60 * 1000
 const MAX_OUTLINE_HEADINGS = 60
+
+// A cut-off page must say so in the file itself: an agent that greps for a
+// missing section would otherwise conclude the page never mentioned it.
+const TRUNCATION_NOTE = `\n---\n[Truncated at ${MAX_STORED_CHARS} characters. The rest of this page was not saved.]\n`
 
 export interface SavedPage {
   path: string
@@ -68,7 +67,8 @@ export function savePage(content: ExtractedContent): SavedPage {
 
   const path = join(CACHE_DIR, `${generateId()}-${slugify(content.title)}.md`)
   const header = `# ${content.title}\n${content.url}\n\n`
-  const body = `${header}${content.content}\n`
+  const footer = content.truncated ? TRUNCATION_NOTE : ""
+  const body = `${header}${content.content}\n${footer}`
   writeFileSync(path, body, { mode: 0o600 })
 
   return {
@@ -79,22 +79,25 @@ export function savePage(content: ExtractedContent): SavedPage {
   }
 }
 
-// Best-effort sweep of stale cache files. Runs once on extension load.
-export function cleanupCache(): void {
+// Best-effort sweep of stale cache files, kicked off once per session by the
+// first read_page call. Never rejects, so callers can fire and forget it.
+export async function cleanupCache(): Promise<void> {
   let entries: string[]
   try {
-    entries = readdirSync(CACHE_DIR)
+    entries = await readdir(CACHE_DIR)
   } catch {
     return // dir doesn't exist yet
   }
 
   const now = Date.now()
-  for (const name of entries) {
-    const path = join(CACHE_DIR, name)
-    try {
-      if (now - statSync(path).mtimeMs > MAX_AGE_MS) rmSync(path)
-    } catch {
-      // Ignore files that vanish mid-sweep.
-    }
-  }
+  await Promise.all(
+    entries.map(async (name) => {
+      const path = join(CACHE_DIR, name)
+      try {
+        if (now - (await stat(path)).mtimeMs > MAX_AGE_MS) await rm(path)
+      } catch {
+        // Ignore files that vanish mid-sweep.
+      }
+    }),
+  )
 }

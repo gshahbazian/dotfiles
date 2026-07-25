@@ -1,9 +1,5 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent"
-
-// send a desktop notification via the OSC 777 escape sequence
-export function notify(title: string, body: string): void {
-  process.stdout.write(`\x1b]777;notify;${title};${body}\x07`)
-}
+import { notify } from "../shared/notify"
 
 export default function notifyWhenAgentSettles(pi: ExtensionAPI) {
   pi.on("agent_settled", () => {

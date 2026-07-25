@@ -1,7 +1,3 @@
-// Small render/format helpers shared by the web-search and read-web-page
-// extensions. Pure functions with no dependencies so both workspace packages
-// can import them across the package boundary.
-
 export function truncate(text: string, max: number): string {
   if (text.length <= max) return text
   return text.slice(0, max - 3) + "..."

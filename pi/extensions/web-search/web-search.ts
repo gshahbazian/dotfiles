@@ -10,6 +10,7 @@ import {
   type QueryResultData,
   type SearchOptions,
 } from "./search"
+import { mapWithConcurrency } from "../shared/concurrency"
 import {
   errorResult,
   previewText,
@@ -19,6 +20,10 @@ import {
 } from "../shared/render"
 
 // Simplified openai-only rewrite of `pi-web-access`.
+
+// Each query is its own minute-scale API call, so run a few at a time rather
+// than paying the full latency per query.
+const QUERY_CONCURRENCY = 3
 
 function collectQueries(single: unknown, multi: unknown): string[] {
   return normalizeQueryList(toRawList(single, multi))
@@ -80,31 +85,42 @@ export default function webSearch(pi: ExtensionAPI) {
         signal,
       }
 
-      const queryResults: QueryResultData[] = []
-      for (let i = 0; i < queries.length; i++) {
-        const query = queries[i]!
-        onUpdate?.({
-          content: [
-            {
-              type: "text",
-              text: `Searching ${i + 1}/${queries.length}: "${query}"...`,
-            },
-          ],
-          details: { progress: i / queries.length, currentQuery: query },
-        })
+      onUpdate?.({
+        content: [
+          { type: "text", text: `Searching ${queries.length} queries...` },
+        ],
+        details: { progress: 0 },
+      })
 
-        try {
-          const { answer, results } = await searchWithOpenAI(
-            query,
-            options,
-            auth,
-          )
-          queryResults.push({ query, answer, results, error: null })
-        } catch (err) {
-          const message = err instanceof Error ? err.message : String(err)
-          queryResults.push({ query, answer: "", results: [], error: message })
-        }
-      }
+      let done = 0
+      const queryResults = await mapWithConcurrency(
+        queries,
+        QUERY_CONCURRENCY,
+        async (query): Promise<QueryResultData> => {
+          try {
+            const { answer, results } = await searchWithOpenAI(
+              query,
+              options,
+              auth,
+            )
+            return { query, answer, results, error: null }
+          } catch (err) {
+            const message = err instanceof Error ? err.message : String(err)
+            return { query, answer: "", results: [], error: message }
+          } finally {
+            done++
+            onUpdate?.({
+              content: [
+                {
+                  type: "text",
+                  text: `Searched ${done}/${queries.length}: "${query}"`,
+                },
+              ],
+              details: { progress: done / queries.length, currentQuery: query },
+            })
+          }
+        },
+      )
 
       let output = ""
       for (const { query, answer, results, error } of queryResults) {
@@ -168,8 +184,12 @@ export default function webSearch(pi: ExtensionAPI) {
 
       if (isPartial) {
         const bar = progressBar(details?.progress ?? 0)
-        const display = truncate(details?.currentQuery ?? "", 40)
-        return new Text(theme.fg("accent", `[${bar}] ${display}`), 0, 0)
+        // Queries run concurrently, so this is the one that finished most
+        // recently rather than the only one in flight.
+        const label = details?.currentQuery
+          ? truncate(details.currentQuery, 40)
+          : "searching"
+        return new Text(theme.fg("accent", `[${bar}] ${label}`), 0, 0)
       }
       if (details?.error) {
         return new Text(theme.fg("error", `Error: ${details.error}`), 0, 0)

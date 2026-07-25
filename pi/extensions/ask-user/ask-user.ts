@@ -13,12 +13,10 @@ import {
   Text,
   type TUI,
   truncateToWidth,
-  visibleWidth,
-  wrapTextWithAnsi,
 } from "@earendil-works/pi-tui"
 import { Type } from "typebox"
-
-import { notify } from "./notify"
+import { notify } from "../shared/notify"
+import { addWrappedLine } from "../shared/wrap"
 
 interface QuestionOption {
   title: string
@@ -47,27 +45,6 @@ function createEditorTheme(theme: Theme): EditorTheme {
       scrollInfo: (text: string) => theme.fg("dim", text),
       noMatch: (text: string) => theme.fg("warning", text),
     },
-  }
-}
-
-function addWrappedLine(
-  lines: string[],
-  prefix: string,
-  text: string,
-  width: number,
-): void {
-  const prefixWidth = visibleWidth(prefix)
-
-  if (prefixWidth >= width) {
-    lines.push(...wrapTextWithAnsi(prefix + text, width))
-    return
-  }
-
-  const wrapped = wrapTextWithAnsi(text, width - prefixWidth)
-  const continuationPrefix = " ".repeat(prefixWidth)
-
-  for (let index = 0; index < wrapped.length; index++) {
-    lines.push(`${index === 0 ? prefix : continuationPrefix}${wrapped[index]}`)
   }
 }
 
@@ -594,13 +571,6 @@ interface AskResult {
   cancelled: boolean
 }
 
-interface LegacyAskResult {
-  selection?: string | null
-  selections?: string[]
-  explanation?: string
-  cancelled?: boolean
-}
-
 interface QuestionInput {
   question: string
   context?: string
@@ -855,33 +825,23 @@ export default function askUser(pi: ExtensionAPI) {
         return new Text(theme.fg("muted", "Waiting for the user..."), 0, 0)
       }
 
-      const details = result.details as
-        (Partial<AskResult> & LegacyAskResult) | undefined
-      if (!details || details.cancelled) {
+      // Sessions are replayed from disk, so tolerate a details shape this
+      // version didn't write.
+      const details = result.details as Partial<AskResult> | undefined
+      const answers = details?.answers
+      if (details?.cancelled || !answers?.length) {
         return new Text(theme.fg("warning", "Cancelled"), 0, 0)
       }
 
-      if (details.questions?.length && details.answers?.length) {
-        const lines = details.answers.map((answer, index) => {
-          const prefix = details.answers!.length > 1 ? `Q${index + 1}: ` : ""
-          let line = `${theme.fg("success", "✓ ")}${theme.fg("accent", prefix + answer.selections.join(", "))}`
-          if (answer.explanation)
-            line += `\n  ${theme.fg("muted", answer.explanation)}`
-          return line
-        })
-        return new Text(lines.join("\n"), 0, 0)
-      }
-
-      const selections =
-        details.selections ?? (details.selection ? [details.selection] : [])
-      if (selections.length === 0) {
-        return new Text(theme.fg("warning", "Cancelled"), 0, 0)
-      }
-
-      let text = `${theme.fg("success", "✓ ")}${theme.fg("accent", selections.join(", "))}`
-      if (details.explanation)
-        text += `\n${theme.fg("muted", details.explanation)}`
-      return new Text(text, 0, 0)
+      const lines = answers.map((answer, index) => {
+        const prefix = answers.length > 1 ? `Q${index + 1}: ` : ""
+        let line = `${theme.fg("success", "✓ ")}${theme.fg("accent", prefix + answer.selections.join(", "))}`
+        if (answer.explanation) {
+          line += `\n  ${theme.fg("muted", answer.explanation)}`
+        }
+        return line
+      })
+      return new Text(lines.join("\n"), 0, 0)
     },
   })
 }

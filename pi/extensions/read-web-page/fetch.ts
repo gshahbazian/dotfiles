@@ -7,11 +7,13 @@ export interface ExtractedContent {
   url: string
   title: string
   content: string
+  // The page was longer than MAX_STORED_CHARS and `content` is only its head.
+  truncated: boolean
   error?: string
 }
 
 const FETCH_TIMEOUT_MS = 30_000
-const MAX_STORED_CHARS = 500_000
+export const MAX_STORED_CHARS = 500_000
 const MIN_USEFUL_CONTENT = 200
 
 const FETCH_HEADERS = {
@@ -85,27 +87,10 @@ export async function fetchAndExtract(
     ? { title: finalUrl, content: html.trim() }
     : await htmlToMarkdown(html, finalUrl)
 
-  return { url: finalUrl, title, content: content.slice(0, MAX_STORED_CHARS) }
-}
-
-// A tiny concurrency limiter so multi-URL fetches don't stampede.
-export async function mapWithConcurrency<T, R>(
-  items: T[],
-  limit: number,
-  fn: (item: T, index: number) => Promise<R>,
-): Promise<R[]> {
-  const results: R[] = new Array(items.length)
-  let next = 0
-
-  const workers = Array.from(
-    { length: Math.min(limit, items.length) },
-    async () => {
-      while (next < items.length) {
-        const index = next++
-        results[index] = await fn(items[index]!, index)
-      }
-    },
-  )
-  await Promise.all(workers)
-  return results
+  return {
+    url: finalUrl,
+    title,
+    content: content.slice(0, MAX_STORED_CHARS),
+    truncated: content.length > MAX_STORED_CHARS,
+  }
 }
