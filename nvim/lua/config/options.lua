@@ -1,5 +1,4 @@
 vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
 
 vim.opt.breakindent = true
 vim.opt.confirm = true
@@ -29,7 +28,7 @@ vim.opt.nrformats = "unsigned"
 vim.opt.ruler = false
 vim.opt.shiftround = true
 vim.opt.shiftwidth = 2
-vim.opt.shortmess:append({ W = true, I = true, c = true, C = true })
+vim.opt.shortmess:append({ W = true, I = true, c = true })
 vim.opt.showbreak = "· "
 vim.opt.showmode = false
 vim.opt.signcolumn = "yes"

@@ -60,21 +60,17 @@ require("lualine").setup({
     lualine_c = {
       { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
       { "filename", path = 1 },
+      -- second %= (lualine adds one before section x) centers what follows
+      { "%=", padding = 0 },
+      -- stylua: ignore
+      {
+        function() return "REC @" .. vim.fn.reg_recording() end,
+        cond = function() return vim.fn.reg_recording() ~= "" end,
+        color = function() return { fg = Snacks.util.color("Normal", "bg"), bg = Snacks.util.color("DiagnosticError"), gui = "bold" } end,
+      },
     },
     lualine_x = {
       Snacks.profiler.status(),
-      -- stylua: ignore
-      {
-        function() return require("noice").api.status.command.get() end,
-        cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
-        color = function() return { fg = Snacks.util.color("Statement") } end,
-      },
-      -- stylua: ignore
-      {
-        function() return require("noice").api.status.mode.get() end,
-        cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
-        color = function() return { fg = Snacks.util.color("Constant") } end,
-      },
       {
         "diff",
         symbols = {
@@ -97,4 +93,12 @@ require("lualine").setup({
     lualine_y = { "diagnostics" },
     lualine_z = { "branch" },
   },
+})
+-- lualine's timer refresh is too slow to show the recording indicator promptly
+vim.api.nvim_create_autocmd({ "RecordingEnter", "RecordingLeave" }, {
+  callback = function()
+    vim.schedule(function()
+      require("lualine").refresh()
+    end)
+  end,
 })

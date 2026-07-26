@@ -10,12 +10,6 @@ vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = tr
 vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
 vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window", remap = true })
 
--- resize window using <ctrl> arrow keys
-vim.keymap.set("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase Window Height" })
-vim.keymap.set("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "Decrease Window Height" })
-vim.keymap.set("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Window Width" })
-vim.keymap.set("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Window Width" })
-
 -- move lines
 vim.keymap.set("n", "<A-j>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down" })
 vim.keymap.set("n", "<A-k>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up" })
@@ -244,10 +238,6 @@ vim.keymap.set({ "n", "x" }, "<leader>P", '"+P', { desc = "Paste from system cli
 
 -- ctrl+s to save
 vim.keymap.set({ "n", "i" }, "<C-s>", "<Esc><cmd>w<cr>", { silent = true, desc = "Save" })
-
--- change macro keys
-vim.keymap.set("n", "q", "<nop>", { silent = true })
-vim.keymap.set("n", "<C-M-q>", "q", { desc = "Record macro" })
 
 -- alt+h/l to go to start/end of line
 vim.keymap.set({ "n", "v" }, "<A-h>", "^", { desc = "Go to start of line" })
