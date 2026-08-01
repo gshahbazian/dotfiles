@@ -75,7 +75,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- wrap in text filetypes
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "text", "plaintex", "typst", "gitcommit", "markdown" },
+  pattern = { "text", "gitcommit", "markdown" },
   callback = function()
     vim.opt_local.wrap = true
   end,
