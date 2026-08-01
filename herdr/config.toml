@@ -16,10 +16,6 @@ row_gap = 1
 name = "vesper"
 auto_switch = false
 
-[keys]
-previous_workspace = "prefix+shift+up"
-next_workspace = "prefix+shift+down"
-
 [[keys.command]]
 key = "cmd+k"
 type = "shell"
