@@ -23,7 +23,6 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' menu select
 zstyle ':completion:*' list-colors ''
 
-setopt correct
 setopt extended_glob
 unsetopt nomatch
 
@@ -33,17 +32,17 @@ autoload -Uz compinit && compinit
 # -----------------------
 # aliases
 # -----------------------
-alias l='eza --grid --group-directories-first'
-alias ll='eza -la --git --no-user --icons=always'
-alias cdd='cd ~/development'
-alias nv='nvim'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-alias path='printf "%s\n" $path'
-alias p='pnpm'
+alias cdd='cd ~/development'
 alias g='git'
+alias l='eza --grid --group-directories-first'
 alias lg='lazygit'
+alias ll='eza -la --git --no-user --icons=always'
+alias nv='nvim'
+alias p='pnpm'
+alias path='printf "%s\n" $path'
 
 # -----------------------
 # package managers

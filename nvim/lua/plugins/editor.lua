@@ -1,5 +1,3 @@
--- ide type plugins
-
 require("noice").setup({
   lsp = {
     override = {

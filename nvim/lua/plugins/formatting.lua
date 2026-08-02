@@ -1,39 +1,28 @@
 local biome_fts = {
-  "astro",
   "css",
-  "graphql",
   "javascript",
   "javascriptreact",
   "json",
   "jsonc",
-  "svelte",
   "typescript",
   "typescriptreact",
-  "vue",
 }
 
 local prettier_fts = {
   "css",
-  "graphql",
-  "handlebars",
   "html",
   "javascript",
   "javascriptreact",
   "json",
   "jsonc",
-  "less",
-  "markdown",
-  "markdown.mdx",
-  "scss",
   "typescript",
   "typescriptreact",
-  "vue",
-  "yaml",
 }
 
 local formatters_by_ft = {
   lua = { "stylua" },
   sh = { "shfmt" },
+  ["_"] = { "trim_whitespace", "trim_newlines" },
 }
 
 for _, ft in ipairs(biome_fts) do

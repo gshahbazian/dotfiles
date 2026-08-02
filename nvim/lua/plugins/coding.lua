@@ -1,5 +1,3 @@
--- coding plugins
-
 require("flash").setup()
 
 require("mini.extra").setup({})
