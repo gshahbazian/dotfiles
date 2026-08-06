@@ -2,17 +2,32 @@
 
 # Usage:
 #   tree [level] [dir]
-#   tree [dir]        (defaults to level 3)
+#   tree [dir]            (defaults to level 3)
+#   tree -i [level] [dir] (include git-ignored files)
 
-# If the first arg is a number, treat it as depth.
-if [[ "$1" =~ ^[0-9]+$ ]]; then
-  level="$1"
-  dir="${2:-.}"
+show_ignored=false
+args=()
+
+for arg in "$@"; do
+  case "$arg" in
+    -i|--ignored) show_ignored=true ;;
+    *) args+=("$arg") ;;
+  esac
+done
+
+# If the first remaining arg is a number, treat it as depth.
+if [[ "${args[0]}" =~ ^[0-9]+$ ]]; then
+  level="${args[0]}"
+  dir="${args[1]:-.}"
 else
   # Otherwise, treat the first arg as the directory.
-  level="${2:-3}"
-  dir="${1:-.}"
+  level="${args[1]:-3}"
+  dir="${args[0]:-.}"
 fi
 
-# Run eza tree with git-ignored files hidden.
-exec eza -a --git-ignore --tree --level="$level" --icons=always "$dir"
+eza_args=(-a --tree --level="$level" --icons=always)
+if [[ "$show_ignored" == false ]]; then
+  eza_args+=(--git-ignore)
+fi
+
+exec eza "${eza_args[@]}" "$dir"
