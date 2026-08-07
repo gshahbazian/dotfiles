@@ -1,6 +1,6 @@
 # pi
 
-config for [pi](https://pi.dev) ([docs](https://github.com/bdsqqq/dots))
+extensions for [pi](https://pi.dev) ([docs](https://github.com/bdsqqq/dots))
 
 ## Useful examples
 - [dmmulroy/.dotfiles](https://github.com/dmmulroy/.dotfiles/tree/main/home/.pi/agent)
