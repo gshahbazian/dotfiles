@@ -206,10 +206,11 @@ vim.keymap.set("n", "<leader>fg", function()
 end, { desc = "Git status" })
 vim.keymap.set("n", "<leader>e", function()
   local mini_files = require("mini.files")
-  if not mini_files.close() then
-    local path = vim.api.nvim_buf_get_name(0)
-    mini_files.open(path ~= "" and path or nil, false)
+  if mini_files.close() ~= nil then
+    return
   end
+  local path = vim.api.nvim_buf_get_name(0)
+  mini_files.open(vim.uv.fs_stat(path) ~= nil and path or nil, false)
 end, { desc = "mini.files" })
 vim.keymap.set("n", "<leader>,", function()
   Snacks.picker.buffers({
