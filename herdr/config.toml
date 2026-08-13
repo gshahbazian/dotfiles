@@ -12,15 +12,19 @@ delivery = "terminal"
 [ui.sidebar.spaces]
 row_gap = 1
 
+[ui.sound]
+enabled = false
+
 [theme]
 name = "vesper"
 auto_switch = false
+
+[keys]
+previous_workspace = "prefix+up"
+next_workspace = "prefix+down"
 
 [[keys.command]]
 key = "cmd+k"
 type = "shell"
 command = 'herdr pane run "$HERDR_ACTIVE_PANE_ID" clear'
 description = "clear scrollback"
-
-[ui.sound]
-enabled = false
