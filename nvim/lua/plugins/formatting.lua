@@ -1,14 +1,4 @@
-local biome_fts = {
-  "css",
-  "javascript",
-  "javascriptreact",
-  "json",
-  "jsonc",
-  "typescript",
-  "typescriptreact",
-}
-
-local prettier_fts = {
+local oxfmt_fts = {
   "css",
   "html",
   "javascript",
@@ -25,23 +15,8 @@ local formatters_by_ft = {
   ["_"] = { "trim_whitespace", "trim_newlines" },
 }
 
-for _, ft in ipairs(biome_fts) do
-  formatters_by_ft[ft] = formatters_by_ft[ft] or {}
-  table.insert(formatters_by_ft[ft], "biome-check")
-end
-
-for _, ft in ipairs(prettier_fts) do
-  formatters_by_ft[ft] = formatters_by_ft[ft] or {}
-  table.insert(formatters_by_ft[ft], "prettier")
-end
-
-local prettier_config_cache = {}
-local function has_prettier_config(ctx)
-  if prettier_config_cache[ctx.filename] == nil then
-    vim.fn.system({ "prettier", "--find-config-path", ctx.filename })
-    prettier_config_cache[ctx.filename] = vim.v.shell_error == 0
-  end
-  return prettier_config_cache[ctx.filename]
+for _, ft in ipairs(oxfmt_fts) do
+  formatters_by_ft[ft] = { "oxfmt" }
 end
 
 require("conform").setup({
@@ -52,11 +27,8 @@ require("conform").setup({
   },
   formatters = {
     injected = { options = { ignore_errors = true } },
-    ["biome-check"] = { require_cwd = true },
-    prettier = {
-      condition = function(_, ctx)
-        return has_prettier_config(ctx)
-      end,
+    oxfmt = {
+      require_cwd = true,
     },
   },
 })

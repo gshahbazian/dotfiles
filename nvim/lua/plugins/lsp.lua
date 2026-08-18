@@ -26,7 +26,7 @@ require("mason").setup()
 
 local mr = require("mason-registry")
 mr.refresh(function()
-  for _, tool in ipairs({ "stylua", "shfmt", "prettier", "biome", "shellcheck" }) do
+  for _, tool in ipairs({ "stylua", "shfmt", "oxfmt", "shellcheck" }) do
     local p = mr.get_package(tool)
     if not p:is_installed() then
       p:install()
@@ -35,9 +35,9 @@ mr.refresh(function()
 end)
 
 require("mason-lspconfig").setup({
-  ensure_installed = { "lua_ls", "tsc", "eslint", "jsonls", "tailwindcss", "bashls" },
+  ensure_installed = { "lua_ls", "tsc", "oxlint", "jsonls", "tailwindcss", "bashls" },
   automatic_enable = {
-    exclude = { "rust_analyzer" },
+    exclude = { "oxfmt", "rust_analyzer" },
   },
 })
 
