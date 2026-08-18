@@ -35,7 +35,7 @@ mr.refresh(function()
 end)
 
 require("mason-lspconfig").setup({
-  ensure_installed = { "lua_ls", "tsgo", "eslint", "jsonls", "tailwindcss", "bashls" },
+  ensure_installed = { "lua_ls", "tsc", "eslint", "jsonls", "tailwindcss", "bashls" },
   automatic_enable = {
     exclude = { "rust_analyzer" },
   },
