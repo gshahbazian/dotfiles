@@ -24,6 +24,9 @@
   copy-hash = !git rev-parse --short HEAD | pbcopy
   aliases = config --get-regexp alias
 
+[init]
+  defaultBranch = main
+
 [push]
   autoSetupRemote = true
 
