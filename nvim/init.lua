@@ -29,11 +29,9 @@ vim.api.nvim_create_autocmd("PackChanged", {
 vim.pack.add({
   "https://github.com/folke/snacks.nvim",
   "https://github.com/nvim-mini/mini.nvim",
-  "https://github.com/gshahbazian/vesper.nvim",
 }, { load = true })
 
-vim.cmd.colorscheme("vesper")
-
+require("config.colorscheme")
 require("config.keymaps")
 require("config.autocmds")
 
