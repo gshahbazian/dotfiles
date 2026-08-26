@@ -1,6 +1,6 @@
 # https://ghostty.org/docs/config/reference
 
-# auto-update-channel = tip
+auto-update-channel = tip
 
 copy-on-select = clipboard
 cursor-click-to-move = true

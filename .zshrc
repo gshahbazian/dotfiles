@@ -100,3 +100,23 @@ ZSH_HIGHLIGHT_STYLES[command]='fg=white,bold'
 ZSH_HIGHLIGHT_STYLES[alias]='fg=white,bold'
 ZSH_HIGHLIGHT_STYLES[function]='fg=white,bold'
 ZSH_HIGHLIGHT_STYLES[builtin]='fg=white,bold'
+
+# -----------------------
+# git worktrees
+# -----------------------
+wt() {
+  local selection
+
+  selection=$(git worktree list --porcelain |
+    awk '
+      /^worktree / { path=substr($0, 10) }
+      /^branch / {
+        branch=$0
+        sub(/^branch refs\/heads\//, "", branch)
+        print branch "\t" path
+      }
+    ' |
+    fzf --height=~100% --layout=reverse) || return
+
+  cd "${selection#*$'\t'}"
+}

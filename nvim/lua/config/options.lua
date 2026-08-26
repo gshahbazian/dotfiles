@@ -44,4 +44,5 @@ vim.opt.undofile = true
 vim.opt.winborder = "single"
 vim.opt.wrap = false
 
+vim.g.clipboard = "osc52"
 vim.g.markdown_recommended_style = 0
