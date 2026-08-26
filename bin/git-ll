@@ -677,7 +677,8 @@ _ll_open_selected() {
 _ll_yank_selected() {
   local url
   url=$(_ll_selected_url) || return 0
-  printf '%s' "$url" | pbcopy
+  b64=$(printf '%s' "$url" | base64 | tr -d '\n')
+  printf '\033]52;c;%s\a' "$b64" > /dev/tty
 }
 
 # Drop the highlight and the shortcut line so scrollback is left holding

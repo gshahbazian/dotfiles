@@ -5,4 +5,6 @@
 
 path=$(realpath "${1:-.}")
 echo "$path"
-printf '%s' "$path" | pbcopy
+
+b64=$(printf '%s' "$path" | base64 | tr -d '\n')
+printf '\033]52;c;%s\a' "$b64" > /dev/tty
