@@ -47,7 +47,7 @@ alias path='printf "%s\n" $path'
 # -----------------------
 # package managers
 # -----------------------
-eval "$(fnm env --log-level=quiet --use-on-cd --version-file-strategy=recursive --corepack-enabled --shell zsh)"
+eval "$(fnm env --log-level=quiet --use-on-cd --version-file-strategy=recursive --shell zsh)"
 eval "$(uv generate-shell-completion zsh)"
 
 # -----------------------
