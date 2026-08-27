@@ -102,8 +102,28 @@ ZSH_HIGHLIGHT_STYLES[function]='fg=white,bold'
 ZSH_HIGHLIGHT_STYLES[builtin]='fg=white,bold'
 
 # -----------------------
-# git worktrees
+# functions
 # -----------------------
+ssh() {
+  if [[ $TERM_PROGRAM != ghostty || -z $GHOSTTY_BIN_DIR ]]; then
+    command ssh "$@"
+    return
+  fi
+
+  # Install Ghostty's terminfo and shell integration on the remote host.
+  if [[ ! -t 1 ]]; then
+    "$GHOSTTY_BIN_DIR/ghostty" +ssh -- "$@"
+    return
+  fi
+
+  ghostty-theme "Kanagawa Wave"
+  {
+    "$GHOSTTY_BIN_DIR/ghostty" +ssh -- "$@"
+  } always {
+    ghostty-theme --reset
+  }
+}
+
 wt() {
   local selection
 

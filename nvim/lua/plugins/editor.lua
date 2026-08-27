@@ -73,9 +73,6 @@ require("which-key").setup({
 
       -- rm jank
       { "<leader>y", hidden = true },
-      { "<leader>p", hidden = true },
-      { "<leader>P", hidden = true },
-      { "<leader>K", hidden = true },
     },
   },
 })

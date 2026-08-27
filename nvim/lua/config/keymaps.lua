@@ -57,8 +57,6 @@ vim.keymap.set("i", ",", ",<c-g>u")
 vim.keymap.set("i", ".", ".<c-g>u")
 vim.keymap.set("i", ";", ";<c-g>u")
 
-vim.keymap.set("n", "<leader>K", "<cmd>norm! K<cr>", { desc = "Keywordprg" })
-
 -- better indenting
 vim.keymap.set("x", "<", "<gv")
 vim.keymap.set("x", ">", ">gv")
@@ -232,10 +230,8 @@ vim.keymap.set("n", "<leader>fr", function()
   })
 end, { desc = "Recent files" })
 
--- yank and paste to system clipboard
+-- yank to system clipboard
 vim.keymap.set({ "n", "x" }, "<leader>y", '"+y', { silent = true, desc = "Copy to system clipboard" })
-vim.keymap.set({ "n", "x" }, "<leader>p", '"+p', { desc = "Paste from system clipboard after the cursor position" })
-vim.keymap.set({ "n", "x" }, "<leader>P", '"+P', { desc = "Paste from system clipboard before the cursor position" })
 
 -- ctrl+s to save
 vim.keymap.set({ "n", "i" }, "<C-s>", "<Esc><cmd>w<cr>", { silent = true, desc = "Save" })

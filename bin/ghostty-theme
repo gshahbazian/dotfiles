@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+
+# Apply or reset the current Ghostty surface's colors via Kitty OSC 21
+# plus xterm OSC 10/11/12 so the window background actually updates.
+# Usage:
+#   ghostty-theme "Kanagawa Wave"
+#   ghostty-theme --reset
+#   ghostty-theme --list
+
+resources="${GHOSTTY_RESOURCES_DIR:-/Applications/Ghostty.app/Contents/Resources/ghostty}"
+themes="$resources/themes"
+
+reset=0
+list=0
+theme=""
+background_override=""
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+  --reset) reset=1 ;;
+  --list) list=1 ;;
+  --background)
+    shift
+    background_override="${1:-}"
+    ;;
+  *)
+    if [[ -n $theme ]]; then
+      echo "error: unexpected argument: $1" >&2
+      exit 1
+    fi
+    theme=$1
+    ;;
+  esac
+  shift
+done
+
+if ((reset)); then
+  printf $'\033]21;foreground;background;cursor;cursor_text;selection_background;selection_foreground;0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15\033\\'
+  printf $'\033]110\033\\\033]111\033\\\033]112\033\\'
+  exit 0
+fi
+
+if ((list)) || [[ -z $theme ]]; then
+  if [[ -z $theme && $list -eq 0 ]]; then
+    echo "usage: ghostty-theme <theme>|--reset|--list [--background '#rrggbb']" >&2
+  fi
+  ls "$themes"
+  exit 0
+fi
+
+theme_file="$themes/$theme"
+if [[ ! -r $theme_file ]]; then
+  echo "error: theme not found: $theme" >&2
+  exit 1
+fi
+
+parts=()
+background=""
+foreground=""
+cursor=""
+
+while IFS= read -r line; do
+  case $line in
+  '' | '#'*) continue ;;
+  esac
+
+  key="${line%% = *}"
+  value="${line#* = }"
+  case $key in
+  palette) parts+=("$value") ;;
+  background) background=$value ;;
+  foreground)
+    foreground=$value
+    parts+=("foreground=$value")
+    ;;
+  cursor-color)
+    cursor=$value
+    parts+=("cursor=$value")
+    ;;
+  cursor-text) parts+=("cursor_text=$value") ;;
+  selection-background) parts+=("selection_background=$value") ;;
+  selection-foreground) parts+=("selection_foreground=$value") ;;
+  esac
+done <"$theme_file"
+
+if [[ -n $background_override ]]; then
+  background=$background_override
+fi
+
+if [[ -n $background ]]; then
+  parts+=("background=$background")
+fi
+
+IFS=';'
+printf $'\033]21;%s\033\\' "${parts[*]}"
+
+if [[ -n $foreground ]]; then
+  printf $'\033]10;%s\033\\' "$foreground"
+fi
+if [[ -n $background ]]; then
+  printf $'\033]11;%s\033\\' "$background"
+fi
+if [[ -n $cursor ]]; then
+  printf $'\033]12;%s\033\\' "$cursor"
+fi

@@ -9,8 +9,6 @@ brew "bash"
 brew "bat"
 # Resource monitor. C++ version and continuation of bashtop and bpytop
 brew "btop"
-# Cloudflare Tunnel client (formerly Argo Tunnel)
-brew "cloudflared"
 # Modern, maintained replacement for ls
 brew "eza"
 # Like neofetch, but much faster because written mostly in C
