@@ -21,7 +21,6 @@
   mm = switch main
   cb = switch -c
   amend = commit --amend --no-edit
-  copy-hash = !git rev-parse --short HEAD | pbcopy
   aliases = config --get-regexp alias
 
 [init]

@@ -23,14 +23,16 @@ vim.opt.linebreak = true
 vim.opt.list = true
 vim.opt.listchars = { tab = "»·", trail = "·", nbsp = "␣" }
 vim.opt.mouse = "a"
-vim.opt.number = true
+vim.opt.mousescroll = "ver:1,hor:0"
 vim.opt.nrformats = "unsigned"
+vim.opt.number = true
 vim.opt.ruler = false
 vim.opt.shiftround = true
 vim.opt.shiftwidth = 2
 vim.opt.shortmess:append({ W = true, I = true, c = true })
 vim.opt.showbreak = "· "
 vim.opt.showmode = false
+vim.opt.sidescrolloff = 8
 vim.opt.signcolumn = "yes"
 vim.opt.smartcase = true
 vim.opt.smartindent = true

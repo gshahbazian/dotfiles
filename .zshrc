@@ -41,7 +41,6 @@ alias l='eza --grid --group-directories-first'
 alias lg='lazygit'
 alias ll='eza -la --git --no-user --icons=always'
 alias nv='nvim'
-alias p='pnpm'
 alias path='printf "%s\n" $path'
 
 # -----------------------

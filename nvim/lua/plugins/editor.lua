@@ -43,7 +43,6 @@ require("which-key").setup({
       { "<leader>r", group = "lsp pickers" },
       { "<leader>f", group = "file" },
       { "<leader>g", group = "git" },
-      { "<leader>gh", group = "hunks" },
       { "<leader>j", group = "util" },
       { "<leader>l", group = "vim.pack" },
       { "<leader>q", group = "quit/session" },
@@ -159,6 +158,9 @@ require("gitsigns").setup({
     changedelete = { text = "▎" },
   },
   current_line_blame = true,
+  current_line_blame_opts = {
+    virt_text_pos = "right_align",
+  },
   on_attach = function(buffer)
     local gs = package.loaded.gitsigns
 
@@ -184,18 +186,17 @@ require("gitsigns").setup({
     map("n", "[H", function()
       gs.nav_hunk("first")
     end, "First Hunk")
-    map({ "n", "x" }, "<leader>ghr", ":Gitsigns reset_hunk<CR>", "Reset Hunk")
-    map("n", "<leader>ghR", gs.reset_buffer, "Reset Buffer")
-    map("n", "<leader>ghp", gs.preview_hunk_inline, "Preview Hunk Inline")
-    map("n", "<leader>ghP", gs.preview_hunk, "Preview Hunk Floating")
-    map("n", "<leader>ghb", function()
+    map({ "n", "x" }, "<leader>gr", ":Gitsigns reset_hunk<CR>", "Reset Hunk")
+    map("n", "<leader>gR", gs.reset_buffer, "Reset Buffer")
+    map("n", "<leader>gp", gs.preview_hunk, "Preview Hunk")
+    map("n", "<leader>gb", function()
       gs.blame_line({ full = true })
     end, "Blame Line")
-    map("n", "<leader>ghB", function()
+    map("n", "<leader>gB", function()
       gs.blame()
     end, "Blame Buffer")
-    map("n", "<leader>ghd", gs.diffthis, "Diff This")
-    map("n", "<leader>ghD", function()
+    map("n", "<leader>gd", gs.diffthis, "Diff This")
+    map("n", "<leader>gD", function()
       gs.diffthis("~")
     end, "Diff This ~")
     map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "GitSigns Select Hunk")

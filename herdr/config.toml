@@ -5,6 +5,7 @@ kitty_graphics = true
 
 [ui]
 prompt_new_tab_name = false
+pane_scrollbars = false
 
 [ui.toast]
 delivery = "terminal"
