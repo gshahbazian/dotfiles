@@ -1,7 +1,7 @@
 local backdrop = require("utils.backdrop")
 
 -- check if we need to reload the file when it changed
-vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
+vim.api.nvim_create_autocmd({ "FocusGained" }, {
   callback = function()
     if vim.o.buftype ~= "nofile" then
       vim.cmd("checktime")
@@ -13,16 +13,6 @@ vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
 vim.api.nvim_create_autocmd("TextYankPost", {
   callback = function()
     vim.hl.on_yank()
-  end,
-})
-
--- resize splits if window got resized
-vim.api.nvim_create_autocmd({ "VimResized" }, {
-  callback = function()
-    local current_tab = vim.fn.tabpagenr()
-    vim.cmd("tabdo wincmd =")
-    vim.cmd("tabnext " .. current_tab)
-    backdrop.resize()
   end,
 })
 
@@ -62,14 +52,6 @@ vim.api.nvim_create_autocmd("FileType", {
         pcall(vim.api.nvim_buf_delete, event.buf, { force = true })
       end, { buffer = event.buf, silent = true, desc = "Quit buffer" })
     end)
-  end,
-})
-
--- make it easier to close man-files when opened inline
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "man" },
-  callback = function(event)
-    vim.bo[event.buf].buflisted = false
   end,
 })
 

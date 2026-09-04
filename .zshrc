@@ -48,6 +48,7 @@ alias path='printf "%s\n" $path'
 # -----------------------
 eval "$(fnm env --log-level=quiet --use-on-cd --version-file-strategy=recursive --shell zsh)"
 eval "$(uv generate-shell-completion zsh)"
+eval "$(pnpm completion zsh)"
 
 # -----------------------
 # fzf
