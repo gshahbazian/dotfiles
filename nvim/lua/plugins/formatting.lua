@@ -9,6 +9,11 @@ local oxfmt_fts = {
   "typescriptreact",
 }
 
+local oxfmt_config_files = {
+  ".oxfmtrc.json",
+  ".oxfmtrc.jsonc",
+}
+
 local formatters_by_ft = {
   lua = { "stylua" },
   sh = { "shfmt" },
@@ -28,6 +33,7 @@ require("conform").setup({
   formatters = {
     injected = { options = { ignore_errors = true } },
     oxfmt = {
+      cwd = require("conform.util").root_file(oxfmt_config_files),
       require_cwd = true,
     },
   },
