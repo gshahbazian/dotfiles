@@ -94,8 +94,8 @@ bindkey '^X^E' edit-command-line
 # plugins
 # -----------------------
 BREW_PREFIX="$(/opt/homebrew/bin/brew --prefix)"
-source "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 source "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+source "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 ZSH_HIGHLIGHT_STYLES[command]='fg=white,bold'
 ZSH_HIGHLIGHT_STYLES[alias]='fg=white,bold'
 ZSH_HIGHLIGHT_STYLES[function]='fg=white,bold'
