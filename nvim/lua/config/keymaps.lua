@@ -96,6 +96,9 @@ vim.keymap.set("n", "[w", diagnostic_goto(false, "WARN"), { desc = "Prev Warning
 vim.keymap.set("n", "<leader>lu", function()
   vim.pack.update()
 end, { desc = "Update plugins" })
+vim.keymap.set("n", "<leader>ls", function()
+  vim.pack.update(nil, { target = "lockfile" })
+end, { desc = "Sync plugins" })
 vim.keymap.set("n", "<leader>lh", "<cmd>checkhealth vim.pack<cr>", { desc = "Plugin health" })
 vim.keymap.set("n", "<leader>lm", "<cmd>Mason<cr>", { desc = "Mason" })
 
