@@ -17,6 +17,7 @@
   s = status
   p = pull --rebase --prune
   d = diff
+  sw = switch
   ma = switch master
   mm = switch main
   cb = switch -c
