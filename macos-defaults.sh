@@ -53,6 +53,12 @@ defaults write -g com.apple.trackpad.forceClick -bool true
 defaults write -g com.apple.trackpad.scaling -int 3
 defaults -currentHost write -g com.apple.trackpad.scrollBehavior -int 2
 
+# Mission Control / Dinky
+# Changing separate display Spaces requires logging out and back in.
+defaults write com.apple.dock mru-spaces -bool false
+defaults write com.apple.dock workspaces-auto-swoosh -bool false
+defaults write com.apple.spaces spans-displays -bool false
+
 # Restart affected apps
 killall Dock
 killall Finder
