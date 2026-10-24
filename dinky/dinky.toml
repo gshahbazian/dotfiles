@@ -22,6 +22,9 @@ center-focused-column = true
 [single-group]
 max-width = 2400
 
+[drag]
+split-trigger = 'alt'
+
 [accordion]
 padding = 30
 orientation = 'keep'
@@ -60,7 +63,7 @@ run = ['layout floating', 'move-window-to-workspace 5 --follow', 'exec-and-forge
 [mode.main]
 meh-t = 'layout h_tiles v_tiles'
 meh-r = 'layout h_accordion v_accordion'
-meh-y = 'layout tiles scrolling'
+meh-y = 'workspace-layout dwindle scrolling'
 
 meh-e = 'layout floating tiling'
 meh-w = 'fullscreen'
