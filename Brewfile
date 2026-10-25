@@ -1,7 +1,5 @@
-tap "felixkratz/formulae", "https://github.com/FelixKratz/homebrew-formulae", trusted: true
 tap "hashicorp/tap", trusted: true
 tap "jesseduffield/lazygit", trusted: true
-tap "nikitabobko/tap", trusted: true
 tap "oven-sh/bun", trusted: true
 # Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
@@ -65,9 +63,5 @@ brew "zoxide"
 brew "zsh-autosuggestions"
 # Fish shell like syntax highlighting for zsh
 brew "zsh-syntax-highlighting"
-# A window border system for macOS
-brew "felixkratz/formulae/borders"
 # Incredibly fast JavaScript runtime, bundler, transpiler and package manager - all in one.
 brew "oven-sh/bun/bun"
-# AeroSpace is an i3-like tiling window manager for macOS
-cask "nikitabobko/tap/aerospace"
