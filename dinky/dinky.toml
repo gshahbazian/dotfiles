@@ -48,7 +48,7 @@ inactive-color = '#00000000'
 exclude-apps = []
 
 [[rules]]
-app-name = '^(?!.*\b(ghostty|chrome)\b).*$'
+app-name = '^(?!.*\b(ghostty|chrome|rex beta)\b).*$'
 run = 'layout floating'
 
 [[rules]]
