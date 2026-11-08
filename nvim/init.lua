@@ -86,6 +86,14 @@ Config.now_if_args(function()
 end)
 
 Config.later(function()
+  -- fff tags a semver prerelease for every commit and vim.pack ranges match
+  -- those, so filter down to stable releases
+  local fff_stable = assert(vim.version.range("*"))
+  local has = fff_stable.has
+  function fff_stable:has(v)
+    return v.prerelease == nil and has(self, v)
+  end
+
   vim.pack.add({
     -- coding
     "https://github.com/folke/flash.nvim",
@@ -100,7 +108,7 @@ Config.later(function()
     { src = "https://github.com/lewis6991/gitsigns.nvim", version = vim.version.range("*") },
     "https://github.com/arnamak/stay-centered.nvim",
     "https://github.com/folke/persistence.nvim",
-    { src = "https://github.com/dmtrKovalenko/fff.nvim" },
+    { src = "https://github.com/dmtrKovalenko/fff.nvim", version = fff_stable },
 
     -- formatting
     "https://github.com/stevearc/conform.nvim",
