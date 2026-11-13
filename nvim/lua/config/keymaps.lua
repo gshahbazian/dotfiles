@@ -28,10 +28,6 @@ end, { desc = "Delete Buffer" })
 vim.keymap.set("n", "<leader>bo", function()
   Snacks.bufdelete.other()
 end, { desc = "Delete Other Buffers" })
-vim.keymap.set("n", "<leader>bD", "<cmd>bd<cr>", { desc = "Delete Buffer and Window" })
-vim.keymap.set("n", "<leader>br", "<Cmd>BufferLineCloseRight<CR>", { desc = "Delete Buffers to the Right" })
-vim.keymap.set("n", "<leader>bl", "<Cmd>BufferLineCloseLeft<CR>", { desc = "Delete Buffers to the Left" })
-vim.keymap.set("n", "<leader>bj", "<cmd>BufferLinePick<cr>", { desc = "Pick Buffer" })
 vim.keymap.set("n", "<leader>ba", function()
   Snacks.bufdelete.all()
 end, { desc = "Delete All Buffers" })
@@ -44,25 +40,9 @@ vim.keymap.set({ "i", "n", "s" }, "<esc>", function()
   return "<esc>"
 end, { expr = true, desc = "Escape and Clear hlsearch" })
 
--- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
-vim.keymap.set("n", "n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Next Search Result" })
-vim.keymap.set("x", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next Search Result" })
-vim.keymap.set("o", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next Search Result" })
-vim.keymap.set("n", "N", "'nN'[v:searchforward].'zv'", { expr = true, desc = "Prev Search Result" })
-vim.keymap.set("x", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev Search Result" })
-vim.keymap.set("o", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev Search Result" })
-
--- add undo break-points
-vim.keymap.set("i", ",", ",<c-g>u")
-vim.keymap.set("i", ".", ".<c-g>u")
-vim.keymap.set("i", ";", ";<c-g>u")
-
 -- better indenting
 vim.keymap.set("x", "<", "<gv")
 vim.keymap.set("x", ">", ">gv")
-
-vim.keymap.set("n", "gco", "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Below" })
-vim.keymap.set("n", "gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Above" })
 
 vim.keymap.set("n", "<leader>fn", "<cmd>enew<cr>", { desc = "New File" })
 
@@ -138,23 +118,6 @@ vim.keymap.set("n", "<leader>w<tab>", "<cmd>tabonly<cr>", { desc = "Close Other 
 vim.keymap.set({ "n", "x", "o" }, "s", function()
   require("flash").jump()
 end, { desc = "Flash" })
-vim.keymap.set({ "n", "o", "x" }, "S", function()
-  require("flash").treesitter()
-end, { desc = "Flash Treesitter" })
-vim.keymap.set("o", "r", function()
-  require("flash").remote()
-end, { desc = "Remote Flash" })
-vim.keymap.set({ "o", "x" }, "R", function()
-  require("flash").treesitter_search()
-end, { desc = "Treesitter Search" })
-vim.keymap.set({ "n", "o", "x" }, "<c-space>", function()
-  require("flash").treesitter({
-    actions = {
-      ["<c-space>"] = "next",
-      ["<BS>"] = "prev",
-    },
-  })
-end, { desc = "Treesitter Incremental Selection" })
 
 -- noice
 vim.keymap.set("n", "<leader>n", "<cmd>Noice history<cr>", { desc = "Notification History" })
